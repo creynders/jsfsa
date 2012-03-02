@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - jsfsm.StateMachine</title>
+		<title>JsDoc Reference - jsfsm.State</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -206,7 +206,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Class jsfsm.StateMachine
+				Class jsfsm.State
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -223,7 +223,7 @@ ul.inheritsList
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class jsfsm.StateMachine.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class jsfsm.State.">
 				<caption>Class Summary</caption>
 				<thead>
 					<tr>
@@ -236,7 +236,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/jsfsm.StateMachine.html#constructor">jsfsm.StateMachine</a></b>(name)
+								<b><a href="../symbols/jsfsm.State.html#constructor">jsfsm.State</a></b>(name, data)
 							</div>
 							<div class="description"></div>
 						</td>
@@ -247,12 +247,50 @@ ul.inheritsList
 
 <!-- ============================== properties summary ===================== -->
 			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class jsfsm.State.">
+					<caption>Field Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Field Attributes</th>
+							<th scope="col">Field Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/jsfsm.State.html#fqn">fqn</a></b>
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/jsfsm.State.html#name">name</a></b>
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+			
 
 <!-- ============================== methods summary ======================== -->
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class jsfsm.StateMachine.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class jsfsm.State.">
 					<caption>Method Summary</caption>
 					<thead>
 						<tr>
@@ -265,7 +303,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/jsfsm.StateMachine.html#getCurrentState">getCurrentState</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/jsfsm.State.html#getParent">getParent</a></b>()
 								</div>
 								<div class="description"></div>
 							</td>
@@ -288,7 +326,7 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>jsfsm.StateMachine</b>(name)
+						<b>jsfsm.State</b>(name, data)
 				</div>
 				
 				<div class="description">
@@ -304,8 +342,14 @@ ul.inheritsList
 						<dt class="heading">Parameters:</dt>
 						
 							<dt>
-								 <b>name</b>
+								<span class="light fixedFont">{String}</span>  <b>name</b>
 								
+							</dt>
+								<dd></dd>
+						
+							<dt>
+								<span class="light fixedFont">{Object}</span>  <b>data</b>
+								<i>Optional</i>
 							</dt>
 								<dd></dd>
 						
@@ -323,6 +367,69 @@ ul.inheritsList
 
 <!-- ============================== field details ========================== -->		
 			
+				<div class="sectionTitle">
+					Field Detail
+				</div>
+				
+					<a name="fqn"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{String}</span>
+					<b>fqn</b>
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Default Value:</dt>
+							<dd>
+								"State"
+							</dd>
+							</dl>
+						
+
+					<hr />
+				
+					<a name="name"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>name</b>
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Default Value:</dt>
+							<dd>
+								undefined
+							</dd>
+							</dl>
+						
+
+					
+				
+			
 
 <!-- ============================== method details ========================= -->		
 			
@@ -330,11 +437,11 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name="getCurrentState"> </a>
+					<a name="getParent"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/jsfsm.State.html">jsfsm.State</a>}</span>
-					<b>getCurrentState</b>()
+					
+					<b>getParent</b>()
 					
 					</div>
 					<div class="description">
@@ -353,7 +460,7 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/jsfsm.State.html">jsfsm.State</a>}</span> </dd>
+								<dd>jsfsm.State</dd>
 							
 							</dl>
 						
