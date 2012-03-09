@@ -270,15 +270,14 @@
          * @param {fsa.State} toState
          */
         _executeActions : function( eventName, fromState, toState ){
-            var i, n, callback, payload;
             if( this._actions.hasOwnProperty( eventName ) ){
-                payload = {
+                var payload = {
                     event : eventName,
                     from : fromState.name,
                     to : toState.name
                 };
-                for( i=0, n=this._actions[ eventName ].length ; i<n ; i++ ){
-                    callback = this._actions[ eventName ][ i ];
+                for( var i=0, n=this._actions[ eventName ].length ; i<n ; i++ ){
+                    var callback = this._actions[ eventName ][ i ];
                     callback.call( this, payload );
                 }
             }
@@ -292,15 +291,14 @@
          * @return {Boolean}
          */
         _executeGuards : function( eventName, fromState, toState ){
-            var i, n, payload, callback;
             if( this._guards.hasOwnProperty( eventName ) ){
-                payload = {
+                var payload = {
                     event : eventName,
                     from : fromState.name,
                     to : toState.name
                 };
-                for( i=0, n=this._guards[ eventName ].length ; i<n ; i++ ){
-                    callback = this._guards[ eventName ][ i ];
+                for( var i=0, n=this._guards[ eventName ].length ; i<n ; i++ ){
+                    var callback = this._guards[ eventName ][ i ];
                     if( ! callback.call( this, payload ) ){
                         return false;
                     }
@@ -332,11 +330,10 @@
          * @param {Function[]|Function} callbacks
          */
         _addCallbacks: function( receiver, eventName, callbacks ){
-            var i, n;
             if( typeof callbacks == "function" ){
                 this._addCallback( receiver, eventName, callbacks );
             }else{
-                for( i=0, n=callbacks.length ; i<n ; i++ ){
+                for( var i=0, n=callbacks.length ; i<n ; i++ ){
                     this._addCallback( receiver, eventName, callbacks[ i ] );
                 }
             }
@@ -377,8 +374,7 @@
          * @param {String[]} [skip]
          */
         _addTransitions : function( data, skip ){
-            var transitionName;
-            for( transitionName in data ){
+            for( var transitionName in data ){
                 if( data.hasOwnProperty( transitionName ) ){
                     if( skip && skip.indexOf( transitionName ) >= 0 ) {
                         continue;
@@ -430,8 +426,7 @@
             delete this.children[ node.state.name ];
         },
         destroy : function(){
-            var stateName;
-            for( stateName in this.children ){
+            for( var stateName in this.children ){
                 if( this.children.hasOwnProperty( stateName ) ){
                     this.children[ stateName ].destroy();
                 }
@@ -444,7 +439,8 @@
          * @return {fsa._Node[]}
          */
         getInitialBranch : function(){
-            var result = [], initial = this.initialChild;
+            var result = [];
+            var initial = this.initialChild;
             while( initial ){
                 result.push( initial );
                 initial = initial.initialChild;
@@ -508,10 +504,9 @@
          * @return {fsa.Automaton} the instance of {@link fsa.Automaton} that is acted upon
          */
         addState : function( state ){
-            var node, parentNode;
             if( ! this.hasState( state.name ) ){
-                node = new fsa._Node( state );
-                parentNode = ( state.parent )
+                var node = new fsa._Node( state );
+                var parentNode = ( state.parent )
                     ? this._nodes[ state.parent ]
                     : this._rootNode
                 ;
@@ -553,12 +548,11 @@
          * @return {fsa.Automaton} the instance of {@link fsa.Automaton} that is acted upon
          */
         removeState : function( stateName ){
-            var node, parentNode, index;
             if( this.hasState( stateName ) ){
-                node = this._nodes[ stateName ];
-                parentNode = node.parent;
+                var node = this._nodes[ stateName ];
+                var parentNode = node.parent;
                 parentNode.removeChild( node );
-                index = this._currentBranch.indexOf( node );
+                var index = this._currentBranch.indexOf( node );
                 if( index >= 0 ){
                     this._currentBranch.splice( index, this._currentBranch.length - index );
                 }
@@ -575,24 +569,25 @@
          * @return {fsa.Automaton} the instance of {@link fsa.Automaton} that is acted upon
          */
         doTransition : function( transitionName ){
-            var runner, i, n, node, newStateBranch, streams, args, proceed, initialNodes;
-            for( i=this._currentBranch.length -1, n = 0  ; i>=n ; i-- ){
-                runner = this._currentBranch[ i ].state;
+            var runner;
+            for( var i=this._currentBranch.length -1, n = 0  ; i>=n ; i-- ){
+                runner = this._currentBranch[ i ].state
                 if( runner.hasTransition( transitionName ) ){
                     break;
                 }
             }
             if( i>=0 ){
                 //transition found somewhere in the _currentStateBranch
-                node = this._nodes[ runner.getTransition( transitionName ) ];
+                var node = this._nodes[ runner.getTransition( transitionName ) ];
                 if( node ){
                     //TODO: determine what to do if node not found?? Currently failing silenlty
 
-                    newStateBranch = this._getFullBranch( node );
-                    streams = this._getShortestRoute( this._currentBranch, newStateBranch );
+                    var newStateBranch = this._getFullBranch( node );
+                    var streams = this._getShortestRoute( this._currentBranch, newStateBranch );
 
-                    args = [ this.getCurrentState(), node.state ];
-                    proceed = this._applyToEachNode( streams.up,     fsa.State.prototype._executeGuards,    [ 'exit' ].concat( args ), true );
+                    var args = [ this.getCurrentState(), node.state ];
+                    var proceed = this._applyToEachNode( streams.up,     fsa.State.prototype._executeGuards,    [ 'exit' ].concat( args ), true );
+                    var initialNodes;
                     if( proceed ){
                         initialNodes = node.getInitialBranch();
                         proceed = this._applyToEachNode( streams.down.concat( initialNodes ),   fsa.State.prototype._executeGuards,   [ 'enter' ].concat( args ), true );
@@ -611,8 +606,7 @@
          * @param {Object} data JSON formatted data object
          */
         parse : function( data ){
-            var stateName;
-            for( stateName in data ){
+            for( var stateName in data ){
                 if( data.hasOwnProperty( stateName ) ){
                     this.createState( stateName, data[ stateName ] );
                 }
@@ -652,8 +646,8 @@
          * @return {Object}
          */
         _getShortestRoute : function( rootToBegin, rootToEnd ){
-            var i, n, up, down;
-            for( i=0, n = Math.min( rootToBegin.length, rootToEnd.length ) ; i<n ; i++ ){
+            var i, n = Math.min( rootToBegin.length, rootToEnd.length );
+            for( i=0 ; i<n ; i++ ){
                 if( rootToBegin[ i ] !== rootToEnd[ i ] ){
                     break;
                 }
@@ -676,12 +670,12 @@
          * @param {Boolean} [allowInterrupt=false]
          */
         _applyToEachNode : function( nodesList, callback, args, allowInterrupt ){
-            var proceed = true, i, n, state;
             if( allowInterrupt == undefined ){
                 allowInterrupt = false;
             }
-            for( i=0, n=nodesList.length; ( ! allowInterrupt || proceed ) && i<n ; i++){
-                state = nodesList[ i ].state;
+            var proceed = true;
+            for( var i=0, n=nodesList.length; ( ! allowInterrupt || proceed ) && i<n ; i++){
+                var state = nodesList[ i ].state;
                 proceed = callback.apply( state, args );
             }
 
