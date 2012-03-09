@@ -1,5 +1,3 @@
-/*jslint bitwise: true, continue: true, eqeq: true, white: true, nomen: true, plusplus: true, maxerr: 50, indent: 4 */
-
 /**
  * @author Camille Reynders
  * @version 0.1
@@ -127,10 +125,10 @@
          * @return {fsa.State} the instance of {@link fsa.State} that is acted upon
          */
         addTransition : function( transitionName, stateName ){
-            if( ! transitionName || typeof transitionName != "string" ){
+            if( ! transitionName || typeof transitionName !== "string" ){
                 throw new Error( 1040 );
             }
-            if( ! stateName || typeof stateName != "string" ){
+            if( ! stateName || typeof stateName !== "string" ){
                 throw new Error( 1041 );
             }
             this._transitions[ transitionName ] = stateName;
@@ -175,7 +173,7 @@
             if( fsa.State._events.indexOf( eventName ) < 0 ){
                 throw new Error( 1060 );
             }
-            if( ! callback || typeof callback != "function" ){
+            if( ! callback || typeof callback !== "function" ){
                 throw new Error( 1061 );
             }
             this._addCallback( this._actions, eventName, callback );
@@ -213,7 +211,7 @@
             if( fsa.State._events.indexOf( eventName ) < 0 ){
                 throw new Error( 1070 );
             }
-            if( ! callback || typeof callback != "function" ){
+            if( ! callback || typeof callback !== "function" ){
                 throw new Error( 1071 );
             }
             this._addCallback( this._guards, eventName, callback );
@@ -330,7 +328,7 @@
          * @param {Function[]|Function} callbacks
          */
         _addCallbacks: function( receiver, eventName, callbacks ){
-            if( typeof callbacks == "function" ){
+            if( typeof callbacks === "function" ){
                 this._addCallback( receiver, eventName, callbacks );
             }else{
                 for( var i=0, n=callbacks.length ; i<n ; i++ ){
@@ -511,7 +509,7 @@
                     : this._rootNode
                 ;
                 parentNode.addChild( node );
-                if( state.isInitial && parentNode.state == this.getCurrentState() ){
+                if( state.isInitial && parentNode.state === this.getCurrentState() ){
                     this._currentBranch.push( node );
                 }
                 this._nodes[ state.name ] = node;
@@ -571,7 +569,7 @@
         doTransition : function( transitionName ){
             var runner;
             for( var i=this._currentBranch.length -1, n = 0  ; i>=n ; i-- ){
-                runner = this._currentBranch[ i ].state
+                runner = this._currentBranch[ i ].state;
                 if( runner.hasTransition( transitionName ) ){
                     break;
                 }
@@ -653,8 +651,8 @@
                 }
             }
 
-            up = rootToBegin.slice( i ).reverse();
-            down = rootToEnd.slice( i );
+            var up = rootToBegin.slice( i ).reverse();
+            var down = rootToEnd.slice( i );
 
             return {
                 up : up,
