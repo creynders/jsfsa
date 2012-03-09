@@ -113,7 +113,7 @@
      * @static
      * @type {String[]}
      */
-    fsa.State._configMembers = [ 'name', 'isInitial', 'guards', 'actions', 'parent', 'transitions' ];
+    fsa.State._configMembers = [ 'isInitial', 'guards', 'actions', 'parent', 'transitions' ];
 
     fsa.State.prototype = {
 
