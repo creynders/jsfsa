@@ -19,6 +19,68 @@
      */
     var fsa = {};
 
+    fsa._Dispatcher = function(){
+        this._listeners = {};
+    };
+
+    fsa._Dispatcher.prototype = {
+        addListener : function( eventName, handler ){
+            if( ! this._listeners.hasOwnProperty( eventName ) ){
+                this._listeners[ eventName ] = [];
+            }
+            this._listeners[ eventName ].push( handler );
+
+            return this;
+        },
+
+        addListeners : function( eventName, handlers ){
+            if( ! this._listeners.hasOwnProperty( eventName ) ){
+                this._listeners[ eventName ] = [];
+            }
+            this._listeners[ eventName ].concat( handlers );
+
+            return this;
+        },
+        hasListener : function( eventName, handler ){
+            return ( this._listeners.hasOwnProperty( eventName ) && this._listeners[ eventName ].indexOf( handler >= 0 ) );
+        },
+        removeListener : function( eventName, handler ){
+            if( this._listeners.hasOwnProperty( eventName ) ){
+                var index = this._listeners[ eventName ].indexOf( handler );
+                if( index >= 0 ){
+                    this._listeners[ eventName ].splice( index, 1 );
+                }
+            }
+            return this;
+        },
+
+        dispatch : function( e ){
+            var eventName = e.type;
+            if( this._listeners.hasOwnProperty( eventName ) ){
+                var args = Array.prototype.slice.call( arguments );
+                for( var i=0, n=this._listeners[ eventName ].length ; i<n ; i++ ){
+                    var handler = this._listeners[ eventName ][ i ];
+                    handler.apply( this, args );
+                }
+            }
+        },
+
+        dispatchUntilFalseOrFinished : function( e ){
+            var eventName = e.type;
+            if( this._listeners.hasOwnProperty( eventName ) ){
+                var args = Array.prototype.slice.call( arguments );
+                for( var i=0, n=this._listeners[ eventName ].length ; i<n ; i++ ){
+                    var handler = this._listeners[ eventName ][ i ];
+                    if( ! handler.apply( this, args ) ) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+    };
+
     /**
      * @class
      * @constructor
@@ -53,13 +115,13 @@
         * @private
         * @type Object
         */
-        this._actions = {};
+        this._actions = undefined;
 
         /**
         * @private
         * @type Object
         */
-        this._guards = {};
+        this._guards = undefined;
 
         /**
         * @private
@@ -74,18 +136,18 @@
             }
             if( data.guards ){
                 if( data.guards.enter ){
-                    this._addCallbacks( this._guards, 'enter', data.guards.enter );
+                    this._guards = this._addCallbacksList( this._guards, 'enter', data.guards.enter );
                 }
                 if( data.guards.exit ){
-                    this._addCallbacks( this._guards, 'exit', data.guards.exit );
+                    this._guards = this._addCallbacksList( this._guards, 'exit', data.guards.exit );
                 }
             }
             if( data.actions ){
                 if( data.actions.enter ){
-                    this._addCallbacks( this._actions, 'enter', data.actions.enter );
+                    this._actions = this._addCallbacksList( this._actions, 'enter', data.actions.enter );
                 }
                 if( data.actions.exit ){
-                    this._addCallbacks( this._actions, 'exit', data.actions.exit );
+                    this._actions = this._addCallbacksList( this._actions, 'exit', data.actions.exit );
                 }
             }
             if( data.parent ){
@@ -170,13 +232,12 @@
          * @return {fsa.State} the instance of {@link fsa.State} that is acted upon
          */
         addAction : function( eventName, callback ){
-            if( fsa.State._events.indexOf( eventName ) < 0 ){
-                throw new Error( 1060 );
-            }
-            if( ! callback || typeof callback !== "function" ){
-                throw new Error( 1061 );
-            }
-            this._addCallback( this._actions, eventName, callback );
+            this._actions = this._addCallback( this._actions, eventName, callback );
+            return this;
+        },
+
+        addActionsList : function( eventName, callbacks ){
+            this._actions = this._addCallbacksList( this._actions, eventName, callbacks );
             return this;
         },
 
@@ -187,7 +248,7 @@
          * @return {Boolean}
          */
         hasAction : function( eventName, callback ){
-            return this._getCallbackIndex( this._actions, eventName, callback ) >= 0;
+            return this._hasCallback( this._actions, eventName, callback );
         },
 
         /**
@@ -197,7 +258,7 @@
          * @return {fsa.State} the instance of {@link fsa.State} that is acted upon
          */
         removeAction : function( eventName, callback ){
-            this._removeCallback( this._actions, eventName, callback );
+            this._removeCallback( this._actions, eventName, callback);
             return this;
         },
 
@@ -208,13 +269,12 @@
          * @return {fsa.State} the instance of {@link fsa.State} that is acted upon
          */
         addGuard : function( eventName, callback ){
-            if( fsa.State._events.indexOf( eventName ) < 0 ){
-                throw new Error( 1070 );
-            }
-            if( ! callback || typeof callback !== "function" ){
-                throw new Error( 1071 );
-            }
-            this._addCallback( this._guards, eventName, callback );
+            this._guards = this._addCallback( this._guards, eventName, callback );
+            return this;
+        },
+
+        addGuardsList : function( eventName, callbacks ){
+            this._guards = this._addCallbacksList( this._guards, eventName, callbacks );
             return this;
         },
 
@@ -225,7 +285,7 @@
          * @return {Boolean}
          */
         hasGuard : function( eventName, callback ){
-            return this._getCallbackIndex( this._guards, eventName, callback ) >= 0;
+            return this._hasCallback( this._guards, eventName, callback );
         },
 
         /**
@@ -263,107 +323,69 @@
 
         /**
          * @internal
-         * @param {String} eventName
-         * @param {fsa.State} fromState
-         * @param {fsa.State} toState
          */
-        _executeActions : function( eventName, fromState, toState ){
-            if( this._actions.hasOwnProperty( eventName ) ){
-                var payload = {
-                    event : eventName,
-                    from : fromState.name,
-                    to : toState.name
-                };
-                for( var i=0, n=this._actions[ eventName ].length ; i<n ; i++ ){
-                    var callback = this._actions[ eventName ][ i ];
-                    callback.call( this, payload );
-                }
+        _executeActions : function(){
+            if( this._actions ){
+                var args = Array.prototype.slice.call( arguments );
+                return fsa._Dispatcher.prototype.dispatch.apply( this._actions, args );
             }
         },
 
         /**
          * @internal
-         * @param {String} eventName
-         * @param {fsa.State} fromState
-         * @param {fsa.State} toState
-         * @return {Boolean}
          */
-        _executeGuards : function( eventName, fromState, toState ){
-            if( this._guards.hasOwnProperty( eventName ) ){
-                var payload = {
-                    event : eventName,
-                    from : fromState.name,
-                    to : toState.name
-                };
-                for( var i=0, n=this._guards[ eventName ].length ; i<n ; i++ ){
-                    var callback = this._guards[ eventName ][ i ];
-                    if( ! callback.call( this, payload ) ){
-                        return false;
-                    }
-                }
+        _executeGuards : function(){
+            if( this._guards ){
+                var args = Array.prototype.slice.call( arguments );
+                return fsa._Dispatcher.prototype.dispatchUntilFalseOrFinished.apply( this._guards, args );
             }
 
             return true;
         },
 
         /**
-         * @private
-         * @param {Array} callbacksList
+         *
          * @param {String} eventName
          * @param {Function} callback
+         * @return {fsa.State} the instance of {@link fsa.State} that is acted upon
          */
-        _getCallbackIndex : function( callbacksList, eventName, callback ){
-            if( callbacksList && callbacksList.hasOwnProperty( eventName ) ){
-                return callbacksList[ eventName ].indexOf( callback );
+        _addCallback : function( dispatcher, eventName, callback ){
+            if( dispatcher == undefined ){
+                dispatcher = new fsa._Dispatcher();
             }
-
-            return -1;
+            dispatcher.addListener( eventName, callback );
+            return dispatcher;
         },
 
-
-        /**
-         * @private
-         * @param {Function[]} receiver
-         * @param {String} eventName
-         * @param {Function[]|Function} callbacks
-         */
-        _addCallbacks: function( receiver, eventName, callbacks ){
-            if( typeof callbacks === "function" ){
-                this._addCallback( receiver, eventName, callbacks );
-            }else{
-                for( var i=0, n=callbacks.length ; i<n ; i++ ){
-                    this._addCallback( receiver, eventName, callbacks[ i ] );
-                }
+        _addCallbacksList : function( dispatcher, eventName, callbacks ){
+            if( dispatcher == undefined ){
+                dispatcher = new fsa._Dispatcher();
             }
-        },
-
-
-        /**
-         * @private
-         * @param {Function[]} receiver
-         * @param {String} eventName
-         * @param {Function} callback
-         */
-        _addCallback : function( receiver, eventName, callback ){
-            if( ! receiver.hasOwnProperty( eventName ) ) {
-                receiver[ eventName ] = [];
-            }
-            if( receiver[ eventName ].indexOf( callback ) < 0 ) {
-                receiver[ eventName ].push( callback );
-            }
+            dispatcher.addListeners( eventName, callbacks );
+            return dispatcher;
         },
 
         /**
-         * @private
-         * @param {Function[]} callbacksList
+         *
          * @param {String} eventName
          * @param {Function} callback
+         * @return {Boolean}
          */
-        _removeCallback : function( callbacksList, eventName, callback ){
-            var index = this._getCallbackIndex( callbacksList, eventName, callback );
-            if( index >= 0 ) {
-                callbacksList[ eventName ].splice( index, 1 );
+        _hasCallback : function( dispatcher, eventName, callback ){
+            return dispatcher && dispatcher.hasListener( eventName, callback );
+        },
+
+        /**
+         *
+         * @param {String} eventName
+         * @param {Function} callback
+         * @return {fsa.State} the instance of {@link fsa.State} that is acted upon
+         */
+        _removeCallback : function( dispatcher, eventName, callback ){
+            if( dispatcher ){
+                dispatcher.removeListener( eventName, callback );
             }
+            return dispatcher;
         },
 
         /**
@@ -562,7 +584,8 @@
         },
 
         /**
-         *
+         * Accepts any number of arguments after <code>transitionName</code> that will be passed on to the
+         * guards and actions
          * @param {String} transitionName
          * @return {fsa.Automaton} the instance of {@link fsa.Automaton} that is acted upon
          */
@@ -582,17 +605,21 @@
 
                     var newStateBranch = this._getFullBranch( node );
                     var streams = this._getShortestRoute( this._currentBranch, newStateBranch );
-
-                    var args = [ this.getCurrentState(), node.state ];
-                    var proceed = this._applyToEachNode( streams.up,     fsa.State.prototype._executeGuards,    [ 'exit' ].concat( args ), true );
+                    var currentStateName = this.getCurrentState().name;
+                    var newStateName = node.state.name;
+                    var passed = Array.prototype.slice.call( arguments );
+                    passed.shift(); //drop transitionName
+                    var exitArgs = [ { type : 'exit', from : currentStateName, to : newStateName } ].concat( passed );
+                    var enterArgs = [ { type : 'enter', from : currentStateName, to : newStateName } ].concat( passed );
+                    var proceed = this._applyToEachNode( streams.up,     fsa.State.prototype._executeGuards,    exitArgs, true );
                     var initialNodes;
                     if( proceed ){
                         initialNodes = node.getInitialBranch();
-                        proceed = this._applyToEachNode( streams.down.concat( initialNodes ),   fsa.State.prototype._executeGuards,   [ 'enter' ].concat( args ), true );
+                        proceed = this._applyToEachNode( streams.down.concat( initialNodes ),   fsa.State.prototype._executeGuards,   enterArgs, true );
                     }
                     if( proceed ) {
-                        this._applyToEachNode( streams.up,     fsa.State.prototype._executeActions,     [ 'exit' ].concat( args ), false );
-                        this._applyToEachNode( streams.down,   fsa.State.prototype._executeActions,    [ 'enter' ].concat( args ), false );
+                        this._applyToEachNode( streams.up,     fsa.State.prototype._executeActions,    exitArgs, false );
+                        this._applyToEachNode( streams.down,   fsa.State.prototype._executeActions,    enterArgs, false );
                         this._currentBranch = newStateBranch.concat( initialNodes );
                     }
                 }
