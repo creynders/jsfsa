@@ -86,18 +86,6 @@ describe( "fsa.State", function(){
         });
     });
     describe( "#addTransition", function(){
-        it( "should throw an error if required param 'transitionName' is missing", function(){
-            expect( function(){main.addTransition()} ).toThrow( new Error( 1040 ) );
-        });
-        it( "should throw an error if required param 'transitionName' is of wrong type", function(){
-            expect( function(){main.addTransition({})} ).toThrow( new Error( 1040 ) );
-        });
-        it( "should throw an error if required param 'stateName' is missing", function(){
-            expect( function(){main.addTransition('foo')} ).toThrow( new Error( 1041 ) );
-        })
-        it( "should throw an error if required param 'stateName' is of wrong type", function(){
-            expect( function(){main.addTransition('foo',{})} ).toThrow( new Error( 1041 ) );
-        })
         it( "should return the state instance that was acted upon", function(){
             expect( main.addTransition('foo','bar') ).toEqual( main );
         });
@@ -119,18 +107,6 @@ describe( "fsa.State", function(){
     });
 
     describe( '#addAction', function(){
-        it( "should throw an error if required param 'eventName' is missing", function(){
-            expect( function(){main.addAction()} ).toThrow( new Error( 1060 ) );
-        });
-        it( "should throw an error if required param 'eventName' is unrecognized", function(){
-            expect( function(){main.addAction('no event')} ).toThrow( new Error( 1060 ) );
-        });
-        it( "should throw an error if required param 'callback' is missing", function(){
-            expect( function(){main.addAction('enter')} ).toThrow( new Error( 1061 ) );
-        });
-        it( "should throw an error if required param 'callback' of wrong type", function(){
-            expect( function(){main.addAction('enter', {})} ).toThrow( new Error( 1061 ) );
-        });
         it( "should return the state instance that was acted upon", function(){
             expect( main.addAction( 'enter', function(){} ) ).toEqual( main );
         });
@@ -150,18 +126,6 @@ describe( "fsa.State", function(){
     });
 
     describe( '#addGuard', function(){
-        it( "should throw an error if required param 'eventName' is missing", function(){
-            expect( function(){main.addGuard()} ).toThrow( new Error( 1070 ) );
-        });
-        it( "should throw an error if required param 'eventName' is unrecognized", function(){
-            expect( function(){main.addGuard('no event')} ).toThrow( new Error( 1070 ) );
-        });
-        it( "should throw an error if required param 'callback' is missing", function(){
-            expect( function(){main.addGuard('enter')} ).toThrow( new Error( 1071 ) );
-        });
-        it( "should throw an error if required param 'callback' of wrong type", function(){
-            expect( function(){main.addGuard('enter', {})} ).toThrow( new Error( 1071 ) );
-        });
         it( "should return the state instance that was acted upon", function(){
             expect( main.addGuard( 'enter', function(){} ) ).toEqual( main );
         });

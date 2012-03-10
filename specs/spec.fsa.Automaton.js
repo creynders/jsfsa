@@ -50,7 +50,7 @@ describe("fsa.Automaton", function(){
         });
     });
 
-    describe( "in simple usage the automaton", function(){
+    describe( "the automaton", function(){
         beforeEach( function(){
             sm.createState( 'off', { transitions : { 'ignite' : 'on' }, isInitial : true } );
             sm.createState( 'on', { transitions : { 'shutdown' : 'off' } } );
@@ -108,7 +108,10 @@ describe("fsa.Automaton", function(){
         });
         it( "should terminate transition with guards denying entry", function(){
             var orange = sm.getState( 'orange' );
-            orange.addGuard( 'enter', function( ){return false } );
+            var f = function(){
+                return false
+            }
+            orange.addGuard( 'enter', f );
             sm.doTransition( 'next' );
             sm.doTransition( 'next' );
             expect( sm.getCurrentState() ).toEqual( sm.getState( 'green' ) );
@@ -154,21 +157,74 @@ describe("fsa.Automaton", function(){
                     "next" : "on/green"
                 }
             };
-            var fsm = new fsa.Automaton( config );
-            expect( fsm.getCurrentState() ).toEqual( fsm.getState('off/standby' ) );
-            fsm.doTransition( 'powerOn' );
-            expect( fsm.getCurrentState() ).toEqual( fsm.getState('on/green' ) );
-            fsm.doTransition( 'next' );
-            expect( fsm.getCurrentState() ).toEqual( fsm.getState('on/orange' ) );
-            fsm.doTransition( 'fail' );
-            expect( fsm.getCurrentState() ).toEqual( fsm.getState('off/kaput/fixable' ) );
-            fsm.doTransition( 'fixed' );
-            expect( fsm.getCurrentState() ).toEqual( fsm.getState('off/standby' ) );
-            fsm.doTransition( 'powerOn' );
-            expect( fsm.getCurrentState() ).toEqual( fsm.getState('on/green' ) );
-            fsm.doTransition( 'vandalize' );
-            expect( fsm.getCurrentState() ).toEqual( fsm.getState('off/kaput/pertetotale' ) );
-        })
-    })
+            sm.parse( config );
+            expect( sm.getCurrentState() ).toEqual( sm.getState('off/standby' ) );
+            sm.doTransition( 'powerOn' );
+            expect( sm.getCurrentState() ).toEqual( sm.getState('on/green' ) );
+            sm.doTransition( 'next' );
+            expect( sm.getCurrentState() ).toEqual( sm.getState('on/orange' ) );
+            sm.doTransition( 'fail' );
+            expect( sm.getCurrentState() ).toEqual( sm.getState('off/kaput/fixable' ) );
+            sm.doTransition( 'fixed' );
+            expect( sm.getCurrentState() ).toEqual( sm.getState('off/standby' ) );
+            sm.doTransition( 'powerOn' );
+            expect( sm.getCurrentState() ).toEqual( sm.getState('on/green' ) );
+            sm.doTransition( 'vandalize' );
+            expect( sm.getCurrentState() ).toEqual( sm.getState('off/kaput/pertetotale' ) );
+        });
+    });
+
+    //TODO: move to spec.fsa.State
+    describe( "a registered action", function(){
+        var spy;
+        var config = {
+            "green" : { isInitial : true, "next" : "orange" },
+            "orange" : { "next" : "red" },
+            "red" : { "next" : "green" }
+        };
+        beforeEach( function(){
+            spy = jasmine.createSpy( 'actionSpy' );
+            sm.parse( config );
+        });
+
+        it( "should be called upon exit", function(){
+            var green = sm.getState( 'green' );
+            green.addAction( 'exit', spy );
+            sm.doTransition( 'next' );
+            expect( spy ).toHaveBeenCalled()
+        });
+        it( "should be called upon entry", function(){
+            var orange = sm.getState( 'orange' );
+            orange.addAction( 'enter', spy );
+            sm.doTransition( 'next' );
+            expect( spy ).toHaveBeenCalled()
+        });
+        it( "should receive an event object", function(){
+            var orange = sm.getState( 'orange' );
+            orange.addAction( 'enter', spy );
+            sm.doTransition( 'next' );
+            var e = {
+                type : 'enter',
+                from : 'green',
+                to : 'orange'
+            }
+            expect( spy ).toHaveBeenCalledWith( e );
+        });
+        it( "should recieve a passed payload", function(){
+            var orange = sm.getState( 'orange' );
+            orange.addAction( 'enter', spy );
+            var payload = {
+                foo : "bar"
+            }
+            sm.doTransition( 'next', payload );
+            var e = {
+                type : 'enter',
+                from : 'green',
+                to : 'orange'
+            };
+            expect( spy ).toHaveBeenCalledWith( e, payload );
+
+        });
+    });
 
 });
