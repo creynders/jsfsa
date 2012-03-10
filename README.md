@@ -79,6 +79,7 @@ console.log( fsm.getCurrentState().name );//outputs 'on'
 ```
 
 * per-state strict-syntax object config
+
 ```
 var offState = new State( 'off', {
 	transitions : {
@@ -100,6 +101,7 @@ console.log( fsm.getCurrentState().name );//outputs 'on'
 ```
 
 * per-state loose-syntax object config
+
 ```
 var offState = new State( 'off', {
 	'ignite' : 'on'
@@ -117,6 +119,7 @@ console.log( fsm.getCurrentState().name );//outputs 'on'
 ```
 
 * fsm loose-syntax object config
+
 ```
 var config = {
 	'off' : {
