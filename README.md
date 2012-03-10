@@ -214,6 +214,9 @@ var config = {
 		actions : { 
 			exit : function(){
 				fsm.pause(); //sets the fsm in a waiting state
+				setTimeout( 500, function(){
+					fsm.proceed(); //automaton proceeds transitioning to "orange" state
+				} );
 			}
 		},
 		"next" : "orange" 
@@ -223,9 +226,5 @@ var config = {
 };
 fsm = new fsa.Automaton( config )
 	.doTransition( 'next' )
-; //automaton is waiting
-
-setTimeout( 500, function(){
-	fsm.proceed(); //automaton proceeds transitioning to "orange" state
-} );
+;
 ```
