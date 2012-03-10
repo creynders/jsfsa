@@ -225,18 +225,15 @@ describe("fsa.Automaton", function(){
 
         });
         it( "should be able to 'halt' the fsm", function(){
-            var listener = {
-                callback : function(){
-                    return false
-                }
-            };
+            callback = function(){
+                sm.pause();
+            }
             runs( function(){
                 var green = sm.getState( 'green' );
-                green.addAction( 'exit', listener.callback );
+                green.addAction( 'exit', callback );
             });
 
             runs( function(){
-                var fsm = sm;
                 sm.doTransition( 'next' );
                 expect( sm.isTransitioning() ).toBeTruthy();
             });

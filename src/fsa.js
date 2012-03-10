@@ -56,19 +56,13 @@
 
         dispatch : function( e ){
             var eventName = e.type;
-            var result = true;
             if( this._listeners.hasOwnProperty( eventName ) ){
                 var args = Array.prototype.slice.call( arguments );
                 for( var i=0, n=this._listeners[ eventName ].length ; i<n ; i++ ){
                     var handler = this._listeners[ eventName ][ i ];
-                    var r = handler.apply( this, args );
-                    if( typeof r === "boolean" ){
-                        result = result && r;
-                    }
+                    handler.apply( this, args );
                 }
             }
-
-            return result;
         },
 
         dispatchUntilFalseOrFinished : function( e ){
@@ -116,6 +110,11 @@
         * @type Boolean
         */
         this.isInitial = false;
+
+        /**
+         * @type Boolean
+         */
+        this._isTransitioning = false;
 
         /**
         * @private
@@ -182,6 +181,14 @@
     fsa.State._configMembers = [ 'isInitial', 'guards', 'actions', 'parent', 'transitions' ];
 
     fsa.State.prototype = {
+
+        isTransitioning : function(){
+            return this._isTransitioning;
+        },
+
+        halt : function(){
+            this._isTransitioning = true;
+        },
 
         /**
          *
@@ -332,7 +339,7 @@
         _executeActions : function(){
             if( this._actions ){
                 var args = Array.prototype.slice.call( arguments );
-                return fsa._Dispatcher.prototype.dispatch.apply( this._actions, args );
+                fsa._Dispatcher.prototype.dispatch.apply( this._actions, args );
             }
         },
 
@@ -483,7 +490,7 @@
         this._nodes = {};
         this._rootNode = new fsa._Node( new fsa.State( '*' ), true );
         this._currentBranch = [ this._rootNode ];
-        this._isTransitioning = false;
+        this._transitioning = 'ready';
         this._actionsQueue = [];
         this._newBranch = undefined;
         if( data ){
@@ -500,7 +507,7 @@
         FQN : 'Automaton',
 
         isTransitioning : function(){
-            return this._isTransitioning;
+            return this._transitioning !== 'ready';
         },
 
         /**
@@ -615,7 +622,7 @@
                 if( node ){
                     //TODO: determine what to do if node not found?? Currently failing silenlty
 
-                    this._isTransitioning = true;
+                    this._transitioning = 'running';
                     var initialNodes = node.getInitialBranch();
                     this._newBranch = this._getFullBranch( node ).concat( initialNodes );
                     var streams = this._getShortestRoute( this._currentBranch, this._newBranch );
@@ -651,18 +658,23 @@
         },
 
         proceed : function(){
-            if( this._isTransitioning ){
+            if( this.isTransitioning() ){
                 if( this._actionsQueue.length > 0 ){
+                    this._transitioning = 'running';
                     var o = this._actionsQueue.shift();
                     var state = o.node.state;
-                    var result = fsa.State.prototype._executeActions.apply( state, o.args );
-                    if( result !== false ){
+                    fsa.State.prototype._executeActions.apply( state, o.args );
+                    if( this._transitioning !== "paused" ){
                         this.proceed();
                     }
                 }else{
                     this._finishTransition();
                 }
             }
+        },
+
+        pause : function(){
+            this._transitioning = 'paused';
         },
 
         /**
@@ -682,7 +694,7 @@
         },
 
         _finishTransition : function(){
-            this._isTransitioning = false;
+            this._transitioning = 'ready';
             this._currentBranch = this._newBranch;
             this._newBranch = undefined;
         },
