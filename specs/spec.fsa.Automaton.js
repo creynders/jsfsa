@@ -50,16 +50,16 @@ describe("fsa.Automaton", function(){
         });
     });
 
-    describe( "the automaton", function(){
+    describe( "the automaton's basic operation", function(){
         beforeEach( function(){
             sm.createState( 'off', { transitions : { 'ignite' : 'on' }, isInitial : true } );
             sm.createState( 'on', { transitions : { 'shutdown' : 'off' } } );
         });
-        it( "should be able to transition to another state", function(){
+        it( "should allow to transition to another state", function(){
             sm.doTransition( 'ignite' );
             expect( sm.getCurrentState() ).toEqual( sm.getState( 'on' ) );
         } );
-        it( "should be able to transition back", function(){
+        it( "should allow to transition back", function(){
             sm.doTransition( 'ignite' );
             sm.doTransition( 'shutdown' );
             expect( sm.getCurrentState() ).toEqual( sm.getState( 'off' ) );
@@ -69,12 +69,12 @@ describe("fsa.Automaton", function(){
             sm.doTransition( 'ignite' );
             expect( sm.getCurrentState() ).toEqual( sm.getState( 'on' ) );
         });
-        it( "should fail silently if transition is not found", function(){
+        it( "should fail silently if a transition is not found", function(){
             sm.doTransition( 'ignite' );
             sm.doTransition( 'whatever' );
             expect( sm.getCurrentState() ).toEqual( sm.getState( 'on' ) );
         });
-        it( "should fail silently if target is not found", function(){
+        it( "should fail silently if a transition target is not found", function(){
             sm.doTransition( 'ignite' );
             sm.removeState( 'off' );
             sm.doTransition( 'shutdown' );
@@ -92,7 +92,7 @@ describe("fsa.Automaton", function(){
             expect( sm.getCurrentState() ).toEqual( sm.getRootState() );
         } );
     });
-    describe( "the automaton", function(){
+    describe( "the automaton's non-binary, single-level state operation", function(){
         beforeEach( function(){
             sm.createState( 'green',    { transitions : { 'next' : 'orange' }, isInitial : true } );
             sm.createState( 'orange',   { transitions : { 'next' : 'red'    } } );
@@ -125,8 +125,8 @@ describe("fsa.Automaton", function(){
         });
 
     });
-    describe( "the automaton", function(){
-        it( "should be configurable through an object", function(){
+    describe( "the automaton's configuration", function(){
+        it( "should be possible with an object", function(){
             var config = {
                 "off" : {
                     isInitial : true,
@@ -224,7 +224,7 @@ describe("fsa.Automaton", function(){
             expect( spy ).toHaveBeenCalledWith( e, payload );
 
         });
-        it( "should be able to 'halt' the fsm", function(){
+        it( "should be able to pause and restart the fsm", function(){
             callback = function(){
                 sm.pause();
             }
