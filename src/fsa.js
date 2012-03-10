@@ -376,6 +376,9 @@
             if( dispatcher === undefined ){
                 dispatcher = new fsa._Dispatcher();
             }
+            if( typeof callbacks === "function" ){
+                callbacks = [ callbacks ];
+            }
             dispatcher.addListeners( eventName, callbacks );
             return dispatcher;
         },
