@@ -657,6 +657,9 @@
             }
         },
 
+        /**
+         *
+         */
         proceed : function(){
             if( this.isTransitioning() ){
                 if( this._actionsQueue.length > 0 ){
@@ -673,8 +676,13 @@
             }
         },
 
+        /**
+         *
+         */
         pause : function(){
-            this._transitioning = 'paused';
+            if( this._transitioning === 'running' ){
+                this._transitioning = 'paused';
+            }
         },
 
         /**
