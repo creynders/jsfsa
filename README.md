@@ -54,3 +54,25 @@ FSA has no dependencies on other frameworks.
 * Docs: the API documentation needs to be completed.
 
 * Demo: a working demo should be created.
+
+## EXAMPLES
+
+### BASIC USAGE
+
+* classy config
+
+```
+var offState = new State( 'off' )
+	.addTransition( 'ignite', 'on' )
+	.isInitial = true
+;
+var onState = new State( 'on' )
+	.addTransition( 'shutdown', 'off' )
+;
+
+var fsm = new fsa.Automaton()
+	.doTransition( 'ignite' )
+;
+console.log( fsm.getCurrentState().name );//outputs 'on'
+```
+	
