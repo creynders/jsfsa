@@ -625,7 +625,6 @@
                 if( node ){
                     //TODO: determine what to do if node not found?? Currently failing silenlty
 
-                    this._transitioning = 'running';
                     var initialNodes = node.getInitialBranch();
                     this._newBranch = this._getFullBranch( node ).concat( initialNodes );
                     var streams = this._getShortestRoute( this._currentBranch, this._newBranch );
@@ -635,14 +634,18 @@
                     payload.shift(); //drop transitionName
                     var exitArgs = [ { type : 'exit', from : currentStateName, to : newStateName } ].concat( payload );
                     var enterArgs = [ { type : 'enter', from : currentStateName, to : newStateName } ].concat( payload );
+                    this._transitioning = 'guarding';
                     var proceed = this._applyToEachNode( streams.up,     fsa.State.prototype._executeGuards,    exitArgs, true );
                     if( proceed ){
                         proceed = this._applyToEachNode( streams.down,   fsa.State.prototype._executeGuards,   enterArgs, true );
                     }
                     if( proceed ) {
+                        this._transitioning = 'running';
                         this._addToActionsQueue( streams.up, exitArgs );
                         this._addToActionsQueue( streams.down, enterArgs );
                         this.proceed();
+                    }else{
+                        this._transitioning = 'ready';
                     }
                 }
             }
@@ -664,7 +667,7 @@
          *
          */
         proceed : function(){
-            if( this.isTransitioning() ){
+            if( this._transitioning !== 'ready' && this._transitioning !== 'guarding' ){
                 if( this._actionsQueue.length > 0 ){
                     this._transitioning = 'running';
                     var o = this._actionsQueue.shift();
