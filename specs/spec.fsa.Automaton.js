@@ -227,7 +227,8 @@ describe("fsa.Automaton", function(){
         it( "should be able to pause and restart the fsm", function(){
             callback = function(){
                 sm.pause();
-            }
+            };
+
             runs( function(){
                 var green = sm.getState( 'green' );
                 green.addAction( 'exit', callback );
