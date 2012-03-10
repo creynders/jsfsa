@@ -56,13 +56,19 @@
 
         dispatch : function( e ){
             var eventName = e.type;
+            var result = true;
             if( this._listeners.hasOwnProperty( eventName ) ){
                 var args = Array.prototype.slice.call( arguments );
                 for( var i=0, n=this._listeners[ eventName ].length ; i<n ; i++ ){
                     var handler = this._listeners[ eventName ][ i ];
-                    handler.apply( this, args );
+                    var r = handler.apply( this, args );
+                    if( typeof r === "boolean" ){
+                        result = result && r;
+                    }
                 }
             }
+
+            return result;
         },
 
         dispatchUntilFalseOrFinished : function( e ){
@@ -176,7 +182,6 @@
     fsa.State._configMembers = [ 'isInitial', 'guards', 'actions', 'parent', 'transitions' ];
 
     fsa.State.prototype = {
-
 
         /**
          *
@@ -478,6 +483,9 @@
         this._nodes = {};
         this._rootNode = new fsa._Node( new fsa.State( '*' ), true );
         this._currentBranch = [ this._rootNode ];
+        this._isTransitioning = false;
+        this._actionsQueue = [];
+        this._newBranch = undefined;
         if( data ){
             this.parse( data );
         }
@@ -490,6 +498,10 @@
          * @default 'Automaton'
          */
         FQN : 'Automaton',
+
+        isTransitioning : function(){
+            return this._isTransitioning;
+        },
 
         /**
          * @return {fsa.State}
@@ -603,24 +615,24 @@
                 if( node ){
                     //TODO: determine what to do if node not found?? Currently failing silenlty
 
-                    var newStateBranch = this._getFullBranch( node );
-                    var streams = this._getShortestRoute( this._currentBranch, newStateBranch );
+                    this._isTransitioning = true;
+                    var initialNodes = node.getInitialBranch();
+                    this._newBranch = this._getFullBranch( node ).concat( initialNodes );
+                    var streams = this._getShortestRoute( this._currentBranch, this._newBranch );
                     var currentStateName = this.getCurrentState().name;
                     var newStateName = node.state.name;
-                    var passed = Array.prototype.slice.call( arguments );
-                    passed.shift(); //drop transitionName
-                    var exitArgs = [ { type : 'exit', from : currentStateName, to : newStateName } ].concat( passed );
-                    var enterArgs = [ { type : 'enter', from : currentStateName, to : newStateName } ].concat( passed );
+                    var payload = Array.prototype.slice.call( arguments );
+                    payload.shift(); //drop transitionName
+                    var exitArgs = [ { type : 'exit', from : currentStateName, to : newStateName } ].concat( payload );
+                    var enterArgs = [ { type : 'enter', from : currentStateName, to : newStateName } ].concat( payload );
                     var proceed = this._applyToEachNode( streams.up,     fsa.State.prototype._executeGuards,    exitArgs, true );
-                    var initialNodes;
                     if( proceed ){
-                        initialNodes = node.getInitialBranch();
-                        proceed = this._applyToEachNode( streams.down.concat( initialNodes ),   fsa.State.prototype._executeGuards,   enterArgs, true );
+                        proceed = this._applyToEachNode( streams.down,   fsa.State.prototype._executeGuards,   enterArgs, true );
                     }
                     if( proceed ) {
-                        this._applyToEachNode( streams.up,     fsa.State.prototype._executeActions,    exitArgs, false );
-                        this._applyToEachNode( streams.down,   fsa.State.prototype._executeActions,    enterArgs, false );
-                        this._currentBranch = newStateBranch.concat( initialNodes );
+                        this._addToActionsQueue( streams.up, exitArgs );
+                        this._addToActionsQueue( streams.down, enterArgs );
+                        this.proceed();
                     }
                 }
             }
@@ -638,6 +650,21 @@
             }
         },
 
+        proceed : function(){
+            if( this._isTransitioning ){
+                if( this._actionsQueue.length > 0 ){
+                    var o = this._actionsQueue.shift();
+                    var state = o.node.state;
+                    var result = fsa.State.prototype._executeActions.apply( state, o.args );
+                    if( result !== false ){
+                        this.proceed();
+                    }
+                }else{
+                    this._finishTransition();
+                }
+            }
+        },
+
         /**
          *
          */
@@ -646,6 +673,18 @@
             this._rootNode = undefined;
             this._nodes = undefined;
             this._currentStateBranch = undefined;
+        },
+
+        _addToActionsQueue: function( nodesList, args ){
+            for( var i=0, n=nodesList.length ; i<n ; i++ ){
+                this._actionsQueue.push( { node : nodesList[ i ], args : args } );
+            }
+        },
+
+        _finishTransition : function(){
+            this._isTransitioning = false;
+            this._currentBranch = this._newBranch;
+            this._newBranch = undefined;
         },
 
         /**

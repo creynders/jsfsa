@@ -174,7 +174,6 @@ describe("fsa.Automaton", function(){
         });
     });
 
-    //TODO: move to spec.fsa.State
     describe( "a registered action", function(){
         var spy;
         var config = {
@@ -225,6 +224,31 @@ describe("fsa.Automaton", function(){
             expect( spy ).toHaveBeenCalledWith( e, payload );
 
         });
+        it( "should be able to 'halt' the fsm", function(){
+            var listener = {
+                callback : function(){
+                    return false
+                }
+            };
+            runs( function(){
+                var green = sm.getState( 'green' );
+                green.addAction( 'exit', listener.callback );
+            });
+
+            runs( function(){
+                var fsm = sm;
+                sm.doTransition( 'next' );
+                expect( sm.isTransitioning() ).toBeTruthy();
+            });
+
+            waits( 500 );
+
+            runs( function(){
+                expect( sm.isTransitioning() ).toBeTruthy();
+                sm.proceed();
+                expect( sm.isTransitioning() ).toBeFalsy();
+            });
+        } );
     });
 
 });
