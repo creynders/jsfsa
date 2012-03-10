@@ -265,7 +265,6 @@ var config = {
 };
 ```
 
-
 ### ASYNCHRONOUS STATE TRANSITIONS
 
 * the FSA can be commanded to pause and resume transitioning to allow for asynchronous state transitions
@@ -290,5 +289,29 @@ var config = {
 };
 fsm = new fsa.Automaton( config )
 	.doTransition( 'next' )
+;
+```
+
+### PAYLOAD PASSING
+
+* payloads passed to the ```doTransition``` method are automatically passed to all guards and actions
+
+```
+var config = {
+	'off' : {
+		'ignite' : 'on'
+		isInitial : true,
+		actions : {
+			exit : function( e, payload ){
+				console.log( payload ); //outputs 'foo'
+			}
+		}
+	},
+	'on' : {
+		'shutdown' : 'off'
+	}
+};
+var fsm = new fsa.Automaton( config )
+	.doTransition( 'ignite', 'foo' )
 ;
 ```
