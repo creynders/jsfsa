@@ -1,3 +1,6 @@
+/*jshint laxbreak:true, laxcomma:true */
+
+
 /**
  * @author Camille Reynders
  * @version 0.1
@@ -362,7 +365,7 @@
          * @return {fsa.State} the instance of {@link fsa.State} that is acted upon
          */
         _addCallback : function( dispatcher, eventName, callback ){
-            if( dispatcher == undefined ){
+            if( dispatcher === undefined ){
                 dispatcher = new fsa._Dispatcher();
             }
             dispatcher.addListener( eventName, callback );
@@ -370,7 +373,7 @@
         },
 
         _addCallbacksList : function( dispatcher, eventName, callbacks ){
-            if( dispatcher == undefined ){
+            if( dispatcher === undefined ){
                 dispatcher = new fsa._Dispatcher();
             }
             dispatcher.addListeners( eventName, callbacks );
@@ -754,7 +757,7 @@
          * @param {Boolean} [allowInterrupt=false]
          */
         _applyToEachNode : function( nodesList, callback, args, allowInterrupt ){
-            if( allowInterrupt == undefined ){
+            if( allowInterrupt === undefined ){
                 allowInterrupt = false;
             }
             var proceed = true;
