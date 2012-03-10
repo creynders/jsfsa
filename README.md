@@ -138,17 +138,18 @@ console.log( fsm.getCurrentState().name );//outputs 'on'
 
 ### GUARDS, ACTIONS and NESTED STATES
 
-* you can config nesting by defining a full path in the state's name
 * actions are executed upon entrance or exit of a state, they are non-blocking
 * guards control entries and exits of states, they need to return a true to continue transition
 or falsy to block it.
 * execution order:
-** exit guards
-** entry guards
-** exit actions
-** entry actions
+1. exit guards
+1. entry guards
+1. exit actions
+1. entry actions
 
 a falsy returning guard will prohibit further execution of guards and actions down the line
+
+* you can config nesting by defining a full path in the state's name
 
 ```
 var config = {
@@ -201,6 +202,69 @@ var config = {
 	}
 };
 ```
+
+* If prefer not to have the hierarchy reflected in the state names, you can use the parent property
+to define the parent state
+
+```
+var config = {
+	"off" : {
+		isInitial : true,
+		"powerOn" : "on"
+	},
+	"standby" : {
+		parent : "off"
+		isInitial : true
+	},
+	"kaput" : {
+		parent : "off",
+		actions : {
+			enter : function(){
+			 	//executed when this state is entered
+				console.error( "damn thing's broken" );
+			},
+			exit : function(){
+				//executed when this state is left
+				console.log( "this fine piece of machinery's working again" );
+			}
+		}
+	},
+	"fixable" :{
+		parent : "kaput",
+		isInitial : true,
+		"fixed" : "standby"
+	},
+	"pertetotale":{
+		parent : "kaput",
+		guards : {
+			exit : function(){
+				//executed when the fsm is determining whether it's allowed to transition state
+				console.log( "it's no use, just throw it away!" );
+				return false; //prohibits further transitioning
+			}
+		}
+	},
+	"on" : {
+		"powerOff" : "off",
+		"fail" : "kaput",
+		"vandalize" : "pertetotale"
+	},
+	"green" : {
+		parent : "on",
+		isInitial : true,
+		"next" : "orange"
+	},
+	"orange" : {
+		parent : "on",
+		"next" : "red"
+	},
+	"red" : {
+		parent : "on"
+		"next" : "green"
+	}
+};
+```
+
 
 ### ASYNCHRONOUS STATE TRANSITIONS
 
