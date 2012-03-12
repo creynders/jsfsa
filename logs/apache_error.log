@@ -1,5 +1,0 @@
-[Mon Mar 12 14:41:21 2012] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /Users/creynder/Dropbox/Work/Projects/CREY - JS statemachine/dev/
-[Mon Mar 12 14:42:13 2012] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /Users/creynder/Dropbox/Work/Projects/CREY - JS statemachine/dev/
-[Mon Mar 12 14:42:38 2012] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /Users/creynder/Dropbox/Work/Projects/CREY - JS statemachine/dev/
-[Mon Mar 12 14:43:19 2012] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /Users/creynder/Dropbox/Work/Projects/CREY - JS statemachine/dev/
-[Mon Mar 12 14:43:45 2012] [error] [client 127.0.0.1] script '/Users/creynder/Dropbox/Work/Projects/CREY - JS statemachine/dev/index.php' not found or unable to stat
