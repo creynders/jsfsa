@@ -21,32 +21,30 @@
      */
     var fsa = {};
 
-    fsa._Dispatcher = function(){
-        this._listeners = {};
-    };
-
-    fsa._Dispatcher.prototype = {
-        addListener : function( eventName, handler ){
+    var DispatcherMixin = function(){
+        this.addListener = function( eventName, handler ){
             if( ! this._listeners.hasOwnProperty( eventName ) ){
                 this._listeners[ eventName ] = [];
             }
             this._listeners[ eventName ].push( handler );
 
             return this;
-        },
+        };
 
-        addListeners : function( eventName, handlers ){
+        this.addListeners = function( eventName, handlers ){
             if( ! this._listeners.hasOwnProperty( eventName ) ){
                 this._listeners[ eventName ] = [];
             }
             this._listeners[ eventName ].concat( handlers );
 
             return this;
-        },
-        hasListener : function( eventName, handler ){
+        };
+
+        this.hasListener = function( eventName, handler ){
             return ( this._listeners.hasOwnProperty( eventName ) && this._listeners[ eventName ].indexOf( handler >= 0 ) );
-        },
-        removeListener : function( eventName, handler ){
+        };
+
+        this.removeListener = function( eventName, handler ){
             if( this._listeners.hasOwnProperty( eventName ) ){
                 var index = this._listeners[ eventName ].indexOf( handler );
                 if( index >= 0 ){
@@ -54,34 +52,21 @@
                 }
             }
             return this;
-        },
+        };
 
-        dispatch : function( e ){
+        this.dispatch = function( e ){
             var eventName = e.type;
+            var result = true;
             if( this._listeners.hasOwnProperty( eventName ) ){
                 var args = Array.prototype.slice.call( arguments );
                 for( var i=0, n=this._listeners[ eventName ].length ; i<n ; i++ ){
                     var handler = this._listeners[ eventName ][ i ];
-                    handler.apply( this, args );
+                    result = handler.apply( this, args ) && result;
                 }
             }
-        },
-
-        dispatchUntilFalseOrFinished : function( e ){
-            var eventName = e.type;
-            if( this._listeners.hasOwnProperty( eventName ) ){
-                var args = Array.prototype.slice.call( arguments );
-                for( var i=0, n=this._listeners[ eventName ].length ; i<n ; i++ ){
-                    var handler = this._listeners[ eventName ][ i ];
-                    if( ! handler.apply( this, args ) ) {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
-    };
+            return result;
+        };
+    }
 
     /**
      * @class
@@ -120,15 +105,9 @@
 
         /**
         * @private
-        * @type Object
+        * @type fsa._Dispatcher
         */
-        this._actions = undefined;
-
-        /**
-        * @private
-        * @type Object
-        */
-        this._guards = undefined;
+        this._guardian = undefined;
 
         /**
         * @private
@@ -143,19 +122,14 @@
             }
             if( data.guards ){
                 if( data.guards.enter ){
-                    this._guards = this._addCallbacksList( this._guards, 'enter', data.guards.enter );
+                    this.addGuards( 'enter', data.guards.enter );
                 }
                 if( data.guards.exit ){
-                    this._guards = this._addCallbacksList( this._guards, 'exit', data.guards.exit );
+                    this.addGuards('exit', data.guards.exit );
                 }
             }
-            if( data.actions ){
-                if( data.actions.enter ){
-                    this._actions = this._addCallbacksList( this._actions, 'enter', data.actions.enter );
-                }
-                if( data.actions.exit ){
-                    this._actions = this._addCallbacksList( this._actions, 'exit', data.actions.exit );
-                }
+            for( var eventName in data.listeners ){
+                this.addListeners( eventName, data.listeners[ eventName ] );
             }
             if( data.parent ){
                 this.parent = data.parent;
@@ -173,24 +147,9 @@
      * @static
      * @type {String[]}
      */
-    fsa.State._events = [ 'enter', 'exit' ];
-
-    /**
-     * @private
-     * @static
-     * @type {String[]}
-     */
     fsa.State._configMembers = [ 'isInitial', 'guards', 'actions', 'parent', 'transitions' ];
 
     fsa.State.prototype = {
-
-        isTransitioning : function(){
-            return this._isTransitioning;
-        },
-
-        halt : function(){
-            this._isTransitioning = true;
-        },
 
         /**
          *
@@ -245,50 +204,18 @@
          * @param {Function} callback
          * @return {fsa.State} the instance of {@link fsa.State} that is acted upon
          */
-        addAction : function( eventName, callback ){
-            this._actions = this._addCallback( this._actions, eventName, callback );
+        addGuard : function( eventName, guard ){
+            this._getGuardian().addListener( eventName, guard );
             return this;
         },
 
-        addActionsList : function( eventName, callbacks ){
-            this._actions = this._addCallbacksList( this._actions, eventName, callbacks );
-            return this;
-        },
-
-        /**
-         *
-         * @param {String} eventName
-         * @param {Function} callback
-         * @return {Boolean}
-         */
-        hasAction : function( eventName, callback ){
-            return this._hasCallback( this._actions, eventName, callback );
-        },
-
-        /**
-         *
-         * @param {String} eventName
-         * @param {Function} callback
-         * @return {fsa.State} the instance of {@link fsa.State} that is acted upon
-         */
-        removeAction : function( eventName, callback ){
-            this._removeCallback( this._actions, eventName, callback);
-            return this;
-        },
-
-        /**
-         *
-         * @param {String} eventName
-         * @param {Function} callback
-         * @return {fsa.State} the instance of {@link fsa.State} that is acted upon
-         */
-        addGuard : function( eventName, callback ){
-            this._guards = this._addCallback( this._guards, eventName, callback );
-            return this;
-        },
-
-        addGuardsList : function( eventName, callbacks ){
-            this._guards = this._addCallbacksList( this._guards, eventName, callbacks );
+        addGuards : function( eventName, guards ){
+            var g = this._getGuardian();
+            if( typeof guards === "function" ){
+                g.addListener( eventName, guards );
+            }else{
+                g.addListeners( eventName, guards );
+            }
             return this;
         },
 
@@ -298,8 +225,8 @@
          * @param {Function} callback
          * @return {Boolean}
          */
-        hasGuard : function( eventName, callback ){
-            return this._hasCallback( this._guards, eventName, callback );
+        hasGuard : function( eventName, guard ){
+            return this._guardian && this._guardian.hasListener( eventName, guard );
         },
 
         /**
@@ -308,8 +235,10 @@
          * @param {Function} callback
          * @return {fsa.State} the instance of {@link fsa.State} that is acted upon
          */
-        removeGuard : function( eventName, callback ){
-            this._removeCallback( this._guards, eventName, callback );
+        removeGuard : function( eventName, guard ){
+            if( this._guardian ){
+                this._guardian.removeListener( eventName, guard );
+            }
             return this;
         },
 
@@ -318,13 +247,19 @@
          * @return {fsa.State} the instance of {@link fsa.State} that is acted upon
          */
         destroy : function(){
-            this._actions = undefined;
-            this._guards = undefined;
+            this._guardian = undefined;
             this._parent = undefined;
             this._transitions = undefined;
             this.name = undefined;
 
             return this;
+        },
+
+        _getGuardian : function(){
+            if( this._guardian === undefined ){
+                this._guardian = new fsa._Dispatcher();
+            }
+            return this._guardian;
         },
 
         _parseName : function( name ){
@@ -337,72 +272,17 @@
 
         /**
          * @internal
+         * @param {Array} args
          */
-        _executeActions : function(){
-            if( this._actions ){
-                var args = Array.prototype.slice.call( arguments );
-                fsa._Dispatcher.prototype.dispatch.apply( this._actions, args );
+        _executeGuards : function( args ){
+            var result = true;
+            if( this._guardian ){
+                result = this._guardian.dispatch.apply( this._guardian, args );
             }
-        },
+            //TODO: determine whether this should be inside the conditional block
+            this.dispatch.apply( this, args );
 
-        /**
-         * @internal
-         */
-        _executeGuards : function(){
-            if( this._guards ){
-                var args = Array.prototype.slice.call( arguments );
-                return fsa._Dispatcher.prototype.dispatchUntilFalseOrFinished.apply( this._guards, args );
-            }
-
-            return true;
-        },
-
-        /**
-         *
-         * @param {String} eventName
-         * @param {Function} callback
-         * @return {fsa.State} the instance of {@link fsa.State} that is acted upon
-         */
-        _addCallback : function( dispatcher, eventName, callback ){
-            if( dispatcher === undefined ){
-                dispatcher = new fsa._Dispatcher();
-            }
-            dispatcher.addListener( eventName, callback );
-            return dispatcher;
-        },
-
-        _addCallbacksList : function( dispatcher, eventName, callbacks ){
-            if( dispatcher === undefined ){
-                dispatcher = new fsa._Dispatcher();
-            }
-            if( typeof callbacks === "function" ){
-                callbacks = [ callbacks ];
-            }
-            dispatcher.addListeners( eventName, callbacks );
-            return dispatcher;
-        },
-
-        /**
-         *
-         * @param {String} eventName
-         * @param {Function} callback
-         * @return {Boolean}
-         */
-        _hasCallback : function( dispatcher, eventName, callback ){
-            return dispatcher && dispatcher.hasListener( eventName, callback );
-        },
-
-        /**
-         *
-         * @param {String} eventName
-         * @param {Function} callback
-         * @return {fsa.State} the instance of {@link fsa.State} that is acted upon
-         */
-        _removeCallback : function( dispatcher, eventName, callback ){
-            if( dispatcher ){
-                dispatcher.removeListener( eventName, callback );
-            }
-            return dispatcher;
+            return result;
         },
 
         /**
@@ -419,18 +299,28 @@
                     this.addTransition( transitionName, data[ transitionName ] );
                 }
             }
+        },
+
+        /**
+         * @private
+         * @param {Array} args
+         */
+        _executeAction : function( args ){
+            this.dispatch.apply( this, args );
         }
 
     };
 
-    fsa._Node = function( state ){
+    DispatcherMixin.call( fsa.State.prototype );
+
+    var Node = function( state ){
         this.state = state;
         this.parent = undefined;
         this.children = undefined;
         this.initialChild = undefined;
     };
 
-    fsa._Node.prototype = {
+    Node.prototype = {
         addChild : function( node ){
             if( ! this.children ) {
                 this.children = {};
@@ -475,10 +365,10 @@
      */
     fsa.Automaton = function( data ){
         this._nodes = {};
-        this._rootNode = new fsa._Node( new fsa.State( '*' ), true );
+        this._rootNode = new Node( new fsa.State( '*' ), true );
         this._currentBranch = [ this._rootNode ];
-        this._transitioning = 'ready';
-        this._actionsQueue = [];
+        this._internalState = 'ready';
+        this._queue = [];
         this._newBranch = undefined;
         if( data ){
             this.parse( data );
@@ -492,10 +382,6 @@
          * @default 'Automaton'
          */
         FQN : 'Automaton',
-
-        isTransitioning : function(){
-            return this._transitioning !== 'ready';
-        },
 
         /**
          * @return {fsa.State}
@@ -531,7 +417,7 @@
          */
         addState : function( state ){
             if( ! this.hasState( state.name ) ){
-                var node = new fsa._Node( state );
+                var node = new Node( state );
                 var parentNode = ( state.parent )
                     ? this._nodes[ state.parent ]
                     : this._rootNode
@@ -597,39 +483,48 @@
          */
         doTransition : function( transitionName ){
             var runner;
+            var found = false;
             for( var i=this._currentBranch.length -1, n = 0  ; i>=n ; i-- ){
                 runner = this._currentBranch[ i ].state;
                 if( runner.hasTransition( transitionName ) ){
+                    found = true;
                     break;
                 }
             }
-            if( i>=0 ){
+            if( found ){
                 //transition found somewhere in the _currentStateBranch
                 var node = this._nodes[ runner.getTransition( transitionName ) ];
                 if( node ){
                     //TODO: determine what to do if node not found?? Currently failing silenlty
 
                     var initialNodes = node.getInitialBranch();
-                    this._newBranch = this._getFullBranch( node ).concat( initialNodes );
+                    this._newBranch = this._getBranchFromRoot( node ).concat( initialNodes );
                     var streams = this._getShortestRoute( this._currentBranch, this._newBranch );
                     var currentStateName = this.getCurrentState().name;
                     var newStateName = node.state.name;
-                    var payload = Array.prototype.slice.call( arguments );
-                    payload.shift(); //drop transitionName
-                    var exitArgs = [ { type : 'exit', from : currentStateName, to : newStateName } ].concat( payload );
-                    var enterArgs = [ { type : 'enter', from : currentStateName, to : newStateName } ].concat( payload );
-                    this._transitioning = 'guarding';
-                    var proceed = this._applyToEachNode( streams.up,     fsa.State.prototype._executeGuards,    exitArgs, true );
-                    if( proceed ){
-                        proceed = this._applyToEachNode( streams.down,   fsa.State.prototype._executeGuards,   enterArgs, true );
+
+                    var payload;
+                    if( arguments.length > 1 ){
+                        payload =  Array.prototype.slice.call( arguments );
+                        payload.shift(); //drop transitionName
                     }
-                    if( proceed ) {
-                        this._transitioning = 'running';
-                        this._addToActionsQueue( streams.up, exitArgs );
-                        this._addToActionsQueue( streams.down, enterArgs );
-                        this.proceed();
+
+                    this._internalState = 'guarding';
+                    var args = [ { type : 'exitGuard', from : currentStateName, to : newStateName } ].concat( payload );
+                    var proceed = this._executeGuards( streams.up, args  );
+                    if( proceed ){
+                        args = [ { type : 'enterGuard', from : currentStateName, to : newStateName } ].concat( payload );
+                        proceed = this._executeGuards( streams.down, args );
+                    }
+
+                    if( proceed ){
+                        this._internalState = 'transitioning';
+                        args = [ { type : 'exit', from : currentStateName, to : newStateName } ].concat( payload );
+                        this._addToQueue( streams.up, args );
+                        args = [ { type : 'enter', from : currentStateName, to : newStateName } ].concat( payload );
+                        this._addToQueue( streams.down, args );
                     }else{
-                        this._transitioning = 'ready';
+                        this._internalState = 'ready';
                     }
                 }
             }
@@ -651,13 +546,13 @@
          *
          */
         proceed : function(){
-            if( this._transitioning !== 'ready' && this._transitioning !== 'guarding' ){
-                if( this._actionsQueue.length > 0 ){
-                    this._transitioning = 'running';
-                    var o = this._actionsQueue.shift();
+            if( this._internalState !== 'ready' && this._internalState !== 'guarding' ){
+                if( this._queue.length > 0 ){
+                    this._internalState = 'transitioning';
+                    var o = this._queue.shift();
                     var state = o.node.state;
-                    fsa.State.prototype._executeActions.apply( state, o.args );
-                    if( this._transitioning !== "paused" ){
+                    state._executeAction( o.args );
+                    if( this._internalState !== "paused" ){
                         this.proceed();
                     }
                 }else{
@@ -670,8 +565,8 @@
          *
          */
         pause : function(){
-            if( this._transitioning === 'running' ){
-                this._transitioning = 'paused';
+            if( this._internalState === 'transitioning' ){
+                this._internalState = 'paused';
             }
         },
 
@@ -685,24 +580,12 @@
             this._currentStateBranch = undefined;
         },
 
-        _addToActionsQueue: function( nodesList, args ){
-            for( var i=0, n=nodesList.length ; i<n ; i++ ){
-                this._actionsQueue.push( { node : nodesList[ i ], args : args } );
-            }
-        },
-
-        _finishTransition : function(){
-            this._transitioning = 'ready';
-            this._currentBranch = this._newBranch;
-            this._newBranch = undefined;
-        },
-
         /**
          * @private
-         * @param {fsa._Node} node
-         * @return {fsa._Node[]}
+         * @param {Node} node
+         * @return {Node[]}
          */
-        _getFullBranch : function( node ){
+        _getBranchFromRoot : function( node ){
             var branch = [];
             do{
                 branch.unshift( node );
@@ -715,8 +598,8 @@
 
         /**
          * @private
-         * @param {fsa._Node[]} rootToBegin
-         * @param {fsa._node[]} rootToEnd
+         * @param {Node[]} rootToBegin
+         * @param {Node[]} rootToEnd
          * @return {Object}
          */
         _getShortestRoute : function( rootToBegin, rootToEnd ){
@@ -738,26 +621,35 @@
 
         /**
          * @private
-         * @param {fsa._Node[]} nodesList
+         * @param {Node[]} nodesList
          * @param {Function} callback
          * @param {Array} args
          * @param {Boolean} [allowInterrupt=false]
          */
-        _applyToEachNode : function( nodesList, callback, args, allowInterrupt ){
-            if( allowInterrupt === undefined ){
-                allowInterrupt = false;
-            }
-            var proceed = true;
-            for( var i=0, n=nodesList.length; ( ! allowInterrupt || proceed ) && i<n ; i++){
+        _executeGuards : function( nodesList, args ){
+            var result = true;
+            for( var i=0, n=nodesList.length; i<n ; i++){
                 var state = nodesList[ i ].state;
-                proceed = callback.apply( state, args );
+                result = state._executeGuards( args ) && result;
             }
 
-            return proceed;
+            return result;
+        },
+
+        _addToQueue: function( nodesList, args ){
+            for( var i=0, n=nodesList.length ; i<n ; i++ ){
+                this._queue.push( { node : nodesList[ i ], args : args } );
+            }
+        },
+
+        _finishTransition : function(){
+            this._internalState = 'ready';
+            this._currentBranch = this._newBranch;
+            this._newBranch = undefined;
         }
-
-
     };
+
+    DispatcherMixin.call( fsa.Automaton.prototype );
 
     $.fsa = fsa;
 
