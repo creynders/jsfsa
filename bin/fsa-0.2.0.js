@@ -23,15 +23,15 @@
     /**
      * @namespace
      * @name fsa
-     * @version %VERSION%
+     * @version 0.2.0
      */
     var fsa = {
     };
     /**
      * @static
-     * @default %VERSION%
+     * @default 0.2.0
      */
-    fsa.VERSION = '%VERSION%';
+    fsa.VERSION = '0.2.0';
 
  //--( Dispatcher )--//
 

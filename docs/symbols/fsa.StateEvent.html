@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - fsa</title>
+		<title>JsDoc Reference - fsa.StateEvent</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -210,13 +210,11 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Namespace fsa
+				Class fsa.StateEvent
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
 			<p class="description">
-				<br />Version
-					0.2.0.<br />
 				
 				
 			
@@ -229,8 +227,8 @@ ul.inheritsList
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class fsa.">
-				<caption>Namespace Summary</caption>
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class fsa.StateEvent.">
+				<caption>Class Summary</caption>
 				<thead>
 					<tr>
 						<th scope="col">Constructor Attributes</th>
@@ -242,7 +240,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/fsa.html#constructor">fsa</a></b>
+								<b><a href="../symbols/fsa.StateEvent.html#constructor">fsa.StateEvent</a></b>(type, from, to)
 							</div>
 							<div class="description"></div>
 						</td>
@@ -255,7 +253,7 @@ ul.inheritsList
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class fsa.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class fsa.StateEvent.">
 					<caption>Field Summary</caption>
 					<thead>
 						<tr>
@@ -269,7 +267,47 @@ ul.inheritsList
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
 								<div class="fixedFont">
-								fsa.<b><a href="../symbols/fsa.html#.VERSION">VERSION</a></b>
+								fsa.StateEvent.<b><a href="../symbols/fsa.StateEvent.html#.ENTERED">ENTERED</a></b>
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								fsa.StateEvent.<b><a href="../symbols/fsa.StateEvent.html#.ENTRY_DENIED">ENTRY_DENIED</a></b>
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								fsa.StateEvent.<b><a href="../symbols/fsa.StateEvent.html#.EXIT_DENIED">EXIT_DENIED</a></b>
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								fsa.StateEvent.<b><a href="../symbols/fsa.StateEvent.html#.EXITED">EXITED</a></b>
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								fsa.StateEvent.<b><a href="../symbols/fsa.StateEvent.html#.FQN">FQN</a></b>
 								</div>
 								<div class="description"></div>
 							</td>
@@ -284,6 +322,33 @@ ul.inheritsList
 
 <!-- ============================== methods summary ======================== -->
 			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class fsa.StateEvent.">
+					<caption>Method Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Method Attributes</th>
+							<th scope="col">Method Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/fsa.StateEvent.html#clone">clone</a></b>()
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+			
 <!-- ============================== events summary ======================== -->
 			
 
@@ -291,11 +356,11 @@ ul.inheritsList
 			
 			<div class="details"><a name="constructor"> </a>
 				<div class="sectionTitle">
-					Namespace Detail
+					Class Detail
 				</div>
 				
 				<div class="fixedFont">
-						<b>fsa</b>
+						<b>fsa.StateEvent</b>(type, from, to)
 				</div>
 				
 				<div class="description">
@@ -306,6 +371,29 @@ ul.inheritsList
 				
 				
 				
+					
+						<dl class="detailList">
+						<dt class="heading">Parameters:</dt>
+						
+							<dt>
+								<span class="light fixedFont">{String}</span>  <b>type</b>
+								
+							</dt>
+								<dd></dd>
+						
+							<dt>
+								<span class="light fixedFont">{String}</span>  <b>from</b>
+								
+							</dt>
+								<dd>name of the exiting/exited state</dd>
+						
+							<dt>
+								<span class="light fixedFont">{String}</span>  <b>to</b>
+								
+							</dt>
+								<dd>name of the entering/entered state</dd>
+						
+						</dl>
 					
 					
 					
@@ -323,11 +411,11 @@ ul.inheritsList
 					Field Detail
 				</div>
 				
-					<a name=".VERSION"> </a>
+					<a name=".ENTERED"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
 					
-					<span class="light">fsa.</span><b>VERSION</b>
+					<span class="light">fsa.StateEvent.</span><b>ENTERED</b>
 					
 					</div>
 					<div class="description">
@@ -345,7 +433,123 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Default Value:</dt>
 							<dd>
-								0.2.0
+								'entered'
+							</dd>
+							</dl>
+						
+
+					<hr />
+				
+					<a name=".ENTRY_DENIED"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">fsa.StateEvent.</span><b>ENTRY_DENIED</b>
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Default Value:</dt>
+							<dd>
+								'entryDenied'
+							</dd>
+							</dl>
+						
+
+					<hr />
+				
+					<a name=".EXIT_DENIED"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">fsa.StateEvent.</span><b>EXIT_DENIED</b>
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Default Value:</dt>
+							<dd>
+								'exitDenied'
+							</dd>
+							</dl>
+						
+
+					<hr />
+				
+					<a name=".EXITED"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">fsa.StateEvent.</span><b>EXITED</b>
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Default Value:</dt>
+							<dd>
+								'exit'
+							</dd>
+							</dl>
+						
+
+					<hr />
+				
+					<a name=".FQN"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">fsa.StateEvent.</span><b>FQN</b>
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Default Value:</dt>
+							<dd>
+								'StateEvent'
 							</dd>
 							</dl>
 						
@@ -355,6 +559,43 @@ ul.inheritsList
 			
 
 <!-- ============================== method details ========================= -->		
+			
+				<div class="sectionTitle">
+					Method Detail
+				</div>
+				
+					<a name="clone"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/fsa.StateEvent.html">fsa.StateEvent</a>}</span>
+					<b>clone</b>()
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/fsa.StateEvent.html">fsa.StateEvent</a>}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					
+				
 			
 			
 <!-- ============================== event details ========================= -->		
@@ -367,7 +608,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.3.2 on Thu Mar 15 2012 16:47:56 GMT+0100 (CET)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.3.2 on Thu Mar 15 2012 16:47:57 GMT+0100 (CET)
 		</div>
 	</body>
 </html>

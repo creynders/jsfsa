@@ -41,7 +41,7 @@ FSA has no dependencies on other frameworks.
 
 * Guards: an unlimited amount of callbacks can be set to guard both entry and exit of states.
 
-* Actions: an unlimited amount of callbacks can be executed on both entry and exit of states.
+* Listeners: an unlimited amount of callbacks can be executed on both entry and exit of states.
 
 * Granular: both state-specific event listening and automaton-wide event listening is possible.
 
@@ -104,7 +104,7 @@ console.log( fsm.getCurrentState().name );//outputs 'on'
 
 ```
 var offState = new State( 'off', {
-	'ignite' : 'on'
+	'ignite' : 'on',
 	isInitial : true
 } );
 var onState = new fsa.State( 'on', {
@@ -123,7 +123,7 @@ console.log( fsm.getCurrentState().name );//outputs 'on'
 ```
 var config = {
 	'off' : {
-		'ignite' : 'on'
+		'ignite' : 'on',
 		isInitial : true
 	},
 	'on' : {
@@ -136,20 +136,102 @@ var fsm = new fsa.Automaton( config )
 console.log( fsm.getCurrentState().name );//outputs 'on'
 ```
 
-### GUARDS, ACTIONS and NESTED STATES
+### GUARDS
 
-* actions are executed upon entrance or exit of a state, they are non-blocking
-* guards control entries and exits of states, they need to return a true to continue transition
-or falsy to block it.
-* execution order:
-1. exit guards
-1. entry guards
-1. exit actions
-1. entry actions
+Guards control entries and exits of states, they need to return a ```true``` to continue transition. Anything falsy will terminate the transition.
 
-a falsy returning guard will prohibit further execution of guards and actions down the line
+```
+//loose syntax
+var blockEntry = function(){
+	return false;
+}
 
-* you can config nesting by defining a full path in the state's name
+var config = {
+	'off' : {
+		'ignite' : 'on',
+		isInitial : true
+	},
+	'on' : {
+		guards : {
+			entry : blockEntry
+		},
+		'shutdown' : 'off'
+	}
+};
+var fsm = new fsa.Automaton( config )
+	.doTransition( 'ignite' )
+;
+console.log( fsm.getCurrentState().name );//outputs 'off'
+```
+
+### LISTENERS
+
+There are 4 events that can be listened to, either directly on a state instance or on the statemachine instance itself.
+
+* On the state:
+
+```
+//loose syntax
+var outputEvent = function( e ){
+	console.log( e.type + ' from ' + e.from + ' to ' + e.to );
+}
+
+var config = {
+	'off' : {
+		listeners : {
+			exited : outputEvent
+		},
+		'ignite' : 'on',
+		isInitial : true
+	},
+	'on' : {
+		listeners : {
+			entered : outputEvent
+		},
+		'shutdown' : 'off'
+	}
+};
+var fsm = new fsa.Automaton( config )
+	.doTransition( 'ignite' )
+;
+//output in console:
+//exited from off to on
+//entered from off to on
+```
+
+* On the automaton:
+
+```
+//loose syntax
+var blockEntry = function(){
+	return false;
+}
+var outputEvent = function( e ){
+	console.log( e.type + ' from ' + e.from + ' to ' + e.to );
+}
+var config = {
+	'off' : {
+		'ignite' : 'on',
+		isInitial : true
+	},
+	'on' : {
+		guards : {
+			entry : blockEntry
+		},
+		'shutdown' : 'off'
+	}
+};
+var fsm = new fsa.Automaton( config )
+	.addListener( fsa.StateEvent.ENTRY_DENIED, outputEvent )
+	.doTransition( 'ignite' )
+;
+//output in console:
+//entryDenied from off to on
+```
+
+### NESTED STATES
+
+* You can define nesting by providing a full path in the state's name
 
 ```
 var config = {
@@ -161,29 +243,12 @@ var config = {
 		isInitial : true
 	},
 	"off/kaput" : {
-		actions : {
-			enter : function(){
-			 	//executed when this state is entered
-				console.error( "damn thing's broken" );
-			},
-			exit : function(){
-				//executed when this state is left
-				console.log( "this fine piece of machinery's working again" );
-			}
-		}
 	},
 	"off/kaput/fixable" :{
 		isInitial : true,
 		"fixed" : "off/standby"
 	},
 	"off/kaput/pertetotale":{
-		guards : {
-			exit : function(){
-				//executed when the fsm is determining whether it's allowed to transition state
-				console.log( "it's no use, just throw it away!" );
-				return false; //prohibits further transitioning
-			}
-		}
 	},
 	"on" : {
 		"powerOff" : "off",
@@ -203,8 +268,7 @@ var config = {
 };
 ```
 
-* If prefer not to have the hierarchy reflected in the state names, you can use the parent property
-to define the parent state
+* If you prefer not to have the hierarchy reflected in the state names, you can use the parent property to define the parent state
 
 ```
 var config = {
@@ -217,17 +281,7 @@ var config = {
 		isInitial : true
 	},
 	"kaput" : {
-		parent : "off",
-		actions : {
-			enter : function(){
-			 	//executed when this state is entered
-				console.error( "damn thing's broken" );
-			},
-			exit : function(){
-				//executed when this state is left
-				console.log( "this fine piece of machinery's working again" );
-			}
-		}
+		parent : "off"
 	},
 	"fixable" :{
 		parent : "kaput",
@@ -235,14 +289,7 @@ var config = {
 		"fixed" : "standby"
 	},
 	"pertetotale":{
-		parent : "kaput",
-		guards : {
-			exit : function(){
-				//executed when the fsm is determining whether it's allowed to transition state
-				console.log( "it's no use, just throw it away!" );
-				return false; //prohibits further transitioning
-			}
-		}
+		parent : "kaput"
 	},
 	"on" : {
 		"powerOff" : "off",
@@ -274,8 +321,8 @@ var fsm;
 var config = {
 	"green" : { 
 		isInitial : true,
-		actions : { 
-			exit : function(){
+		listeners : { 
+			exited : function(){
 				fsm.pause(); //sets the fsm in a waiting state
 				setTimeout( 500, function(){
 					fsm.proceed(); //automaton proceeds transitioning to "orange" state
@@ -294,15 +341,15 @@ fsm = new fsa.Automaton( config )
 
 ### PAYLOAD PASSING
 
-* payloads passed to the ```doTransition``` method are automatically passed to all guards and actions
+* payloads passed to the ```doTransition``` method are automatically passed to all guards and listeners
 
 ```
 var config = {
 	'off' : {
 		'ignite' : 'on'
 		isInitial : true,
-		actions : {
-			exit : function( e, payload ){
+		listeners : {
+			exited : function( e, payload ){
 				console.log( payload ); //outputs 'foo'
 			}
 		}

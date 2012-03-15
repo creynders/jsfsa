@@ -1,25 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="asf" default="properties" basedir=".">
 
-    <!-- PROPERTIES -->
-    <!-- allow user-specific overrides -->
-    <property file="build.user.properties"/>
-    <property file="build.properties"/>
-    <loadfile property="version.old" srcFile="${file.version.txt}" />
-    <tstamp>
-        <format property="timestamp" pattern="yyyy-MM-dd HH:mm:ss Z"/>
-    </tstamp>
-
-    <taskdef name="jshint" classname="com.philmander.ant.jshint.JsHintAntTask"
-        classpath="${file.jshint_anttask.jar}" />
-
     <target name="version">
-        <input message="Current version number is ${version.old}. Please enter the new version number:" defaultValue="${version.old}" addproperty="version.new"/>
-        <echo file="${file.version.txt}" message="${version.new}" />
+        <loadfile property="version.old" srcFile="version.txt" />
+        <input message="Current version number is ${version.old}. Please enter the new version number:"
+            defaultValue="${version.old}" addproperty="version"/>
+        <echo file="version.txt" message="${version}" />
+    </target>
+
+    <!-- PROPERTIES -->
+    <target name="properties">
+        <loadfile property="version" srcFile="version.txt" />
+        <tstamp>
+            <format property="timestamp" pattern="yyyyMMddHHmmss"/>
+        </tstamp>
+        <!-- allow user-specific overrides -->
+        <property file="build.user.properties"/>
+        <property file="build.properties"/>
+    </target>
+    
+    <!-- CREATE BUILD -->
+
+    <target name="create_build" depends="properties">
+        <echo>Creating build...</echo>
+        <delete dir="${dir.build}" />
+        <mkdir dir="${dir.build.current}" />
+        <echo>Finished.</echo>
+    </target>
+
+    <!-- CONSOLIDATE -->
+    <target name="consolidate" depends="properties, create_build">
+        <echo>Consolidating...</echo>
+        <copy file="${dir.src}/${name.base.js}" tofile="${file.consolidated.js}"/>
+        <replace file="${file.consolidated.js}" token="%VERSION%" value="${version}"/>
+        <replace file="${file.consolidated.js}" token="%TIMESTAMP%" value="${timestamp}"/>
+        <concat id="srcfiles" destfile="${file.consolidated.js}" append="true">
+            <fileset dir="${dir.src}" includes="**/*.js" excludes="${name.base.js}"/>
+        </concat>
+        <pathconvert pathsep=";" property="files" refid="srcfiles"/>
+        <echo>${files}</echo>
+        <echo>Finished.</echo>
+    </target>
+
+    <!-- JSHint -->
+  	<target name="jshint" depends="properties, consolidate">
+        <echo>Checking syntax...</echo>
+          <exec executable="phantomjs" dir="${basedir}" failonerror="true" resultproperty="specs.results">
+              <arg line="'${file.jshint-runner.js}'" />
+              <arg line="'${file.jshint.js}'" />
+              <arg line="'${file.consolidated.js}'" />
+              <arg line="${timeout.phantom}" />
+          </exec>
+        <echo>Finished</echo>
+  	</target>
+
+    <!-- SPECS -->
+    <target name="specs" depends="properties">
+        <echo>Running specs...</echo>
+        <exec executable="phantomjs" dir="${basedir}" failonerror="true" resultproperty="specs.results">
+            <arg line="'${file.jasmine-runner.js}'" />
+            <arg line="'${file.specs-runner.html}'" />
+            <arg line="${timeout.phantom}" />
+        </exec>
+        <echo>Finished.</echo>
+    </target>
+
+
+    <!-- MINIFY -->
+    <target name="minify" depends="properties,create_build, consolidate">
+        <echo>Minifying...</echo>
+        <exec executable="java" dir="${basedir}" failonerror="true">
+            <arg line="-jar '${file.yui_compressor.jar}'" />
+            <arg line="--type js" />
+            <arg line="-o '${file.minified.js}'" />
+            <arg line="'${file.consolidated.js}'" />
+        </exec>
+        <echo>Finished</echo>
     </target>
 
     <!-- JSDOC -->
-    <target name="jsdocs">
+    <target name="jsdocs" depends="properties, consolidate">
+        <echo>recreating docs folder...</echo>
+        <delete dir="${dir.docs}"/>
+        <mkdir dir="${dir.docs}" />
         <echo>Generating...</echo>
         <exec executable="java" dir="${basedir}">
             <arg line="-jar '${file.jsdoc_toolkit.jar}' '${dir.jsdoc_toolkit}/app/run.js'" />
@@ -28,58 +91,24 @@
             <!-- use the default template -->
             <arg line="-t='${dir.jsdoc_toolkit}/templates/jsdoc'" />
             <!-- Create an arg element for each file you want to include in the documentation -->
-            <arg line="'${dir.src}/fsa.js'" />
+            <arg line="'${file.consolidated.js}'" />
         </exec>
         <echo>Finished</echo>
     </target>
 
-    <!-- JSHint -->
-  	<target name="jshint">
-        <echo>Checking syntax...</echo>
-        <jshint dir="${dir.src}" includes="**/*.js" />
-        <echo>Finished</echo>
-  	</target>
+    <!-- FINISH -->
 
-    <!-- MINIFY -->
-    <target name="minify">
-        <echo>Minifying...</echo>
-        <exec executable="java" dir="${basedir}" failonerror="true">
-            <arg line="-jar '${file.yui_compressor.jar}'" />
-            <arg line="--type js" />
-            <arg line="-v" />
-            <arg line="-o '${dir.bin}/fsa-${version.new}.min.js'" />
-            <arg line="'${dir.src}/fsa.js'" />
-        </exec>
-        <echo>Finished</echo>
-    </target>
-
-    <!-- SPECS -->
-    <target name="specs">
-        <echo>Running specs...</echo>
-        <exec executable="phantomjs" dir="${basedir}" failonerror="true" resultproperty="specs.results">
-            <arg line="'${file.jasmine-runner.js}'" />
-            <arg line="${url.specs.html}" />
-            <arg line="${timeout.specs}" />
-        </exec>
-        <echo>Finished.</echo>
-    </target>
-
-    <target name="copy">
-        <copy file="${dir.src}/fsa.js" tofile="${dir.bin}/fsa-${version.new}.js"/>
-    </target>
-    
-    <target name="clean">
-        <echo>Cleaning up...</echo>
+    <target name="finish" depends="properties">
+        <echo>Finishing...</echo>
         <delete dir="${dir.bin}" />
         <mkdir dir="${dir.bin}" />
-        <delete dir="${dir.docs}" />
-        <mkdir dir="${dir.docs}" />
+        <move file="${dir.build.current}" tofile="${dir.bin}"/>
         <echo>Finished.</echo>
     </target>
 
-    <!-- BUILD -->
-    <target name="build" depends="version, jshint, specs, clean, jsdocs, copy, minify">
 
+    <!-- BUILD -->
+    <target name="build" depends="version, properties, create_build, consolidate, jshint, specs, minify, jsdocs, finish">
     </target>
 
 </project>

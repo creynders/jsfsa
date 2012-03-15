@@ -112,14 +112,14 @@ describe("fsa.Automaton", function(){
             var f = function(){
                 return false
             }
-            orange.addGuard( 'enter', f );
+            orange.addGuard( fsa.Action.ENTRY, f );
             sm.doTransition( 'next' );
             sm.doTransition( 'next' );
             expect( sm.getCurrentState() ).toEqual( sm.getState( 'green' ) );
         });
         it( "should terminate transition with guards denying exit", function(){
             var orange = sm.getState( 'orange' );
-            orange.addGuard( 'exit', function( ){return false } );
+            orange.addGuard( fsa.Action.EXIT, function( ){return false } );
             sm.doTransition( 'next' );
             sm.doTransition( 'next' );
             expect( sm.getCurrentState() ).toEqual( sm.getState( 'orange' ) );
@@ -175,72 +175,51 @@ describe("fsa.Automaton", function(){
         });
     });
 
-    describe( "a registered listener", function(){
-        var spy;
-        var config = {
-            "green" : { isInitial : true, "next" : "orange" },
-            "orange" : { "next" : "red" },
-            "red" : { "next" : "green" }
-        };
+    describe( "the automaton's dispacther", function(){
         beforeEach( function(){
-            spy = jasmine.createSpy( 'actionSpy' );
-            sm.parse( config );
-        });
-
-        it( "should be called upon exit", function(){
-            var green = sm.getState( 'green' );
-            green.addListener( 'exit', spy );
+            sm.createState( 'green',    { transitions : { 'next' : 'orange' }, isInitial : true } );
+            sm.createState( 'orange',   { transitions : { 'next' : 'red'    } } );
+            sm.createState( 'red',      { transitions : { 'next' : 'green'  } } );
+        } );
+        it( "should dispatch a exited event", function(){
+            var spy = jasmine.createSpy( 'exited' );
+            sm.addListener( fsa.StateEvent.EXITED, spy );
             sm.doTransition( 'next' );
-            expect( spy ).toHaveBeenCalled()
-        });
-        it( "should be called upon entry", function(){
-            var orange = sm.getState( 'orange' );
-            orange.addListener( 'enter', spy );
-            sm.doTransition( 'next' );
-            expect( spy ).toHaveBeenCalled()
-        });
-        it( "should receive an event object", function(){
-            var orange = sm.getState( 'orange' );
-            orange.addListener( 'enter', spy );
-            sm.doTransition( 'next' );
-            var e = new fsa.StateEvent( 'enter', 'green', 'orange' );
+            var e= new fsa.StateEvent( fsa.StateEvent.EXITED, 'green', 'orange' );
             expect( spy ).toHaveBeenCalledWith( e );
         });
-        it( "should recieve a passed payload", function(){
-            var orange = sm.getState( 'orange' );
-            orange.addListener( 'enter', spy );
-            var payload = {
-                foo : "bar"
-            }
-            sm.doTransition( 'next', payload );
-            var e = new fsa.StateEvent( 'enter', 'green', 'orange' );
-            expect( spy ).toHaveBeenCalledWith( e, payload );
 
+        it( "should dispatch an entered event", function(){
+            var spy = jasmine.createSpy( 'entered' );
+            sm.addListener( fsa.StateEvent.ENTERED, spy );
+            sm.doTransition( 'next' );
+            var e= new fsa.StateEvent( fsa.StateEvent.ENTERED, 'green', 'orange' );
+            expect( spy ).toHaveBeenCalledWith( e );
         });
-        it( "should be able to pause and restart the fsm", function(){
-            callback = function(){
-                sm.pause();
-            };
 
-            runs( function(){
-                var green = sm.getState( 'green' );
-                green.addListener( 'exit', callback );
+        it( "should dispatch an entryDenied event", function(){
+            var spy = jasmine.createSpy( 'entryDenied' );
+            sm.addListener( fsa.StateEvent.ENTRY_DENIED, spy );
+            var state = sm.getState('orange');
+            state.addGuard( fsa.Action.ENTRY, function(){
+                return false;
             });
+            sm.doTransition( 'next' );
+            var e= new fsa.StateEvent( fsa.StateEvent.ENTRY_DENIED, 'green', 'orange' );
+            expect( spy ).toHaveBeenCalledWith( e );
+        });
 
-            runs( function(){
-                var s= sm;
-                sm.doTransition( 'next' );
-                expect( sm.isTransitioning() ).toBeTruthy();
+        it( "should dispatch an exitDenied event", function(){
+            var spy = jasmine.createSpy( 'exitDenied' );
+            sm.addListener( fsa.StateEvent.EXIT_DENIED, spy );
+            var state = sm.getState('green');
+            state.addGuard( fsa.Action.EXIT, function(){
+                return false;
             });
+            sm.doTransition( 'next' );
+            var e= new fsa.StateEvent( fsa.StateEvent.EXIT_DENIED, 'green', 'orange' );
+            expect( spy ).toHaveBeenCalledWith( e );
+        });
 
-            waits( 500 );
-
-            runs( function(){
-                expect( sm.isTransitioning() ).toBeTruthy();
-                sm.proceed();
-                expect( sm.isTransitioning() ).toBeFalsy();
-            });
-        } );
     });
-
 });

@@ -193,9 +193,13 @@ ul.inheritsList
 	
 	<li><a href="../symbols/fsa.html">fsa</a></li>
 	
+	<li><a href="../symbols/fsa.Action.html">fsa.Action</a></li>
+	
 	<li><a href="../symbols/fsa.Automaton.html">fsa.Automaton</a></li>
 	
 	<li><a href="../symbols/fsa.State.html">fsa.State</a></li>
+	
+	<li><a href="../symbols/fsa.StateEvent.html">fsa.StateEvent</a></li>
 	
 </ul>
 <hr />
@@ -217,7 +221,7 @@ ul.inheritsList
 				
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/_Users_creynder_Dropbox_Work_Projects_CREY - JS statemachine_dev_src_fsa.js.html">fsa.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/_Users_creynder_Dropbox_Work_Projects_CREY - JS statemachine_dev_build_20120315164745_fsa-0.2.0.js.html">fsa-0.2.0.js</a>.
 				
 			</p>
 
@@ -260,10 +264,10 @@ ul.inheritsList
 					<tbody>
 					
 						<tr>
-							<td class="attributes">&nbsp;</td>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
 								<div class="fixedFont">
-								<b><a href="../symbols/fsa.Automaton.html#FQN">FQN</a></b>
+								fsa.Automaton.<b><a href="../symbols/fsa.Automaton.html#.FQN">FQN</a></b>
 								</div>
 								<div class="description"></div>
 							</td>
@@ -293,6 +297,24 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/fsa.Automaton.html#addListener">addListener</a></b>(eventName, handler)
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/fsa.Automaton.html#addListeners">addListeners</a></b>(eventName, handlers)
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/fsa.Automaton.html#addState">addState</a></b>(state)
 								</div>
 								<div class="description"></div>
@@ -312,6 +334,15 @@ ul.inheritsList
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/fsa.Automaton.html#destroy">destroy</a></b>()
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/fsa.Automaton.html#dispatch">dispatch</a></b>(e)
 								</div>
 								<div class="description"></div>
 							</td>
@@ -357,6 +388,15 @@ guards and actions</div>
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/fsa.Automaton.html#hasListener">hasListener</a></b>(eventName, handlers)
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/fsa.Automaton.html#hasState">hasState</a></b>(stateName)
 								</div>
 								<div class="description"></div>
@@ -385,6 +425,15 @@ guards and actions</div>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/fsa.Automaton.html#proceed">proceed</a></b>()
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/fsa.Automaton.html#removeListener">removeListener</a></b>(eventName, handlers)
 								</div>
 								<div class="description"></div>
 							</td>
@@ -455,11 +504,11 @@ guards and actions</div>
 					Field Detail
 				</div>
 				
-					<a name="FQN"> </a>
-					<div class="fixedFont">
+					<a name=".FQN"> </a>
+					<div class="fixedFont">&lt;static&gt; 
 					
 					<span class="light">{String}</span>
-					<b>FQN</b>
+					<span class="light">fsa.Automaton.</span><b>FQN</b>
 					
 					</div>
 					<div class="description">
@@ -491,6 +540,90 @@ guards and actions</div>
 				<div class="sectionTitle">
 					Method Detail
 				</div>
+				
+					<a name="addListener"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>addListener</b>(eventName, handler)
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>eventName</b>
+									
+								</dt>
+								<dd></dd>
+							
+								<dt>
+									<span class="light fixedFont">{Function}</span> <b>handler</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="addListeners"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>addListeners</b>(eventName, handlers)
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>eventName</b>
+									
+								</dt>
+								<dd></dd>
+							
+								<dt>
+									<span class="light fixedFont">{Function}</span> <b>handlers</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
 				
 					<a name="addState"> </a>
 					<div class="fixedFont">
@@ -599,6 +732,48 @@ guards and actions</div>
 					
 					
 					
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="dispatch"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>dispatch</b>(e)
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>e</b>
+									
+								</dt>
+								<dd></dd>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>e.type</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
 						
 						
 						
@@ -760,6 +935,55 @@ guards and actions
 
 					<hr />
 				
+					<a name="hasListener"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Boolean}</span>
+					<b>hasListener</b>(eventName, handlers)
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>eventName</b>
+									
+								</dt>
+								<dd></dd>
+							
+								<dt>
+									<span class="light fixedFont">{Function}</span> <b>handlers</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Boolean}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
 					<a name="hasState"> </a>
 					<div class="fixedFont">
 					
@@ -889,6 +1113,48 @@ guards and actions
 
 					<hr />
 				
+					<a name="removeListener"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>removeListener</b>(eventName, handlers)
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>eventName</b>
+									
+								</dt>
+								<dd></dd>
+							
+								<dt>
+									<span class="light fixedFont">{Function}</span> <b>handlers</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
 					<a name="removeState"> </a>
 					<div class="fixedFont">
 					
@@ -944,7 +1210,7 @@ guards and actions
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.3.2 on Mon Mar 12 2012 15:26:54 GMT+0100 (CET)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.3.2 on Thu Mar 15 2012 16:47:57 GMT+0100 (CET)
 		</div>
 	</body>
 </html>
