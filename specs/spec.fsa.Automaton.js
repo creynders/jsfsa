@@ -175,7 +175,7 @@ describe("fsa.Automaton", function(){
         });
     });
 
-    describe( "a registered action", function(){
+    describe( "a registered listener", function(){
         var spy;
         var config = {
             "green" : { isInitial : true, "next" : "orange" },
@@ -189,39 +189,31 @@ describe("fsa.Automaton", function(){
 
         it( "should be called upon exit", function(){
             var green = sm.getState( 'green' );
-            green.addAction( 'exit', spy );
+            green.addListener( 'exit', spy );
             sm.doTransition( 'next' );
             expect( spy ).toHaveBeenCalled()
         });
         it( "should be called upon entry", function(){
             var orange = sm.getState( 'orange' );
-            orange.addAction( 'enter', spy );
+            orange.addListener( 'enter', spy );
             sm.doTransition( 'next' );
             expect( spy ).toHaveBeenCalled()
         });
         it( "should receive an event object", function(){
             var orange = sm.getState( 'orange' );
-            orange.addAction( 'enter', spy );
+            orange.addListener( 'enter', spy );
             sm.doTransition( 'next' );
-            var e = {
-                type : 'enter',
-                from : 'green',
-                to : 'orange'
-            }
+            var e = new fsa.StateEvent( 'enter', 'green', 'orange' );
             expect( spy ).toHaveBeenCalledWith( e );
         });
         it( "should recieve a passed payload", function(){
             var orange = sm.getState( 'orange' );
-            orange.addAction( 'enter', spy );
+            orange.addListener( 'enter', spy );
             var payload = {
                 foo : "bar"
             }
             sm.doTransition( 'next', payload );
-            var e = {
-                type : 'enter',
-                from : 'green',
-                to : 'orange'
-            };
+            var e = new fsa.StateEvent( 'enter', 'green', 'orange' );
             expect( spy ).toHaveBeenCalledWith( e, payload );
 
         });
@@ -232,10 +224,11 @@ describe("fsa.Automaton", function(){
 
             runs( function(){
                 var green = sm.getState( 'green' );
-                green.addAction( 'exit', callback );
+                green.addListener( 'exit', callback );
             });
 
             runs( function(){
+                var s= sm;
                 sm.doTransition( 'next' );
                 expect( sm.isTransitioning() ).toBeTruthy();
             });
