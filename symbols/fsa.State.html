@@ -193,9 +193,13 @@ ul.inheritsList
 	
 	<li><a href="../symbols/fsa.html">fsa</a></li>
 	
+	<li><a href="../symbols/fsa.Action.html">fsa.Action</a></li>
+	
 	<li><a href="../symbols/fsa.Automaton.html">fsa.Automaton</a></li>
 	
 	<li><a href="../symbols/fsa.State.html">fsa.State</a></li>
+	
+	<li><a href="../symbols/fsa.StateEvent.html">fsa.StateEvent</a></li>
 	
 </ul>
 <hr />
@@ -217,7 +221,7 @@ ul.inheritsList
 				
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/_Users_creynder_Dropbox_Work_Projects_CREY - JS statemachine_dev_src_fsa.js.html">fsa.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/_Users_creynder_Dropbox_Work_Projects_CREY - JS statemachine_dev_build_20120315164745_fsa-0.2.0.js.html">fsa-0.2.0.js</a>.
 				
 			</p>
 
@@ -260,10 +264,10 @@ ul.inheritsList
 					<tbody>
 					
 						<tr>
-							<td class="attributes">&nbsp;</td>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
 								<div class="fixedFont">
-								<b><a href="../symbols/fsa.State.html#FQN">FQN</a></b>
+								fsa.State.<b><a href="../symbols/fsa.State.html#.FQN">FQN</a></b>
 								</div>
 								<div class="description"></div>
 							</td>
@@ -323,7 +327,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/fsa.State.html#addAction">addAction</a></b>(eventName, callback)
+								<div class="fixedFont"><b><a href="../symbols/fsa.State.html#addGuard">addGuard</a></b>(eventName, guard)
 								</div>
 								<div class="description"></div>
 							</td>
@@ -332,7 +336,25 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/fsa.State.html#addGuard">addGuard</a></b>(eventName, callback)
+								<div class="fixedFont"><b><a href="../symbols/fsa.State.html#addGuards">addGuards</a></b>(eventName, guards)
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/fsa.State.html#addListener">addListener</a></b>(eventName, handler)
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/fsa.State.html#addListeners">addListeners</a></b>(eventName, handlers)
 								</div>
 								<div class="description"></div>
 							</td>
@@ -359,6 +381,15 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/fsa.State.html#dispatch">dispatch</a></b>(e)
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/fsa.State.html#getTransition">getTransition</a></b>(transitionName)
 								</div>
 								<div class="description"></div>
@@ -368,7 +399,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/fsa.State.html#hasAction">hasAction</a></b>(eventName, callback)
+								<div class="fixedFont"><b><a href="../symbols/fsa.State.html#hasGuard">hasGuard</a></b>(eventName, guard)
 								</div>
 								<div class="description"></div>
 							</td>
@@ -377,7 +408,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/fsa.State.html#hasGuard">hasGuard</a></b>(eventName, callback)
+								<div class="fixedFont"><b><a href="../symbols/fsa.State.html#hasListener">hasListener</a></b>(eventName, handlers)
 								</div>
 								<div class="description"></div>
 							</td>
@@ -395,7 +426,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/fsa.State.html#removeAction">removeAction</a></b>(eventName, callback)
+								<div class="fixedFont"><b><a href="../symbols/fsa.State.html#removeGuard">removeGuard</a></b>(eventName, guard)
 								</div>
 								<div class="description"></div>
 							</td>
@@ -404,7 +435,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/fsa.State.html#removeGuard">removeGuard</a></b>(eventName, callback)
+								<div class="fixedFont"><b><a href="../symbols/fsa.State.html#removeListener">removeListener</a></b>(eventName, handlers)
 								</div>
 								<div class="description"></div>
 							</td>
@@ -481,11 +512,11 @@ ul.inheritsList
 					Field Detail
 				</div>
 				
-					<a name="FQN"> </a>
-					<div class="fixedFont">
+					<a name=".FQN"> </a>
+					<div class="fixedFont">&lt;static&gt; 
 					
-					<span class="light">{String}</span>
-					<b>FQN</b>
+					
+					<span class="light">fsa.State.</span><b>FQN</b>
 					
 					</div>
 					<div class="description">
@@ -503,7 +534,7 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Default Value:</dt>
 							<dd>
-								"State"
+								'State'
 							</dd>
 							</dl>
 						
@@ -584,11 +615,11 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name="addAction"> </a>
+					<a name="addGuard"> </a>
 					<div class="fixedFont">
 					
 					<span class="light">{<a href="../symbols/fsa.State.html">fsa.State</a>}</span>
-					<b>addAction</b>(eventName, callback)
+					<b>addGuard</b>(eventName, guard)
 					
 					</div>
 					<div class="description">
@@ -610,7 +641,7 @@ ul.inheritsList
 								<dd></dd>
 							
 								<dt>
-									<span class="light fixedFont">{Function}</span> <b>callback</b>
+									<span class="light fixedFont">{Function}</span> <b>guard</b>
 									
 								</dt>
 								<dd></dd>
@@ -633,11 +664,11 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name="addGuard"> </a>
+					<a name="addGuards"> </a>
 					<div class="fixedFont">
 					
 					<span class="light">{<a href="../symbols/fsa.State.html">fsa.State</a>}</span>
-					<b>addGuard</b>(eventName, callback)
+					<b>addGuards</b>(eventName, guards)
 					
 					</div>
 					<div class="description">
@@ -659,7 +690,7 @@ ul.inheritsList
 								<dd></dd>
 							
 								<dt>
-									<span class="light fixedFont">{Function}</span> <b>callback</b>
+									<span class="light fixedFont">{Function[]}</span> <b>guards</b>
 									
 								</dt>
 								<dd></dd>
@@ -676,6 +707,90 @@ ul.inheritsList
 								<dd><span class="light fixedFont">{<a href="../symbols/fsa.State.html">fsa.State</a>}</span> the instance of <a href="../symbols/fsa.State.html">fsa.State</a> that is acted upon</dd>
 							
 							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="addListener"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>addListener</b>(eventName, handler)
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>eventName</b>
+									
+								</dt>
+								<dd></dd>
+							
+								<dt>
+									<span class="light fixedFont">{Function}</span> <b>handler</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="addListeners"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>addListeners</b>(eventName, handlers)
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>eventName</b>
+									
+								</dt>
+								<dd></dd>
+							
+								<dt>
+									<span class="light fixedFont">{Function}</span> <b>handlers</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
 						
 						
 						
@@ -778,6 +893,48 @@ ul.inheritsList
 
 					<hr />
 				
+					<a name="dispatch"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>dispatch</b>(e)
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>e</b>
+									
+								</dt>
+								<dd></dd>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>e.type</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
 					<a name="getTransition"> </a>
 					<div class="fixedFont">
 					
@@ -821,11 +978,11 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name="hasAction"> </a>
+					<a name="hasGuard"> </a>
 					<div class="fixedFont">
 					
 					<span class="light">{Boolean}</span>
-					<b>hasAction</b>(eventName, callback)
+					<b>hasGuard</b>(eventName, guard)
 					
 					</div>
 					<div class="description">
@@ -847,7 +1004,7 @@ ul.inheritsList
 								<dd></dd>
 							
 								<dt>
-									<span class="light fixedFont">{Function}</span> <b>callback</b>
+									<span class="light fixedFont">{Function}</span> <b>guard</b>
 									
 								</dt>
 								<dd></dd>
@@ -870,11 +1027,11 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name="hasGuard"> </a>
+					<a name="hasListener"> </a>
 					<div class="fixedFont">
 					
 					<span class="light">{Boolean}</span>
-					<b>hasGuard</b>(eventName, callback)
+					<b>hasListener</b>(eventName, handlers)
 					
 					</div>
 					<div class="description">
@@ -896,7 +1053,7 @@ ul.inheritsList
 								<dd></dd>
 							
 								<dt>
-									<span class="light fixedFont">{Function}</span> <b>callback</b>
+									<span class="light fixedFont">{Function}</span> <b>handlers</b>
 									
 								</dt>
 								<dd></dd>
@@ -962,11 +1119,11 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name="removeAction"> </a>
+					<a name="removeGuard"> </a>
 					<div class="fixedFont">
 					
 					<span class="light">{<a href="../symbols/fsa.State.html">fsa.State</a>}</span>
-					<b>removeAction</b>(eventName, callback)
+					<b>removeGuard</b>(eventName, guard)
 					
 					</div>
 					<div class="description">
@@ -988,7 +1145,7 @@ ul.inheritsList
 								<dd></dd>
 							
 								<dt>
-									<span class="light fixedFont">{Function}</span> <b>callback</b>
+									<span class="light fixedFont">{Function}</span> <b>guard</b>
 									
 								</dt>
 								<dd></dd>
@@ -1011,11 +1168,11 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name="removeGuard"> </a>
+					<a name="removeListener"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/fsa.State.html">fsa.State</a>}</span>
-					<b>removeGuard</b>(eventName, callback)
+					
+					<b>removeListener</b>(eventName, handlers)
 					
 					</div>
 					<div class="description">
@@ -1037,7 +1194,7 @@ ul.inheritsList
 								<dd></dd>
 							
 								<dt>
-									<span class="light fixedFont">{Function}</span> <b>callback</b>
+									<span class="light fixedFont">{Function}</span> <b>handlers</b>
 									
 								</dt>
 								<dd></dd>
@@ -1047,13 +1204,6 @@ ul.inheritsList
 						
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{<a href="../symbols/fsa.State.html">fsa.State</a>}</span> the instance of <a href="../symbols/fsa.State.html">fsa.State</a> that is acted upon</dd>
-							
-							</dl>
 						
 						
 						
@@ -1115,7 +1265,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.3.2 on Mon Mar 12 2012 15:26:55 GMT+0100 (CET)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.3.2 on Thu Mar 15 2012 16:47:57 GMT+0100 (CET)
 		</div>
 	</body>
 </html>
