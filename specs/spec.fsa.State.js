@@ -35,7 +35,7 @@ describe( "fsa.State", function(){
                     enter : f1,
                     exit : [ f1, f2 ]
                 },
-                actions : {
+                listeners : {
                     enter : [ f1, f2 ],
                     exit : f1
                 },
@@ -49,9 +49,9 @@ describe( "fsa.State", function(){
             expect( state.hasGuard( 'enter', f1 ) ).toBeTruthy();
             expect( state.hasGuard( 'exit', f1 ) ).toBeTruthy();
             expect( state.hasGuard( 'exit', f2 ) ).toBeTruthy();
-            expect( state.hasAction( 'enter', f1 ) ).toBeTruthy();
-            expect( state.hasAction( 'enter', f2 ) ).toBeTruthy();
-            expect( state.hasAction( 'exit', f1 ) ).toBeTruthy();
+            expect( state.hasListener( 'enter', f1 ) ).toBeTruthy();
+            expect( state.hasListener( 'enter', f2 ) ).toBeTruthy();
+            expect( state.hasListener( 'exit', f1 ) ).toBeTruthy();
             expect( state.hasTransition( 'foo' ) ).toBeTruthy();
             expect( state.hasTransition( 'waldorf' ) ).toBeTruthy();
             expect( state.parent ).toEqual( 'someParentState' );
@@ -65,7 +65,7 @@ describe( "fsa.State", function(){
                     enter : f1,
                     exit : [ f1, f2 ]
                 },
-                actions : {
+                listeners : {
                     enter : [ f1, f2 ],
                     exit : f1
                 },
@@ -77,9 +77,9 @@ describe( "fsa.State", function(){
             expect( state.hasGuard( 'enter', f1 ) ).toBeTruthy();
             expect( state.hasGuard( 'exit', f1 ) ).toBeTruthy();
             expect( state.hasGuard( 'exit', f2 ) ).toBeTruthy();
-            expect( state.hasAction( 'enter', f1 ) ).toBeTruthy();
-            expect( state.hasAction( 'enter', f2 ) ).toBeTruthy();
-            expect( state.hasAction( 'exit', f1 ) ).toBeTruthy();
+            expect( state.hasListener( 'enter', f1 ) ).toBeTruthy();
+            expect( state.hasListener( 'enter', f2 ) ).toBeTruthy();
+            expect( state.hasListener( 'exit', f1 ) ).toBeTruthy();
             expect( state.hasTransition( 'foo' ) ).toBeTruthy();
             expect( state.hasTransition( 'waldorf' ) ).toBeTruthy();
             expect( state.parent ).toEqual( 'someParentState' );
@@ -108,20 +108,20 @@ describe( "fsa.State", function(){
 
     describe( '#addAction', function(){
         it( "should return the state instance that was acted upon", function(){
-            expect( main.addAction( 'enter', function(){} ) ).toEqual( main );
+            expect( main.addListener( 'enter', function(){} ) ).toEqual( main );
         });
     });
-    describe( '#removeAction', function(){
+    describe( '#removeListener', function(){
         it( "should return the state instance that was acted upon", function(){
-            expect( main.removeAction() ).toEqual( main );
+            expect( main.removeListener() ).toEqual( main );
         });
     });
-    describe( '#hasAction', function(){
+    describe( '#hasListener', function(){
         it( "should return false if no eventName was provided", function(){
-            expect( main.hasAction() ).toBeFalsy();
+            expect( main.hasListener() ).toBeFalsy();
         });
         it( "should return false if no callback was provided", function(){
-            expect( main.hasAction( 'enter' ) ).toBeFalsy();
+            expect( main.hasListener( 'enter' ) ).toBeFalsy();
         });
     });
 

@@ -22,6 +22,8 @@
     var fsa = {};
 
     var DispatcherMixin = function(){
+        this._listeners = {};
+
         this.addListener = function( eventName, handler ){
             if( ! this._listeners.hasOwnProperty( eventName ) ){
                 this._listeners[ eventName ] = [];
@@ -32,16 +34,28 @@
         };
 
         this.addListeners = function( eventName, handlers ){
-            if( ! this._listeners.hasOwnProperty( eventName ) ){
-                this._listeners[ eventName ] = [];
+            if( typeof handlers === "function" ){
+                return this.addListener( eventName, handlers );
             }
-            this._listeners[ eventName ].concat( handlers );
+
+            var arr;
+            if( ! this._listeners.hasOwnProperty( eventName ) ){
+                arr = [];
+            }else{
+                arr = this._listeners[ eventName ]
+            }
+
+            this._listeners[ eventName ] = arr.concat( handlers );
 
             return this;
         };
 
         this.hasListener = function( eventName, handler ){
-            return ( this._listeners.hasOwnProperty( eventName ) && this._listeners[ eventName ].indexOf( handler >= 0 ) );
+            if( this._listeners.hasOwnProperty( eventName ) ){
+                var index = this._listeners[ eventName ].indexOf( handler );
+                return index >= 0;
+            }
+            return false;
         };
 
         this.removeListener = function( eventName, handler ){
@@ -66,22 +80,25 @@
             }
             return result;
         };
+    };
+
+    var Dispatcher = function(){
+    };
+    DispatcherMixin.call( Dispatcher.prototype );
+
+    fsa.StateEvent = function( type, from, to ){
+        this.type = type;
+        this.from = from;
+        this.to = to;
+    };
+    fsa.StateEvent.prototype = {
+        clone : function(){
+            return new fsa.StateEvent( this.type, this.from, this.to );
+        }
     }
 
-    /**
-     * @class
-     * @constructor
-     * @param {String} name
-     * @param {Object} [data]
-     */
-    fsa.State = function( name, data ){
-        /**
-        * @type String
-        * @default "State"
-        * @const
-        */
-        this.FQN = 'State';
 
+    var StateMixin = function(){
         /**
         * @type String
         */
@@ -91,7 +108,7 @@
         * name of the parent state
         * @type String
         */
-        this.parent = '';
+        this.parent = undefined;
 
         /**
         * @type Boolean
@@ -115,42 +132,6 @@
         */
         this._transitions = {};
 
-        this._parseName( name );
-        if( data ){
-            if( data.isInitial ) {
-                this.isInitial = true;
-            }
-            if( data.guards ){
-                if( data.guards.enter ){
-                    this.addGuards( 'enter', data.guards.enter );
-                }
-                if( data.guards.exit ){
-                    this.addGuards('exit', data.guards.exit );
-                }
-            }
-            for( var eventName in data.listeners ){
-                this.addListeners( eventName, data.listeners[ eventName ] );
-            }
-            if( data.parent ){
-                this.parent = data.parent;
-            }
-            if( data.transitions ){
-                this._addTransitions( data.transitions );
-            }
-
-            this._addTransitions( data, fsa.State._configMembers );
-        }
-    };
-
-    /**
-     * @private
-     * @static
-     * @type {String[]}
-     */
-    fsa.State._configMembers = [ 'isInitial', 'guards', 'actions', 'parent', 'transitions' ];
-
-    fsa.State.prototype = {
-
         /**
          *
          * @param {String} transitionName
@@ -159,7 +140,7 @@
          * @throws {Error} 1041
          * @return {fsa.State} the instance of {@link fsa.State} that is acted upon
          */
-        addTransition : function( transitionName, stateName ){
+        this.addTransition = function( transitionName, stateName ){
             if( ! transitionName || typeof transitionName !== "string" ){
                 throw new Error( 1040 );
             }
@@ -168,35 +149,35 @@
             }
             this._transitions[ transitionName ] = stateName;
             return this;
-        },
+        };
 
         /**
          *
          * @param {String} transitionName
          * @return {fsa.State} the instance of {@link fsa.State} that is acted upon
          */
-        removeTransition : function( transitionName ){
+        this.removeTransition = function( transitionName ){
             delete this._transitions[ transitionName ];
             return this;
-        },
+        };
 
         /**
          *
          * @param {String} transitionName
          * @return {String} target state name
          */
-        getTransition : function( transitionName ){
+        this.getTransition = function( transitionName ){
             return this._transitions[ transitionName ];
-        },
+        };
 
         /**
          *
          * @param {String} transitionName
          * @return {Boolean}
          */
-        hasTransition : function( transitionName ){
+        this.hasTransition = function( transitionName ){
             return this._transitions.hasOwnProperty( transitionName );
-        },
+        };
 
         /**
          *
@@ -204,20 +185,15 @@
          * @param {Function} callback
          * @return {fsa.State} the instance of {@link fsa.State} that is acted upon
          */
-        addGuard : function( eventName, guard ){
+        this.addGuard = function( eventName, guard ){
             this._getGuardian().addListener( eventName, guard );
             return this;
-        },
+        };
 
-        addGuards : function( eventName, guards ){
-            var g = this._getGuardian();
-            if( typeof guards === "function" ){
-                g.addListener( eventName, guards );
-            }else{
-                g.addListeners( eventName, guards );
-            }
+        this.addGuards = function( eventName, guards ){
+            this._getGuardian().addListeners( eventName, guards );
             return this;
-        },
+        };
 
         /**
          *
@@ -225,9 +201,9 @@
          * @param {Function} callback
          * @return {Boolean}
          */
-        hasGuard : function( eventName, guard ){
+        this.hasGuard = function( eventName, guard ){
             return this._guardian && this._guardian.hasListener( eventName, guard );
-        },
+        };
 
         /**
          *
@@ -235,46 +211,46 @@
          * @param {Function} callback
          * @return {fsa.State} the instance of {@link fsa.State} that is acted upon
          */
-        removeGuard : function( eventName, guard ){
+        this.removeGuard = function( eventName, guard ){
             if( this._guardian ){
                 this._guardian.removeListener( eventName, guard );
             }
             return this;
-        },
+        };
 
         /**
          *
          * @return {fsa.State} the instance of {@link fsa.State} that is acted upon
          */
-        destroy : function(){
+        this.destroy = function(){
             this._guardian = undefined;
             this._parent = undefined;
             this._transitions = undefined;
             this.name = undefined;
 
             return this;
-        },
+        };
 
-        _getGuardian : function(){
+        this._getGuardian = function(){
             if( this._guardian === undefined ){
-                this._guardian = new fsa._Dispatcher();
+                this._guardian = new Dispatcher();
             }
             return this._guardian;
-        },
+        };
 
-        _parseName : function( name ){
+        this._parseName = function( name ){
             var index = name.lastIndexOf( '/' );
             if( index >=0 ){
                 this.parent = name.substring( 0, index );
             }
             this.name = name;
-        },
+        };
 
         /**
          * @internal
          * @param {Array} args
          */
-        _executeGuards : function( args ){
+        this._executeGuards = function( args ){
             var result = true;
             if( this._guardian ){
                 result = this._guardian.dispatch.apply( this._guardian, args );
@@ -283,14 +259,14 @@
             this.dispatch.apply( this, args );
 
             return result;
-        },
+        };
 
         /**
          * @private
          * @param {Object} data
          * @param {String[]} [skip]
          */
-        _addTransitions : function( data, skip ){
+        this._addTransitions = function( data, skip ){
             for( var transitionName in data ){
                 if( data.hasOwnProperty( transitionName ) ){
                     if( skip && skip.indexOf( transitionName ) >= 0 ) {
@@ -299,21 +275,80 @@
                     this.addTransition( transitionName, data[ transitionName ] );
                 }
             }
-        },
+        };
 
         /**
          * @private
          * @param {Array} args
          */
-        _executeAction : function( args ){
+        this._executeAction = function( args ){
             this.dispatch.apply( this, args );
-        }
+        };
 
+        this._parseData = function( name, data ){
+            this._parseName( name );
+
+            if( data ){
+                if( data.isInitial ) {
+                    this.isInitial = true;
+                }
+                if( data.guards ){
+                    if( data.guards.enter ){
+                        this.addGuards( 'enter', data.guards.enter );
+                    }
+                    if( data.guards.exit ){
+                        this.addGuards('exit', data.guards.exit );
+                    }
+                }
+                for( var eventName in data.listeners ){
+                    this.addListeners( eventName, data.listeners[ eventName ] );
+                }
+                if( data.parent ){
+                    this.parent = data.parent;
+                }
+                if( data.transitions ){
+                    this._addTransitions( data.transitions );
+                }
+
+                this._addTransitions( data, StateMixin._configMembers );
+            };
+        }
     };
+    /**
+     * @private
+     * @static
+     * @type {String[]}
+     */
+    StateMixin._configMembers = [ 'isInitial', 'guards', 'listeners', 'parent', 'transitions' ];
+
+
+
+    /**
+     * @class
+     * @constructor
+     * @param {String} name
+     * @param {Object} [data]
+     */
+    fsa.State = function( name, data ){
+        this._parseData( name, data );
+    }
 
     DispatcherMixin.call( fsa.State.prototype );
+    StateMixin.call( fsa.State.prototype );
+    fsa.StateEvent = function( type, from, to ){
+        this.type = type;
+        this.from = from;
+        this.to = to;
+    };
+    fsa.StateEvent.prototype = {
+        clone : function(){
+            return new fsa.StateEvent( this.type, this.from, this.to );
+        }
+    }
+
 
     var Node = function( state ){
+        this.FQN = 'Node';
         this.state = state;
         this.parent = undefined;
         this.children = undefined;
@@ -365,7 +400,7 @@
      */
     fsa.Automaton = function( data ){
         this._nodes = {};
-        this._rootNode = new Node( new fsa.State( '*' ), true );
+        this._rootNode = new Node( new fsa.State('root') );
         this._currentBranch = [ this._rootNode ];
         this._internalState = 'ready';
         this._queue = [];
@@ -510,21 +545,30 @@
                     }
 
                     this._internalState = 'guarding';
-                    var args = [ { type : 'exitGuard', from : currentStateName, to : newStateName } ].concat( payload );
+
+                    var args = [ new fsa.StateEvent( 'exit', currentStateName, newStateName ) ].concat( payload );
                     var proceed = this._executeGuards( streams.up, args  );
-                    if( proceed ){
-                        args = [ { type : 'enterGuard', from : currentStateName, to : newStateName } ].concat( payload );
+                    if( !proceed ){
+                        args = [ new fsa.StateEvent( 'exitDenied', currentStateName, newStateName ) ].concat( payload );
+                        this.dispatch.apply( this, args );
+                    }else{
+                        args = [ new fsa.StateEvent( 'enter', currentStateName, newStateName ) ].concat( payload );
                         proceed = this._executeGuards( streams.down, args );
                     }
 
-                    if( proceed ){
-                        this._internalState = 'transitioning';
-                        args = [ { type : 'exit', from : currentStateName, to : newStateName } ].concat( payload );
-                        this._addToQueue( streams.up, args );
-                        args = [ { type : 'enter', from : currentStateName, to : newStateName } ].concat( payload );
-                        this._addToQueue( streams.down, args );
-                    }else{
+                    if( ! proceed ){
+                        args = [ new fsa.StateEvent( 'enterDenied', currentStateName, newStateName ) ].concat( payload );
+                        this.dispatch.apply( this, args );
                         this._internalState = 'ready';
+                    }else{
+                        this._internalState = 'transitioning';
+                        args = [ new fsa.StateEvent( 'exit', currentStateName, newStateName ) ].concat( payload );
+                        this._addToQueue( streams.up, args );
+                        //this._addToQueue( [ this._rootNode ], args );
+                        args = [ new fsa.StateEvent( 'enter', currentStateName, newStateName ) ].concat( payload );
+                        this._addToQueue( streams.down, args );
+                        //this._addToQueue( [ this._rootNode ], args );
+                        this.proceed();
                     }
                 }
             }
@@ -587,10 +631,10 @@
          */
         _getBranchFromRoot : function( node ){
             var branch = [];
-            do{
-                branch.unshift( node );
+            while( node ){
+                //branch.unshift( node );
                 node = node.parent;
-            }while( node );
+            };
 
             return branch;
         },

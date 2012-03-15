@@ -56,6 +56,7 @@ describe("fsa.Automaton", function(){
             sm.createState( 'on', { transitions : { 'shutdown' : 'off' } } );
         });
         it( "should allow to transition to another state", function(){
+            var s = sm;
             sm.doTransition( 'ignite' );
             expect( sm.getCurrentState() ).toEqual( sm.getState( 'on' ) );
         } );
