@@ -341,8 +341,6 @@
         };
     };
 
-//--( StateProxy )--//
-    
 //--( Node )--//
 
     var Node = function( state ){
@@ -570,12 +568,13 @@
                     this._internalState = 'ready';
                 }else{
                     this._internalState = 'transitioning';
+                    var referer = [ { state : this } ];
                     args = cloneAndUnshift( payload, new fsa.StateEvent( 'exit', currentStateName, newStateName ) );
                     this._addToQueue( streams.up, args );
-                    //this._addToQueue( [ this._rootNode ], args );
+                    this._addToQueue( referer, args );
                     args = cloneAndUnshift( payload, new fsa.StateEvent( 'enter', currentStateName, newStateName ) );
                     this._addToQueue( streams.down, args );
-                    //this._addToQueue( [ this._rootNode ], args );
+                    this._addToQueue( referer, args );
                     this.proceed();
                 }
             }
@@ -603,7 +602,7 @@
             if( this._queue.length > 0 ){
                 this._internalState = 'transitioning';
                 var o = this._queue.shift();
-                var state = o.node.state;
+                var state = o.obj.state;
                 state._executeAction( o.args );
                 if( this._internalState !== "paused" ){
                     this.proceed();
@@ -692,9 +691,9 @@
         return result;
     };
 
-    fsa.Automaton.prototype._addToQueue = function( nodesList, args ){
-        for( var i=0, n=nodesList.length ; i<n ; i++ ){
-            this._queue.push( { node : nodesList[ i ], args : args } );
+    fsa.Automaton.prototype._addToQueue = function( list, args ){
+        for( var i=0, n=list.length ; i<n ; i++ ){
+            this._queue.push( { obj : list[ i ], args : args } );
         }
     };
 
@@ -703,6 +702,8 @@
         this._currentBranch = this._newBranch;
         this._newBranch = undefined;
     };
+
+    fsa.Automaton.prototype._executeAction = fsa.State.prototype._executeAction;
 
 
     $.fsa = fsa;
