@@ -22,17 +22,15 @@ info [at] creynders [dot] be
 
 ## FEATURES
 
-* Framework independent: doesn't rely on any other 3rd party frameworks.
+* __Hierarchical states__: states can be configured to have an unlimited number of substates, an unlimited number of levels deep.
 
-* Framework integration: easily used on top of other frameworks.
+* __Guards__: an unlimited amount of callbacks can be set to guard both entry and exit of states.
 
-* Hierarchical states: states can be configured to have an unlimited number of substates, an unlimited number of levels deep.
+* __Listeners__: an unlimited amount of callbacks can be executed on both entry and exit of states.
 
-* Guards: an unlimited amount of callbacks can be set to guard both entry and exit of states.
+* __Granular__: both state-specific event listening and automaton-wide event listening is possible.
 
-* Listeners: an unlimited amount of callbacks can be executed on both entry and exit of states.
-
-* Granular: both state-specific event listening and automaton-wide event listening is possible.
+* __Framework independent__: doesn't rely on any other 3rd party frameworks.
 
 ## TODO
 
