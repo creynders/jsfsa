@@ -56,7 +56,6 @@ describe("jsfsa.Automaton", function(){
             sm.createState( 'on', { transitions : { 'shutdown' : 'off' } } );
         });
         it( "should allow to transition to another state", function(){
-            var s = sm;
             sm.doTransition( 'ignite' );
             expect( sm.getCurrentState() ).toEqual( sm.getState( 'on' ) );
         } );
@@ -110,8 +109,8 @@ describe("jsfsa.Automaton", function(){
         it( "should terminate transition with guards denying entry", function(){
             var orange = sm.getState( 'orange' );
             var f = function(){
-                return false
-            }
+                return false;
+            };
             orange.addGuard( jsfsa.Action.ENTRY, f );
             sm.doTransition( 'next' );
             sm.doTransition( 'next' );

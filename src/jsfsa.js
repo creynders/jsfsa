@@ -78,7 +78,7 @@
     /**
      *
      * @param {String} eventName
-     * @param {Function} handlers
+     * @param {Function} handler
      * @return {Boolean}
      */
     Dispatcher.prototype.hasListener = function( eventName, handler ){
@@ -91,7 +91,7 @@
     /**
      *
      * @param {String} eventName
-     * @param {Function} handlers
+     * @param {Function} handler
      */
     Dispatcher.prototype.removeListener = function( eventName, handler ){
         if( this._listeners.hasOwnProperty( eventName ) ){
@@ -241,13 +241,8 @@
         this.isInitial = false;
 
         /**
-         * @type Boolean
-         */
-        this._isTransitioning = false;
-
-        /**
         * @private
-        * @type jsfsa._Dispatcher
+        * @type Dispatcher
         */
         this._guardian = undefined;
 
@@ -275,7 +270,7 @@
     /**
      *
      * @param {String} transitionName
-     * @param {String} StateName
+     * @param {String} stateName
      * @throws {Error} 1040
      * @throws {Error} 1041
      * @return {jsfsa.State} the instance of {@link jsfsa.State} that is acted upon
@@ -370,7 +365,6 @@
      */
     jsfsa.State.prototype.destroy = function(){
         this._guardian = undefined;
-        this._parent = undefined;
         this._transitions = undefined;
         this._listeners = undefined;
         this.name = undefined;
@@ -735,6 +729,8 @@
                 }
             }
         }
+
+        return this;
     };
 
 
@@ -785,7 +781,7 @@
         this._rootNode.destroy();
         this._rootNode = undefined;
         this._nodes = undefined;
-        this._currentStateBranch = undefined;
+        this._currentBranch = undefined;
     };
 
     /**
@@ -829,9 +825,7 @@
     /**
      * @private
      * @param {Node[]} nodesList
-     * @param {Function} callback
      * @param {Array} args
-     * @param {Boolean} [allowInterrupt=false]
      */
     jsfsa.Automaton.prototype._executeGuards = function( nodesList, args ){
         var result = true;

@@ -181,7 +181,7 @@ describe( "jsfsa.State", function(){
             orange.addListener( jsfsa.StateEvent.ENTERED, spy );
             var payload = {
                 foo : "bar"
-            }
+            };
             sm.doTransition( 'next', payload );
             var e = new jsfsa.StateEvent( jsfsa.StateEvent.ENTERED, 'green', 'orange' );
             expect( spy ).toHaveBeenCalledWith( e, payload );
@@ -198,7 +198,6 @@ describe( "jsfsa.State", function(){
             });
 
             runs( function(){
-                var s= sm;
                 sm.doTransition( 'next' );
                 expect( sm.isTransitioning() ).toBeTruthy();
             });
