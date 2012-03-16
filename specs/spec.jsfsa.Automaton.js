@@ -3,10 +3,10 @@
  * Date: 08/03/12
  * Time: 11:44
  */
-describe("fsa.Automaton", function(){
+describe("jsfsa.Automaton", function(){
     var sm;
     beforeEach( function(){
-        sm = new fsa.Automaton();
+        sm = new jsfsa.Automaton();
     });
     beforeEach( function(){
         this.addMatchers({
@@ -21,22 +21,22 @@ describe("fsa.Automaton", function(){
     });
 
     describe("instance", function(){
-        it( "should be of type fsa.Automaton", function(){
-            expect( sm ).toBeInstanceOf( fsa.Automaton );
+        it( "should be of type jsfsa.Automaton", function(){
+            expect( sm ).toBeInstanceOf( jsfsa.Automaton );
         });
         it( "should have a root state", function(){
-            expect( sm.getRootState() ).toBeInstanceOf( fsa.State );
+            expect( sm.getRootState() ).toBeInstanceOf( jsfsa.State );
         })
     });
 
     describe( "an added state", function(){
         it( "should be detectable", function (){
-            var state = new fsa.State( 'foo' );
+            var state = new jsfsa.State( 'foo' );
             sm.addState( state );
             expect( sm.hasState( state.name ) ).toBeTruthy();
         } );
         it( "should be removable", function(){
-            var state = new fsa.State( 'foo' );
+            var state = new jsfsa.State( 'foo' );
             sm
                 .addState( state )
                 .removeState( state.name )
@@ -44,7 +44,7 @@ describe("fsa.Automaton", function(){
             expect( sm.hasState( state.name ) ).toBeFalsy();
         });
         it( "should be retrievable", function(){
-            var state = new fsa.State( 'foo' );
+            var state = new jsfsa.State( 'foo' );
             sm.addState( state );
             expect( sm.getState( state.name ) ).toEqual( state );
         });
@@ -112,14 +112,14 @@ describe("fsa.Automaton", function(){
             var f = function(){
                 return false
             }
-            orange.addGuard( fsa.Action.ENTRY, f );
+            orange.addGuard( jsfsa.Action.ENTRY, f );
             sm.doTransition( 'next' );
             sm.doTransition( 'next' );
             expect( sm.getCurrentState() ).toEqual( sm.getState( 'green' ) );
         });
         it( "should terminate transition with guards denying exit", function(){
             var orange = sm.getState( 'orange' );
-            orange.addGuard( fsa.Action.EXIT, function( ){return false } );
+            orange.addGuard( jsfsa.Action.EXIT, function( ){return false } );
             sm.doTransition( 'next' );
             sm.doTransition( 'next' );
             expect( sm.getCurrentState() ).toEqual( sm.getState( 'orange' ) );
@@ -183,41 +183,41 @@ describe("fsa.Automaton", function(){
         } );
         it( "should dispatch a exited event", function(){
             var spy = jasmine.createSpy( 'exited' );
-            sm.addListener( fsa.StateEvent.EXITED, spy );
+            sm.addListener( jsfsa.StateEvent.EXITED, spy );
             sm.doTransition( 'next' );
-            var e= new fsa.StateEvent( fsa.StateEvent.EXITED, 'green', 'orange' );
+            var e= new jsfsa.StateEvent( jsfsa.StateEvent.EXITED, 'green', 'orange' );
             expect( spy ).toHaveBeenCalledWith( e );
         });
 
         it( "should dispatch an entered event", function(){
             var spy = jasmine.createSpy( 'entered' );
-            sm.addListener( fsa.StateEvent.ENTERED, spy );
+            sm.addListener( jsfsa.StateEvent.ENTERED, spy );
             sm.doTransition( 'next' );
-            var e= new fsa.StateEvent( fsa.StateEvent.ENTERED, 'green', 'orange' );
+            var e= new jsfsa.StateEvent( jsfsa.StateEvent.ENTERED, 'green', 'orange' );
             expect( spy ).toHaveBeenCalledWith( e );
         });
 
         it( "should dispatch an entryDenied event", function(){
             var spy = jasmine.createSpy( 'entryDenied' );
-            sm.addListener( fsa.StateEvent.ENTRY_DENIED, spy );
+            sm.addListener( jsfsa.StateEvent.ENTRY_DENIED, spy );
             var state = sm.getState('orange');
-            state.addGuard( fsa.Action.ENTRY, function(){
+            state.addGuard( jsfsa.Action.ENTRY, function(){
                 return false;
             });
             sm.doTransition( 'next' );
-            var e= new fsa.StateEvent( fsa.StateEvent.ENTRY_DENIED, 'green', 'orange' );
+            var e= new jsfsa.StateEvent( jsfsa.StateEvent.ENTRY_DENIED, 'green', 'orange' );
             expect( spy ).toHaveBeenCalledWith( e );
         });
 
         it( "should dispatch an exitDenied event", function(){
             var spy = jasmine.createSpy( 'exitDenied' );
-            sm.addListener( fsa.StateEvent.EXIT_DENIED, spy );
+            sm.addListener( jsfsa.StateEvent.EXIT_DENIED, spy );
             var state = sm.getState('green');
-            state.addGuard( fsa.Action.EXIT, function(){
+            state.addGuard( jsfsa.Action.EXIT, function(){
                 return false;
             });
             sm.doTransition( 'next' );
-            var e= new fsa.StateEvent( fsa.StateEvent.EXIT_DENIED, 'green', 'orange' );
+            var e= new jsfsa.StateEvent( jsfsa.StateEvent.EXIT_DENIED, 'green', 'orange' );
             expect( spy ).toHaveBeenCalledWith( e );
         });
 

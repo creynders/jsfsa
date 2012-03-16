@@ -3,10 +3,10 @@
  * Date: 07/03/12
  * Time: 15:37
  */
-describe( "fsa.State", function(){
+describe( "jsfsa.State", function(){
     var main;
     beforeEach( function(){
-        main = new fsa.State( 'main' );
+        main = new jsfsa.State( 'main' );
     });
     afterEach( function(){
         main = undefined;
@@ -20,8 +20,8 @@ describe( "fsa.State", function(){
     } );
 
     describe( "instance", function(){
-        it("should be of type fsa.State", function(){
-            expect( main ).toBeInstanceOf( fsa.State );
+        it("should be of type jsfsa.State", function(){
+            expect( main ).toBeInstanceOf( jsfsa.State );
         });
     });
     describe( "constructor", function(){
@@ -44,14 +44,14 @@ describe( "fsa.State", function(){
                     'waldorf' : 'statlerState'
                 }
             };
-            var state = new fsa.State( 'test', config );
+            var state = new jsfsa.State( 'test', config );
             expect( state.isInitial ).toBeTruthy();
-            expect( state.hasGuard( fsa.Action.ENTRY, f1 ) ).toBeTruthy();
-            expect( state.hasGuard( fsa.Action.EXIT, f1 ) ).toBeTruthy();
-            expect( state.hasGuard( fsa.Action.EXIT, f2 ) ).toBeTruthy();
-            expect( state.hasListener( fsa.StateEvent.ENTERED, f1 ) ).toBeTruthy();
-            expect( state.hasListener( fsa.StateEvent.ENTERED, f2 ) ).toBeTruthy();
-            expect( state.hasListener( fsa.StateEvent.EXITED, f1 ) ).toBeTruthy();
+            expect( state.hasGuard( jsfsa.Action.ENTRY, f1 ) ).toBeTruthy();
+            expect( state.hasGuard( jsfsa.Action.EXIT, f1 ) ).toBeTruthy();
+            expect( state.hasGuard( jsfsa.Action.EXIT, f2 ) ).toBeTruthy();
+            expect( state.hasListener( jsfsa.StateEvent.ENTERED, f1 ) ).toBeTruthy();
+            expect( state.hasListener( jsfsa.StateEvent.ENTERED, f2 ) ).toBeTruthy();
+            expect( state.hasListener( jsfsa.StateEvent.EXITED, f1 ) ).toBeTruthy();
             expect( state.hasTransition( 'foo' ) ).toBeTruthy();
             expect( state.hasTransition( 'waldorf' ) ).toBeTruthy();
             expect( state.parent ).toEqual( 'someParentState' );
@@ -72,14 +72,14 @@ describe( "fsa.State", function(){
                 'foo' : 'barState',
                 'waldorf' : 'statlerState'
             };
-            var state = new fsa.State( "someParentState/test", config );
+            var state = new jsfsa.State( "someParentState/test", config );
             expect( state.isInitial ).toBeTruthy();
-            expect( state.hasGuard( fsa.Action.ENTRY, f1 ) ).toBeTruthy();
-            expect( state.hasGuard( fsa.Action.EXIT, f1 ) ).toBeTruthy();
-            expect( state.hasGuard( fsa.Action.EXIT, f2 ) ).toBeTruthy();
-            expect( state.hasListener( fsa.StateEvent.ENTERED, f1 ) ).toBeTruthy();
-            expect( state.hasListener( fsa.StateEvent.ENTERED, f2 ) ).toBeTruthy();
-            expect( state.hasListener( fsa.StateEvent.EXITED, f1 ) ).toBeTruthy();
+            expect( state.hasGuard( jsfsa.Action.ENTRY, f1 ) ).toBeTruthy();
+            expect( state.hasGuard( jsfsa.Action.EXIT, f1 ) ).toBeTruthy();
+            expect( state.hasGuard( jsfsa.Action.EXIT, f2 ) ).toBeTruthy();
+            expect( state.hasListener( jsfsa.StateEvent.ENTERED, f1 ) ).toBeTruthy();
+            expect( state.hasListener( jsfsa.StateEvent.ENTERED, f2 ) ).toBeTruthy();
+            expect( state.hasListener( jsfsa.StateEvent.EXITED, f1 ) ).toBeTruthy();
             expect( state.hasTransition( 'foo' ) ).toBeTruthy();
             expect( state.hasTransition( 'waldorf' ) ).toBeTruthy();
             expect( state.parent ).toEqual( 'someParentState' );
@@ -108,7 +108,7 @@ describe( "fsa.State", function(){
 
     describe( '#addAction', function(){
         it( "should return the state instance that was acted upon", function(){
-            expect( main.addListener( fsa.StateEvent.ENTERED, function(){} ) ).toEqual( main );
+            expect( main.addListener( jsfsa.StateEvent.ENTERED, function(){} ) ).toEqual( main );
         });
     });
     describe( '#removeListener', function(){
@@ -121,13 +121,13 @@ describe( "fsa.State", function(){
             expect( main.hasListener() ).toBeFalsy();
         });
         it( "should return false if no callback was provided", function(){
-            expect( main.hasListener( fsa.StateEvent.ENTERED ) ).toBeFalsy();
+            expect( main.hasListener( jsfsa.StateEvent.ENTERED ) ).toBeFalsy();
         });
     });
 
     describe( '#addGuard', function(){
         it( "should return the state instance that was acted upon", function(){
-            expect( main.addGuard( fsa.Action.ENTRY, function(){} ) ).toEqual( main );
+            expect( main.addGuard( jsfsa.Action.ENTRY, function(){} ) ).toEqual( main );
         });
     });
     describe( '#removeGuard', function(){
@@ -140,7 +140,7 @@ describe( "fsa.State", function(){
             expect( main.hasGuard() ).toBeFalsy();
         });
         it( "should return false if no callback was provided", function(){
-            expect( main.hasGuard( fsa.Action.ENTRY ) ).toBeFalsy();
+            expect( main.hasGuard( jsfsa.Action.ENTRY ) ).toBeFalsy();
         });
     });
 
@@ -154,36 +154,36 @@ describe( "fsa.State", function(){
         };
         beforeEach( function(){
             spy = jasmine.createSpy( 'actionSpy' );
-            sm = new fsa.Automaton( config );
+            sm = new jsfsa.Automaton( config );
         });
 
         it( "should be called upon exit", function(){
             var green = sm.getState( 'green' );
-            green.addListener( fsa.StateEvent.EXITED, spy );
+            green.addListener( jsfsa.StateEvent.EXITED, spy );
             sm.doTransition( 'next' );
             expect( spy ).toHaveBeenCalled()
         });
         it( "should be called upon entry", function(){
             var orange = sm.getState( 'orange' );
-            orange.addListener( fsa.StateEvent.ENTERED, spy );
+            orange.addListener( jsfsa.StateEvent.ENTERED, spy );
             sm.doTransition( 'next' );
             expect( spy ).toHaveBeenCalled()
         });
         it( "should receive an event object", function(){
             var orange = sm.getState( 'orange' );
-            orange.addListener( fsa.StateEvent.ENTERED, spy );
+            orange.addListener( jsfsa.StateEvent.ENTERED, spy );
             sm.doTransition( 'next' );
-            var e = new fsa.StateEvent( fsa.StateEvent.ENTERED, 'green', 'orange' );
+            var e = new jsfsa.StateEvent( jsfsa.StateEvent.ENTERED, 'green', 'orange' );
             expect( spy ).toHaveBeenCalledWith( e );
         });
         it( "should recieve a passed payload", function(){
             var orange = sm.getState( 'orange' );
-            orange.addListener( fsa.StateEvent.ENTERED, spy );
+            orange.addListener( jsfsa.StateEvent.ENTERED, spy );
             var payload = {
                 foo : "bar"
             }
             sm.doTransition( 'next', payload );
-            var e = new fsa.StateEvent( fsa.StateEvent.ENTERED, 'green', 'orange' );
+            var e = new jsfsa.StateEvent( jsfsa.StateEvent.ENTERED, 'green', 'orange' );
             expect( spy ).toHaveBeenCalledWith( e, payload );
 
         });
@@ -194,7 +194,7 @@ describe( "fsa.State", function(){
 
             runs( function(){
                 var green = sm.getState( 'green' );
-                green.addListener( fsa.StateEvent.EXITED, callback );
+                green.addListener( jsfsa.StateEvent.EXITED, callback );
             });
 
             runs( function(){
