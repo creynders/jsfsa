@@ -13,7 +13,7 @@ asynchronous, non-deterministic, hierarchical finite-state machines in JavaScrip
 * __Named transitions__: switching of states happens through named transitions.
 * __Asynchronous transitioning__: transitioning from one state to the other can be paused/resumed.
 * __Framework independent__: doesn't rely on any other 3rd party frameworks.
-* 
+
 ## Contact
 
 You can contact me on Twitter with questions/remarks : [@camillereynders](http://twitter.com/camillereynders)
