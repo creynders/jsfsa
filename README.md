@@ -32,15 +32,15 @@ info [at] creynders [dot] be
 * classy config
 
 ```
-var offState = new fsa.State( 'off' )
+var offState = new jsfsa.State( 'off' )
 	.addTransition( 'ignite', 'on' )
 	.isInitial = true
 ;
-var onState = new fsa.State( 'on' )
+var onState = new jsfsa.State( 'on' )
 	.addTransition( 'shutdown', 'off' )
 ;
 
-var fsm = new fsa.Automaton()
+var fsm = new jsfsa.Automaton()
 	.addState( offState )
 	.addState( onState )
 	.doTransition( 'ignite' )
@@ -57,12 +57,12 @@ var offState = new State( 'off', {
 	},
 	isInitial : true
 } );
-var onState = new fsa.State( 'on', {
+var onState = new jsfsa.State( 'on', {
 	transitions : {
 		'shutdown' : 'off'
 	}
 } );
-var fsm = new fsa.Automaton()
+var fsm = new jsfsa.Automaton()
 	.addState( offState )
 	.addState( onState )
 	.doTransition( 'ignite' )
@@ -77,10 +77,10 @@ var offState = new State( 'off', {
 	'ignite' : 'on',
 	isInitial : true
 } );
-var onState = new fsa.State( 'on', {
+var onState = new jsfsa.State( 'on', {
 	'shutdown' : 'off'
 } );
-var fsm = new fsa.Automaton()
+var fsm = new jsfsa.Automaton()
 	.addState( offState )
 	.addState( onState )
 	.doTransition( 'ignite' )
@@ -100,7 +100,7 @@ var config = {
 		'shutdown' : 'off'
 	}
 };
-var fsm = new fsa.Automaton( config )
+var fsm = new jsfsa.Automaton( config )
 	.doTransition( 'ignite' )
 ;
 console.log( fsm.getCurrentState().name );//outputs 'on'
@@ -128,7 +128,7 @@ var config = {
 		'shutdown' : 'off'
 	}
 };
-var fsm = new fsa.Automaton( config )
+var fsm = new jsfsa.Automaton( config )
 	.doTransition( 'ignite' )
 ;
 console.log( fsm.getCurrentState().name );//outputs 'off'
@@ -161,7 +161,7 @@ var config = {
 		'shutdown' : 'off'
 	}
 };
-var fsm = new fsa.Automaton( config )
+var fsm = new jsfsa.Automaton( config )
 	.doTransition( 'ignite' )
 ;
 //output in console:
@@ -191,8 +191,8 @@ var config = {
 		'shutdown' : 'off'
 	}
 };
-var fsm = new fsa.Automaton( config )
-	.addListener( fsa.StateEvent.ENTRY_DENIED, outputEvent )
+var fsm = new jsfsa.Automaton( config )
+	.addListener( jsfsa.StateEvent.ENTRY_DENIED, outputEvent )
 	.doTransition( 'ignite' )
 ;
 //output in console:
@@ -304,7 +304,7 @@ var config = {
 	"orange" : { "next" : "red" },
 	"red" : { "next" : "green" }
 };
-fsm = new fsa.Automaton( config )
+fsm = new jsfsa.Automaton( config )
 	.doTransition( 'next' )
 ;
 ```
@@ -328,7 +328,7 @@ var config = {
 		'shutdown' : 'off'
 	}
 };
-var fsm = new fsa.Automaton( config )
+var fsm = new jsfsa.Automaton( config )
 	.doTransition( 'ignite', 'foo' )
 ;
 ```
@@ -359,7 +359,7 @@ JSFSA is inspired by the fsm's of
 
 ## TODO
 
-* Optimize and refactor. FSA's gone through various implementations and though I tried to keep it clean and lean, there's definitely a ton of stuff that can be optimized. At the moment I concentrated more on the API than on the actual implementation.
+* Optimize and refactor. JSFSA's gone through various implementations and though I tried to keep it clean and lean, there's definitely a ton of stuff that can be optimized. At the moment I concentrated more on the API than on the actual implementation.
 * Tests: although I tried to create all tests I could think of, there's undoubtedly a large amount of (unwanted) behaviours that still need to be tested.
 * Docs: the API documentation needs to be completed.
 * Demo: a working demo should be created.
