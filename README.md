@@ -357,7 +357,7 @@ var fsm = new fsa.Automaton( config )
 JSFSA has no dependencies on other frameworks. 
 
 * Building :
-* 
+
 1. [Apache Ant](http://ant.apache.org/): build scripting
 1. [Jasmine](https://github.com/pivotal/jasmine): unit testing (incl.)
 1. [JSDoc Toolkit](http://code.google.com/p/jsdoc-toolkit/): API documentation generation (incl.)
