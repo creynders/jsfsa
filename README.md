@@ -3,12 +3,17 @@
 JSFSA is an abbreviation for JavaScript Finite State Automaton (or Automata), it is a small lib for creating 
 asynchronous, non-deterministic, hierarchical finite-state machines in JavaScript.
 
-* __Asynchronous__: the automatons transitioning can be paused/resumed
-* __Non-deterministic__: from a given state you can jump to several other states
-* __Hierarchical__: States can have sub-states
-
 [Find out more here](http://en.wikipedia.org/wiki/Finite-state_machine)
 
+## Features
+
+* __Hierarchical states__: states can be configured to have an unlimited number of substates, an unlimited number of levels deep.
+* __Guards__: an unlimited amount of callbacks can be set to guard both entry and exit of states.
+* __Listeners__: an unlimited amount of callbacks can be executed on both entry and exit of states.
+* __Named transitions__: switching of states happens through named transitions.
+* __Asynchronous transitioning__: transitioning from one state to the other can be paused/resumed.
+* __Framework independent__: doesn't rely on any other 3rd party frameworks.
+* 
 ## Contact
 
 You can contact me on Twitter with questions/remarks : [@camillereynders](http://twitter.com/camillereynders)
@@ -19,25 +24,6 @@ info [at] creynders [dot] be
 ## Resources
 
 [API documentation](http://creynders.github.com/jsfsa/docs)
-
-## FEATURES
-
-* __Hierarchical states__: states can be configured to have an unlimited number of substates, an unlimited number of levels deep.
-* __Guards__: an unlimited amount of callbacks can be set to guard both entry and exit of states.
-* __Listeners__: an unlimited amount of callbacks can be executed on both entry and exit of states.
-* __Named transitions__: switching of states happens through named transitions.
-* __Asynchronous transitioning__: transitioning from one state to the other can be paused/resumed.
-* __Framework independent__: doesn't rely on any other 3rd party frameworks.
-
-## TODO
-
-* Optimize and refactor. FSA's gone through various implementations and though I tried to keep it clean and lean, there's definitely a ton of stuff that can be optimized. At the moment I concentrated more on the API than on the actual implementation.
-
-* Tests: although I tried to create all tests I could think of, there's undoubtedly a large amount of (unwanted) behaviours that still need to be tested.
-
-* Docs: the API documentation needs to be completed.
-
-* Demo: a working demo should be created.
 
 ## EXAMPLES
 
@@ -368,8 +354,13 @@ JSFSA has no dependencies on other frameworks.
 JSFSA is inspired by the fsm's of 
 
 * [Cássio S. Antonio](https://github.com/cassiozen/AS3-State-Machine)
-
 * [Neil Manuell](http://statemachine.org/)
-
 * [Jake Gordon](http://codeincomplete.com/posts/2012/1/7/javascript_state_machine_v2_1_0/)
+
+## TODO
+
+* Optimize and refactor. FSA's gone through various implementations and though I tried to keep it clean and lean, there's definitely a ton of stuff that can be optimized. At the moment I concentrated more on the API than on the actual implementation.
+* Tests: although I tried to create all tests I could think of, there's undoubtedly a large amount of (unwanted) behaviours that still need to be tested.
+* Docs: the API documentation needs to be completed.
+* Demo: a working demo should be created.
 
