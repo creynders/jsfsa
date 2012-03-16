@@ -1,7 +1,11 @@
-# FSA
+# JSFSA
 
-FSA is an abbreviation for Finite State Automaton (or Automata), it is a small lib for creating 
+JSFSA is an abbreviation for JavaScript Finite State Automaton (or Automata), it is a small lib for creating 
 asynchronous, non-deterministic, hierarchical finite-state machines in JavaScript.
+
+* __Asynchronous__: the automatons transitioning can be paused/resumed
+* __Non-deterministic__: from a given state you can jump to several other states
+* __Hierarchical__: States can have sub-states
 
 [Find out more here](http://en.wikipedia.org/wiki/Finite-state_machine)
 
@@ -12,24 +16,9 @@ You can contact me on Twitter with questions/remarks : [@camillereynders](http:/
 or send me a mail at:
 info [at] creynders [dot] be
 
-## Inspiration
-
-FSA is inspired by the fsm's of 
-
-* [Cássio S. Antonio](https://github.com/cassiozen/AS3-State-Machine)
-
-* [Neil Manuell](http://statemachine.org/)
-
-* [Jake Gordon](http://codeincomplete.com/posts/2012/1/7/javascript_state_machine_v2_1_0/)
-
 ## Resources
 
-[API documentation](http://creynders.github.com/fsa/docs)
-
-## Dependencies
-
-FSA has no dependencies on other frameworks. 
-[jasmine](https://github.com/pivotal/jasmine) is used for testing.
+[API documentation](http://creynders.github.com/jsfsa/docs)
 
 ## FEATURES
 
@@ -362,3 +351,30 @@ var fsm = new fsa.Automaton( config )
 	.doTransition( 'ignite', 'foo' )
 ;
 ```
+
+## Dependencies
+
+* Usage:
+
+JSFSA has no dependencies on other frameworks. 
+
+* Building :
+[Apache Ant](http://ant.apache.org/): build scripting
+[Jasmine](https://github.com/pivotal/jasmine): unit testing (incl.)
+[JSDoc Toolkit](http://code.google.com/p/jsdoc-toolkit/): API documentation generation (incl.)
+[JSHint](http://www.jshint.com/): JS code QA (incl.)
+[YUI Compressor](http://developer.yahoo.com/yui/compressor/): Minification (incl.)
+[PhantomJS](http://www.phantomjs.org/): Headless Webkit
+
+
+
+## Inspiration
+
+JSFSA is inspired by the fsm's of 
+
+* [Cássio S. Antonio](https://github.com/cassiozen/AS3-State-Machine)
+
+* [Neil Manuell](http://statemachine.org/)
+
+* [Jake Gordon](http://codeincomplete.com/posts/2012/1/7/javascript_state_machine_v2_1_0/)
+
