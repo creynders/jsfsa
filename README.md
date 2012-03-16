@@ -23,13 +23,9 @@ info [at] creynders [dot] be
 ## FEATURES
 
 * __Hierarchical states__: states can be configured to have an unlimited number of substates, an unlimited number of levels deep.
-
 * __Guards__: an unlimited amount of callbacks can be set to guard both entry and exit of states.
-
 * __Listeners__: an unlimited amount of callbacks can be executed on both entry and exit of states.
-
-* __Granular__: both state-specific event listening and automaton-wide event listening is possible.
-
+* __Named transitions__: switching of states happens through named transitions.
 * __Framework independent__: doesn't rely on any other 3rd party frameworks.
 
 ## TODO
