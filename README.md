@@ -137,11 +137,7 @@ console.log( fsm.getCurrentState().name );//outputs 'off'
 ### LISTENERS
 
 There are 4 events that can be listened to, either directly on a state instance or on the statemachine instance itself:
-
-1. 'entered'
-1. 'exited'
-1. 'entryDenied'
-1. 'exitDenied'
+'entered', 'exited', 'entryDenied', 'exitDenied'.
 
 * On the state:
 
