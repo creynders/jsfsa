@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <project name="asf" default="properties" basedir=".">
 
-    <target name="version">
+    <target name="version" description="Reads previous version number from file and prompts user to overwrite it">
         <loadfile property="version.old" srcFile="version.txt" />
         <input message="Current version number is ${version.old}. Please enter the new version number:"
             defaultValue="${version.old}" addproperty="version"/>
@@ -9,7 +10,7 @@
     </target>
 
     <!-- PROPERTIES -->
-    <target name="properties">
+    <target name="properties" description="sets up properties">
         <loadfile property="version" srcFile="version.txt" />
         <tstamp>
             <format property="timestamp" pattern="yyyyMMddHHmmss"/>
@@ -21,7 +22,7 @@
     
     <!-- CREATE BUILD -->
 
-    <target name="create_build" depends="properties">
+    <target name="create_build" depends="properties" description="creates build dir from scratch">
         <echo>Creating build...</echo>
         <delete dir="${dir.build}" />
         <mkdir dir="${dir.build.current}" />
@@ -29,7 +30,7 @@
     </target>
 
     <!-- CONSOLIDATE -->
-    <target name="consolidate" depends="properties, create_build">
+    <target name="consolidate" depends="properties, create_build" description="consolidates source files">
         <echo>Consolidating...</echo>
         <copy file="${dir.src}/${name.base.js}" tofile="${file.consolidated.js}"/>
         <replace file="${file.consolidated.js}" token="%VERSION%" value="${version}"/>
@@ -43,7 +44,7 @@
     </target>
 
     <!-- JSHint -->
-  	<target name="jshint" depends="properties, consolidate">
+  	<target name="jshint" depends="properties, consolidate" description="JS code check">
         <echo>Checking syntax...</echo>
           <exec executable="phantomjs" dir="${basedir}" failonerror="true" resultproperty="specs.results">
               <arg line="'${file.jshint-runner.js}'" />
@@ -55,7 +56,7 @@
   	</target>
 
     <!-- SPECS -->
-    <target name="specs" depends="properties">
+    <target name="specs" depends="properties" description="runs the specs">
         <echo>Running specs...</echo>
         <exec executable="phantomjs" dir="${basedir}" failonerror="true" resultproperty="specs.results">
             <arg line="'${file.jasmine-runner.js}'" />
@@ -67,7 +68,7 @@
 
 
     <!-- MINIFY -->
-    <target name="minify" depends="properties,create_build, consolidate">
+    <target name="minify" depends="properties,create_build, consolidate" description="minifies">
         <echo>Minifying...</echo>
         <exec executable="java" dir="${basedir}" failonerror="true">
             <arg line="-jar '${file.yui_compressor.jar}'" />
@@ -79,7 +80,7 @@
     </target>
 
     <!-- JSDOC -->
-    <target name="jsdocs" depends="properties, consolidate">
+    <target name="jsdocs" depends="properties, consolidate" description="creates API documentation">
         <echo>recreating docs folder...</echo>
         <delete dir="${dir.docs}"/>
         <mkdir dir="${dir.docs}" />
@@ -98,7 +99,7 @@
 
     <!-- FINISH -->
 
-    <target name="finish" depends="properties">
+    <target name="finish" depends="properties" description="finishes the build by moving everything form build to bin">
         <echo>Finishing...</echo>
         <delete dir="${dir.bin}" />
         <mkdir dir="${dir.bin}" />
