@@ -25,7 +25,7 @@ info [at] creynders [dot] be
 
 [API documentation](http://creynders.github.com/jsfsa/docs)
 
-## EXAMPLES
+## Examples
 
 ### BASIC USAGE
 
@@ -335,11 +335,11 @@ var fsm = new fsa.Automaton( config )
 
 ## Dependencies
 
-### Usage
+### USAGE
 
 JSFSA has no dependencies on other frameworks. 
 
-### Building
+### BUILD
 
 * [Apache Ant](http://ant.apache.org/): build scripting
 * [Jasmine](https://github.com/pivotal/jasmine): unit testing (incl.)
