@@ -26,6 +26,7 @@ info [at] creynders [dot] be
 * __Guards__: an unlimited amount of callbacks can be set to guard both entry and exit of states.
 * __Listeners__: an unlimited amount of callbacks can be executed on both entry and exit of states.
 * __Named transitions__: switching of states happens through named transitions.
+* __Asynchronous transitioning__: transitioning from one state to the other can be paused/resumed.
 * __Framework independent__: doesn't rely on any other 3rd party frameworks.
 
 ## TODO
