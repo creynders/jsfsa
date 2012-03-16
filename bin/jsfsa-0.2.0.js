@@ -3,7 +3,7 @@
 /**
  * @author Camille Reynders
  * @version 0.2.0
- * built: 20120316103145
+ * built: 20120316114029
  */
 
 
@@ -137,17 +137,27 @@
      * @param {String} to name of the entering/entered state
      */
     jsfsa.StateEvent = function( type, from, to ){
+
+        /**
+         * @type String
+         */
+        this.fqn = 'jsfsa.StateEvent';
+
+        /**
+         * @type String
+         */
         this.type = type;
+
+        /**
+         * @type String
+         */
         this.from = from;
+
+        /**
+         * @type String
+         */
         this.to = to;
     };
-
-    /**
-     * @static
-     * @const
-     * @default 'StateEvent'
-     */
-    jsfsa.StateEvent.FQN = 'StateEvent';
 
     /**
      * @static
@@ -225,6 +235,11 @@
         Dispatcher.call( this );
 
         /**
+         * @type String
+         */
+        this.fqn = 'jsfsa.State';
+
+        /**
         * @type String
         */
         this.name = '';
@@ -257,13 +272,6 @@
 
     jsfsa.State.prototype = new DispatcherProxy();
     jsfsa.State.prototype.constructor = jsfsa.State;
-
-    /**
-     * @static
-     * @const
-     * @default 'State'
-     */
-    jsfsa.State.FQN = 'State';
 
     jsfsa.State._configMembers = [ 'isInitial', 'guards', 'listeners', 'parent', 'transitions' ];
 
@@ -477,8 +485,6 @@
         this.initialChild = undefined;
     };
 
-    Node.FQN = 'Node';
-
     Node.prototype = {
 
         /**
@@ -546,6 +552,7 @@
      */
     jsfsa.Automaton = function( data ){
         Dispatcher.call( this );
+        this.fqn = 'jsfsa.Automaton';
         this._nodes = {};
         this._rootNode = new Node( new jsfsa.State('root') );
         this._currentBranch = [ this._rootNode ];
@@ -559,14 +566,6 @@
 
     jsfsa.Automaton.prototype = new DispatcherProxy();
     jsfsa.Automaton.prototype.constructor = jsfsa.Automaton;
-
-    /**
-     * @static
-     * @const
-     * @type String
-     * @default 'Automaton'
-     */
-    jsfsa.Automaton.FQN = 'Automaton';
 
     jsfsa.Automaton.prototype.isTransitioning = function(){
         return this._internalState === 'transitioning' || this._internalState === 'paused';
@@ -737,6 +736,7 @@
     /**
      *
      * @param {Object} data JSON formatted data object
+     * @return {jsfsa.Automaton} the instance of {@link jsfsa.Automaton} that is acted upon
      */
     jsfsa.Automaton.prototype.parse = function( data ){
         for( var stateName in data ){
@@ -744,10 +744,12 @@
                 this.createState( stateName, data[ stateName ] );
             }
         }
+
+        return this;
     };
 
     /**
-     *
+     * @return {jsfsa.Automaton} the instance of {@link jsfsa.Automaton} that is acted upon
      */
     jsfsa.Automaton.prototype.proceed = function(){
         if( this._internalState !== 'ready' && this._internalState !== 'guarding' ){
@@ -763,15 +765,19 @@
                 this._finishTransition();
             }
         }
+
+        return this;
     };
 
     /**
-     *
+     * @return {jsfsa.Automaton} the instance of {@link jsfsa.Automaton} that is acted upon
      */
     jsfsa.Automaton.prototype.pause = function(){
         if( this._internalState === 'transitioning' ){
             this._internalState = 'paused';
         }
+
+        return this;
     };
 
     /**
