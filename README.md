@@ -352,11 +352,11 @@ var fsm = new fsa.Automaton( config )
 
 ## Dependencies
 
-* Usage:
+### Usage
 
 JSFSA has no dependencies on other frameworks. 
 
-* Building :
+### Building
 
 1. [Apache Ant](http://ant.apache.org/): build scripting
 1. [Jasmine](https://github.com/pivotal/jasmine): unit testing (incl.)
@@ -364,7 +364,6 @@ JSFSA has no dependencies on other frameworks.
 1. [JSHint](http://www.jshint.com/): JS code QA (incl.)
 1. [YUI Compressor](http://developer.yahoo.com/yui/compressor/): Minification (incl.)
 1. [PhantomJS](http://www.phantomjs.org/): Headless Webkit
-
 
 
 ## Inspiration
