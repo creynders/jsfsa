@@ -173,7 +173,7 @@ describe( "jsfsa.State", function(){
             var orange = sm.getState( 'orange' );
             orange.addListener( jsfsa.StateEvent.ENTERED, spy );
             sm.doTransition( 'next' );
-            var e = new jsfsa.StateEvent( jsfsa.StateEvent.ENTERED, 'green', 'orange' );
+            var e = new jsfsa.StateEvent( jsfsa.StateEvent.ENTERED, 'green', 'orange', 'next' );
             expect( spy ).toHaveBeenCalledWith( e );
         });
         it( "should recieve a passed payload", function(){
@@ -183,7 +183,7 @@ describe( "jsfsa.State", function(){
                 foo : "bar"
             };
             sm.doTransition( 'next', payload );
-            var e = new jsfsa.StateEvent( jsfsa.StateEvent.ENTERED, 'green', 'orange' );
+            var e = new jsfsa.StateEvent( jsfsa.StateEvent.ENTERED, 'green', 'orange', 'next');
             expect( spy ).toHaveBeenCalledWith( e, payload );
 
         });

@@ -184,7 +184,7 @@ describe("jsfsa.Automaton", function(){
             var spy = jasmine.createSpy( 'exited' );
             sm.addListener( jsfsa.StateEvent.EXITED, spy );
             sm.doTransition( 'next' );
-            var e= new jsfsa.StateEvent( jsfsa.StateEvent.EXITED, 'green', 'orange' );
+            var e= new jsfsa.StateEvent( jsfsa.StateEvent.EXITED, 'green', 'orange', 'next' );
             expect( spy ).toHaveBeenCalledWith( e );
         });
 
@@ -192,7 +192,7 @@ describe("jsfsa.Automaton", function(){
             var spy = jasmine.createSpy( 'entered' );
             sm.addListener( jsfsa.StateEvent.ENTERED, spy );
             sm.doTransition( 'next' );
-            var e= new jsfsa.StateEvent( jsfsa.StateEvent.ENTERED, 'green', 'orange' );
+            var e= new jsfsa.StateEvent( jsfsa.StateEvent.ENTERED, 'green', 'orange', 'next' );
             expect( spy ).toHaveBeenCalledWith( e );
         });
 
@@ -204,7 +204,7 @@ describe("jsfsa.Automaton", function(){
                 return false;
             });
             sm.doTransition( 'next' );
-            var e= new jsfsa.StateEvent( jsfsa.StateEvent.ENTRY_DENIED, 'green', 'orange' );
+            var e= new jsfsa.StateEvent( jsfsa.StateEvent.ENTRY_DENIED, 'green', 'orange', 'next' );
             expect( spy ).toHaveBeenCalledWith( e );
         });
 
@@ -216,7 +216,7 @@ describe("jsfsa.Automaton", function(){
                 return false;
             });
             sm.doTransition( 'next' );
-            var e= new jsfsa.StateEvent( jsfsa.StateEvent.EXIT_DENIED, 'green', 'orange' );
+            var e= new jsfsa.StateEvent( jsfsa.StateEvent.EXIT_DENIED, 'green', 'orange', 'next' );
             expect( spy ).toHaveBeenCalledWith( e );
         });
 

@@ -136,7 +136,7 @@
      * @param {String} from name of the exiting/exited state
      * @param {String} to name of the entering/entered state
      */
-    jsfsa.StateEvent = function( type, from, to ){
+    jsfsa.StateEvent = function( type, from, to, transition ){
 
         /**
          * @type String
@@ -157,6 +157,11 @@
          * @type String
          */
         this.to = to;
+
+        /**
+         * @type String
+         */
+        this.transition = transition
     };
 
     /**
@@ -187,14 +192,33 @@
      */
     jsfsa.StateEvent.EXIT_DENIED = 'exitDenied';
 
+    /**
+     * @static
+     * @const
+     * @default 'transitionDenied'
+     */
+    jsfsa.StateEvent.TRANSITION_DENIED = 'transitionDenied';
+
     jsfsa.StateEvent.prototype = {
         /**
          * @return {jsfsa.StateEvent}
          */
         clone : function(){
-            return new jsfsa.StateEvent( this.type, this.from, this.to );
+            var result = new jsfsa.StateEvent( this.type, this.from, this.to, this.transition )
+            return result;
+        },
+
+        /**
+         * @internal
+         * @param type
+         */
+        _setType : function( type ){
+            this.type = type;
+
+            return this;
         }
     };
+
 //--( Action )--//
 
     /**
@@ -552,7 +576,11 @@
      */
     jsfsa.Automaton = function( data ){
         Dispatcher.call( this );
+        /**
+         *
+         */
         this.fqn = 'jsfsa.Automaton';
+
         this._nodes = {};
         this._rootNode = new Node( new jsfsa.State('root') );
         this._currentBranch = [ this._rootNode ];
@@ -679,49 +707,54 @@
                 break;
             }
         }
-        if( found ){
+
+        var payload;
+        if( arguments.length > 1 ){
+            payload =  Array.prototype.slice.call( arguments );
+            payload.shift(); //drop transitionname
+        }else{
+            payload = [];
+        }
+
+        var event = new jsfsa.StateEvent( '', this.getCurrentState().name, undefined, transitionName );
+        var args = cloneAndUnshift( payload, event.clone()._setType(jsfsa.StateEvent.TRANSITION_DENIED) );
+
+        if( ! found ){
+            //there's no transition with that name in the current state branch
+            this.dispatch.apply( this, args );
+        }else{
             //transition found somewhere in the _currentStateBranch
             var targetNode = this._nodes[ runner.getTransition( transitionName ) ];
-            if( targetNode ){
-                //TODO: determine what to do if targetNode not found?? Currently failing silenlty
-
+            if( ! targetNode ){
+                //state doesn't exist
+                this.dispatch.apply( this, args );
+            }else{
+                event.to = targetNode.state.name;
                 var initialNodes = targetNode.getInitialBranch();
                 this._newBranch = this._getBranchFromRoot( targetNode ).concat( initialNodes );
                 var streams = this._getShortestRoute( this._currentBranch, this._newBranch );
-                var currentStateName = this.getCurrentState().name;
-                var newStateName = targetNode.state.name;
-
-                var payload;
-                if( arguments.length > 1 ){
-                    payload =  Array.prototype.slice.call( arguments );
-                    payload.shift(); //drop transitionname
-                }else{
-                    payload = [];
-                }
-
                 this._internalState = 'guarding';
-
-                var args = cloneAndUnshift( payload, new jsfsa.StateEvent( jsfsa.Action.EXIT, currentStateName, newStateName ) );
+                var args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.Action.EXIT ) );
                 var proceed = this._executeGuards( streams.up, args  );
                 if( !proceed ){
-                    args = cloneAndUnshift( payload, new jsfsa.StateEvent( jsfsa.StateEvent.EXIT_DENIED, currentStateName, newStateName ) );
+                    args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.StateEvent.EXIT_DENIED ) );
                     this.dispatch.apply( this, args );
                 }else{
-                    args = cloneAndUnshift( payload, new jsfsa.StateEvent( jsfsa.Action.ENTRY, currentStateName, newStateName ) );
+                    args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.Action.ENTRY ) );
                     proceed = this._executeGuards( streams.down, args );
                 }
 
                 if( ! proceed ){
-                    args = cloneAndUnshift( payload, new jsfsa.StateEvent( jsfsa.StateEvent.ENTRY_DENIED, currentStateName, newStateName ) );
+                    args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.StateEvent.ENTRY_DENIED ) );
                     this.dispatch.apply( this, args );
                     this._internalState = 'ready';
                 }else{
                     this._internalState = 'transitioning';
                     var referer = [ { state : this } ];
-                    args = cloneAndUnshift( payload, new jsfsa.StateEvent( jsfsa.StateEvent.EXITED, currentStateName, newStateName ) );
+                    args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.StateEvent.EXITED ) );
                     this._addToQueue( streams.up, args );
                     this._addToQueue( referer, args );
-                    args = cloneAndUnshift( payload, new jsfsa.StateEvent( jsfsa.StateEvent.ENTERED, currentStateName, newStateName ) );
+                    args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.StateEvent.ENTERED ) );
                     this._addToQueue( streams.down, args );
                     this._addToQueue( referer, args );
                     this.proceed();
