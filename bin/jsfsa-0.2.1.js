@@ -2,8 +2,8 @@
 
 /**
  * @author Camille Reynders
- * @version 0.2.0
- * built: 20120316114029
+ * @version 0.2.1
+ * built: 20120317093258
  */
 
 
@@ -23,15 +23,15 @@
     /**
      * @namespace
      * @name jsfsa
-     * @version 0.2.0
+     * @version 0.2.1
      */
     var jsfsa = {
     };
     /**
      * @static
-     * @default 0.2.0
+     * @default 0.2.1
      */
-    jsfsa.VERSION = '0.2.0';
+    jsfsa.VERSION = '0.2.1';
 
  //--( Dispatcher )--//
 
@@ -40,9 +40,11 @@
     };
 
     /**
-     *
+     * Registers a <code>handler</code> function to be called when an event with <code>eventName</code> is dispatched.
+     * The <code>handler</code> is called within the scope of the dispatcher.
      * @param {String} eventName
      * @param {Function} handler
+     * @return {Object} the dispatcher
      */
     Dispatcher.prototype.addListener = function( eventName, handler ){
         if( ! this._listeners.hasOwnProperty( eventName ) ){
@@ -54,9 +56,10 @@
     };
 
     /**
-     *
+     * Registers several <code>handlers</code> for an event with name <code>eventName</code>
      * @param {String} eventName
      * @param {Function} handlers
+     * @return {Object} the dispatcher
      */
     Dispatcher.prototype.addListeners = function( eventName, handlers ){
         if( typeof handlers === "function" ){
@@ -76,7 +79,7 @@
     };
 
     /**
-     *
+     * Checks whether the dispatcher has a specific <code>handler</code> registered for <code>eventName</code>
      * @param {String} eventName
      * @param {Function} handler
      * @return {Boolean}
@@ -89,9 +92,10 @@
         return false;
     };
     /**
-     *
+     * Unregisters a <code>handler</code> for <code>eventName</code>
      * @param {String} eventName
      * @param {Function} handler
+     * @return {Object} the dispatcher
      */
     Dispatcher.prototype.removeListener = function( eventName, handler ){
         if( this._listeners.hasOwnProperty( eventName ) ){
@@ -104,9 +108,10 @@
     };
 
     /**
-     *
+     * Dispatches an event.
      * @param {Object} e
      * @param {String} e.type
+     * @return {Boolean} the result of the registered handlers
      */
     Dispatcher.prototype.dispatch = function( e ){
         var eventName = e.type;
@@ -135,8 +140,9 @@
      * @param {String} type
      * @param {String} from name of the exiting/exited state
      * @param {String} to name of the entering/entered state
+     * @param {transition} transition name of the transition
      */
-    jsfsa.StateEvent = function( type, from, to ){
+    jsfsa.StateEvent = function( type, from, to, transition ){
 
         /**
          * @type String
@@ -144,22 +150,37 @@
         this.fqn = 'jsfsa.StateEvent';
 
         /**
+         * The name of the dispatched event.
+         * @see jsfsa.StateEvent.ENTERED
+         * @see jsfsa.StateEvent.EXITED
+         * @see jsfsa.StateEvent.ENTRY_DENIED
+         * @see jsfsa.StateEvent.EXIT_DENIED
+         * @see jsfsa.StateEvent.TRANSITION_DENIED
          * @type String
          */
         this.type = type;
 
         /**
+         * The name of the state we're (trying to) transition from.
          * @type String
          */
         this.from = from;
 
         /**
+         * The name of the state we're (trying to) transition to.
          * @type String
          */
         this.to = to;
+
+        /**
+         * The name of the transition.
+         * @type String
+         */
+        this.transition = transition;
     };
 
     /**
+     * Dispatched when a state has been entered
      * @static
      * @const
      * @default 'entered'
@@ -167,6 +188,7 @@
     jsfsa.StateEvent.ENTERED = 'entered';
 
     /**
+     * Dispatched when a state has been exited
      * @static
      * @const
      * @default 'exit'
@@ -174,6 +196,7 @@
     jsfsa.StateEvent.EXITED = 'exited';
 
     /**
+     * Dispatched when entry to a state has been denied by a guard
      * @static
      * @const
      * @default 'entryDenied'
@@ -181,20 +204,43 @@
     jsfsa.StateEvent.ENTRY_DENIED = 'entryDenied';
 
     /**
+     * Dispatched when exit from a state has been denied by a guard.
      * @static
      * @const
      * @default 'exitDenied'
      */
     jsfsa.StateEvent.EXIT_DENIED = 'exitDenied';
 
+    /**
+     * Dispatched when the current state has no transition with the specified name
+     * or if the <code>to</code> state was not found.</br>
+     * This event is only dispatched by {@link jsfsa.Automaton}
+     * @static
+     * @const
+     * @default 'transitionDenied'
+     */
+    jsfsa.StateEvent.TRANSITION_DENIED = 'transitionDenied';
+
     jsfsa.StateEvent.prototype = {
         /**
          * @return {jsfsa.StateEvent}
          */
         clone : function(){
-            return new jsfsa.StateEvent( this.type, this.from, this.to );
+            var result = new jsfsa.StateEvent( this.type, this.from, this.to, this.transition );
+            return result;
+        },
+
+        /**
+         * @internal
+         * @param type
+         */
+        _setType : function( type ){
+            this.type = type;
+
+            return this;
         }
     };
+
 //--( Action )--//
 
     /**
@@ -229,7 +275,7 @@
      * @borrows Dispatcher#hasListener as this.hasListener
      * @borrows Dispatcher#dispatch as this.dispatch
      * @param {String} name
-     * @param {Object} [data]
+     * @param {Object} [data] object with configuration data, see {@link jsfsa.State#parseData} for syntax
      */
     jsfsa.State = function( name, data ){
         Dispatcher.call( this );
@@ -240,19 +286,21 @@
         this.fqn = 'jsfsa.State';
 
         /**
-        * @type String
-        */
+         * The name of the state
+         * @type String
+         */
         this.name = '';
 
         /**
-        * name of the parent state
+        * Name of the parent state
         * @type String
         */
         this.parent = undefined;
 
         /**
-        * @type Boolean
-        */
+         * Whether this state will be used as the initial state of the {@link jsfsa.State#parent}
+         * @type Boolean
+         */
         this.isInitial = false;
 
         /**
@@ -267,7 +315,8 @@
         */
         this._transitions = {};
 
-        this._parseData( name, data );
+        this._parseName( name );
+        this.parseData( data );
     };
 
     jsfsa.State.prototype = new DispatcherProxy();
@@ -276,26 +325,25 @@
     jsfsa.State._configMembers = [ 'isInitial', 'guards', 'listeners', 'parent', 'transitions' ];
 
     /**
-     *
+     * Tells this state to allow a transition with name <code>transitionName</code> from this state to <code>stateName</code></br>
+     * Overwrites transitions with the same name already registered with this state.
+     * @see jsfsa.State#removeTransition
+     * @see jsfsa.State#hasTransition
+     * @see jsfsa.State#getTransition
      * @param {String} transitionName
      * @param {String} stateName
-     * @throws {Error} 1040
-     * @throws {Error} 1041
      * @return {jsfsa.State} the instance of {@link jsfsa.State} that is acted upon
      */
     jsfsa.State.prototype.addTransition = function( transitionName, stateName ){
-        if( ! transitionName || typeof transitionName !== "string" ){
-            throw new Error( 1040 );
-        }
-        if( ! stateName || typeof stateName !== "string" ){
-            throw new Error( 1041 );
-        }
         this._transitions[ transitionName ] = stateName;
         return this;
     };
 
     /**
-     *
+     * Removes a registered transition with name <code>transitionName</code>. Fails silently if such a transition was not found.
+     * @see jsfsa.State#addTransition
+     * @see jsfsa.State#hasTransition
+     * @see jsfsa.State#getTransition
      * @param {String} transitionName
      * @return {jsfsa.State} the instance of {@link jsfsa.State} that is acted upon
      */
@@ -305,7 +353,10 @@
     };
 
     /**
-     *
+     * Retrieves the name of the state that will be transitioned with <code>transitionName</code>
+     * @see jsfsa.State#addTransition
+     * @see jsfsa.State#hasTransition
+     * @see jsfsa.State#removeTransition
      * @param {String} transitionName
      * @return {String} target state name
      */
@@ -314,7 +365,10 @@
     };
 
     /**
-     *
+     * Checks whether a transition with <code>transitionName</code> has been registered for this state.
+     * @see jsfsa.State#addTransition
+     * @see jsfsa.State#getTransition
+     * @see jsfsa.State#removeTransition
      * @param {String} transitionName
      * @return {Boolean}
      */
@@ -323,61 +377,152 @@
     };
 
     /**
-     *
-     * @param {String} eventName
+     * Sets up <code>guard</code> to be called if entry/exit of a state has been requested.</br>
+     * The <code>guard</code> should return <code>true</code> to allow the <code>action</code> to happen.
+     * Anything <code>falsy</code> will deny transition to/from this state.</br>
+     * The <code>guard</code> receives a {@link jsfsa.StateEvent} object as a first parameter.
+     * @see jsfsa.State#addGuards
+     * @see jsfsa.State#hasGuard
+     * @see jsfsa.State#removeGuard
+     * @param {String} action One of the static property values of {@link jsfsa.Action}
      * @param {Function} guard
      * @return {jsfsa.State} the instance of {@link jsfsa.State} that is acted upon
      */
-    jsfsa.State.prototype.addGuard = function( eventName, guard ){
-        this._getGuardian().addListener( eventName, guard );
+    jsfsa.State.prototype.addGuard = function( action, guard ){
+        this._getGuardian().addListener( action, guard );
         return this;
     };
 
     /**
-     *
-     * @param {String} eventName
+     * Registers multiple <code>guards</code> to be called on <code>action</code>
+     * @see jsfsa.State#addGuard
+     * @see jsfsa.State#hasGuard
+     * @see jsfsa.State#removeGuard
+     * @param {String} action One of the static property values of {@link jsfsa.Action}
      * @param {Function[]} guards
      * @return {jsfsa.State} the instance of {@link jsfsa.State} that is acted upon
      */
-    jsfsa.State.prototype.addGuards = function( eventName, guards ){
-        this._getGuardian().addListeners( eventName, guards );
+    jsfsa.State.prototype.addGuards = function( action, guards ){
+        this._getGuardian().addListeners( action, guards );
         return this;
     };
 
     /**
-     *
-     * @param {String} eventName
+     * Checks if a <code>guard</code> has been registered to control transitioning to/from this state.
+     * @see jsfsa.State#addGuard
+     * @see jsfsa.State#addGuards
+     * @see jsfsa.State#removeGuard
+     * @param {String} action One of the static property values of {@link jsfsa.Action}
      * @param {Function} guard
      * @return {Boolean}
      */
-    jsfsa.State.prototype.hasGuard = function( eventName, guard ){
-        return this._guardian && this._guardian.hasListener( eventName, guard );
+    jsfsa.State.prototype.hasGuard = function( action, guard ){
+        return this._guardian && this._guardian.hasListener( action, guard );
     };
 
     /**
-     *
-     * @param {String} eventName
+     * Unregisters a <code>guard</code> for <code>action</code>
+     * @see jsfsa.State#addGuard
+     * @see jsfsa.State#addGuards
+     * @see jsfsa.State#hasGuard
+     * @param {String} action One of the static property values of {@link jsfsa.Action}
      * @param {Function} guard
      * @return {jsfsa.State} the instance of {@link jsfsa.State} that is acted upon
      */
-    jsfsa.State.prototype.removeGuard = function( eventName, guard ){
+    jsfsa.State.prototype.removeGuard = function( action, guard ){
         if( this._guardian ){
-            this._guardian.removeListener( eventName, guard );
+            this._guardian.removeListener( action, guard );
         }
         return this;
     };
 
     /**
-     *
-     * @return {jsfsa.State} the instance of {@link jsfsa.State} that is acted upon
+     * Parses the <code>data</code> to configure the state.
+     * @example //Strict syntax
+    var guard = function( e ){
+        return false;
+    };
+    var listener = function( e ){
+        console.log( e );
+    }
+    var config = {
+        isInitial : true,
+        transitions : {
+            'ignite' : 'on', //transitionName : targetStateName
+            'fail' : 'broken'
+        },
+        guards : {
+            entry : [ guard ],
+            exit : [ guard ]
+        },
+        listeners : {
+            entryDenied : [ listener ],
+            entered : [ listener ],
+            exitDenied : [ listener ],
+            exited : [ listener ]
+        }
+    }
+     * @example //Loose syntax
+    var guard = function( e ){
+        return false;
+    };
+    var listener = function( e ){
+        console.log( e );
+    }
+    var config = {
+        isInitial : true,
+        'ignite' : 'on', //transitionName : targetStateName
+        'fail' : 'broken'
+        guards : {
+            entry : guard,
+            exit : guard
+        },
+        listeners : {
+            entryDenied : listener,
+            entered : listener,
+            exitDenied : listener,
+            exited : listener
+        }
+    }
+     * @param {Object} data
+     */
+    jsfsa.State.prototype.parseData = function( data ){
+        if( data ){
+            if( data.isInitial ) {
+                this.isInitial = true;
+            }
+            if( data.guards ){
+                if( data.guards[ jsfsa.Action.ENTRY ] ){
+                    this.addGuards( jsfsa.Action.ENTRY, data.guards[ jsfsa.Action.ENTRY ] );
+                }
+                if( data.guards[ jsfsa.Action.EXIT ] ){
+                    this.addGuards(jsfsa.Action.EXIT, data.guards[ jsfsa.Action.EXIT ] );
+                }
+            }
+            for( var eventName in data.listeners ){
+                if( data.listeners.hasOwnProperty( eventName ) ){
+                    this.addListeners( eventName, data.listeners[ eventName ] );
+                }
+            }
+            if( data.parent ){
+                this.parent = data.parent;
+            }
+            if( data.transitions ){
+                this._addTransitions( data.transitions );
+            }
+
+            this._addTransitions( data, jsfsa.State._configMembers );
+        }
+    };
+
+    /**
+     * Releases all resources. After calling this method, the State instance can/should no longer be used.
      */
     jsfsa.State.prototype.destroy = function(){
         this._guardian = undefined;
         this._transitions = undefined;
         this._listeners = undefined;
         this.name = undefined;
-
-        return this;
     };
 
     jsfsa.State.prototype._getGuardian = function(){
@@ -439,36 +584,6 @@
         this.dispatch.apply( this, args );
     };
 
-    jsfsa.State.prototype._parseData = function( name, data ){
-        this._parseName( name );
-
-        if( data ){
-            if( data.isInitial ) {
-                this.isInitial = true;
-            }
-            if( data.guards ){
-                if( data.guards[ jsfsa.Action.ENTRY ] ){
-                    this.addGuards( jsfsa.Action.ENTRY, data.guards[ jsfsa.Action.ENTRY ] );
-                }
-                if( data.guards[ jsfsa.Action.EXIT ] ){
-                    this.addGuards(jsfsa.Action.EXIT, data.guards[ jsfsa.Action.EXIT ] );
-                }
-            }
-            for( var eventName in data.listeners ){
-                if( data.listeners.hasOwnProperty( eventName ) ){
-                    this.addListeners( eventName, data.listeners[ eventName ] );
-                }
-            }
-            if( data.parent ){
-                this.parent = data.parent;
-            }
-            if( data.transitions ){
-                this._addTransitions( data.transitions );
-            }
-
-            this._addTransitions( data, jsfsa.State._configMembers );
-        }
-    };
 
 //--( Node )--//
 
@@ -552,7 +667,11 @@
      */
     jsfsa.Automaton = function( data ){
         Dispatcher.call( this );
+        /**
+         *
+         */
         this.fqn = 'jsfsa.Automaton';
+
         this._nodes = {};
         this._rootNode = new Node( new jsfsa.State('root') );
         this._currentBranch = [ this._rootNode ];
@@ -679,49 +798,54 @@
                 break;
             }
         }
-        if( found ){
+
+        var payload;
+        if( arguments.length > 1 ){
+            payload =  Array.prototype.slice.call( arguments );
+            payload.shift(); //drop transitionname
+        }else{
+            payload = [];
+        }
+
+        var event = new jsfsa.StateEvent( '', this.getCurrentState().name, undefined, transitionName );
+        var args = cloneAndUnshift( payload, event.clone()._setType(jsfsa.StateEvent.TRANSITION_DENIED) );
+
+        if( ! found ){
+            //there's no transition with that name in the current state branch
+            this.dispatch.apply( this, args );
+        }else{
             //transition found somewhere in the _currentStateBranch
             var targetNode = this._nodes[ runner.getTransition( transitionName ) ];
-            if( targetNode ){
-                //TODO: determine what to do if targetNode not found?? Currently failing silenlty
-
+            if( ! targetNode ){
+                //state doesn't exist
+                this.dispatch.apply( this, args );
+            }else{
+                event.to = targetNode.state.name;
                 var initialNodes = targetNode.getInitialBranch();
                 this._newBranch = this._getBranchFromRoot( targetNode ).concat( initialNodes );
                 var streams = this._getShortestRoute( this._currentBranch, this._newBranch );
-                var currentStateName = this.getCurrentState().name;
-                var newStateName = targetNode.state.name;
-
-                var payload;
-                if( arguments.length > 1 ){
-                    payload =  Array.prototype.slice.call( arguments );
-                    payload.shift(); //drop transitionname
-                }else{
-                    payload = [];
-                }
-
                 this._internalState = 'guarding';
-
-                var args = cloneAndUnshift( payload, new jsfsa.StateEvent( jsfsa.Action.EXIT, currentStateName, newStateName ) );
+                args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.Action.EXIT ) );
                 var proceed = this._executeGuards( streams.up, args  );
                 if( !proceed ){
-                    args = cloneAndUnshift( payload, new jsfsa.StateEvent( jsfsa.StateEvent.EXIT_DENIED, currentStateName, newStateName ) );
+                    args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.StateEvent.EXIT_DENIED ) );
                     this.dispatch.apply( this, args );
                 }else{
-                    args = cloneAndUnshift( payload, new jsfsa.StateEvent( jsfsa.Action.ENTRY, currentStateName, newStateName ) );
+                    args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.Action.ENTRY ) );
                     proceed = this._executeGuards( streams.down, args );
                 }
 
                 if( ! proceed ){
-                    args = cloneAndUnshift( payload, new jsfsa.StateEvent( jsfsa.StateEvent.ENTRY_DENIED, currentStateName, newStateName ) );
+                    args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.StateEvent.ENTRY_DENIED ) );
                     this.dispatch.apply( this, args );
                     this._internalState = 'ready';
                 }else{
                     this._internalState = 'transitioning';
                     var referer = [ { state : this } ];
-                    args = cloneAndUnshift( payload, new jsfsa.StateEvent( jsfsa.StateEvent.EXITED, currentStateName, newStateName ) );
+                    args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.StateEvent.EXITED ) );
                     this._addToQueue( streams.up, args );
                     this._addToQueue( referer, args );
-                    args = cloneAndUnshift( payload, new jsfsa.StateEvent( jsfsa.StateEvent.ENTERED, currentStateName, newStateName ) );
+                    args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.StateEvent.ENTERED ) );
                     this._addToQueue( streams.down, args );
                     this._addToQueue( referer, args );
                     this.proceed();

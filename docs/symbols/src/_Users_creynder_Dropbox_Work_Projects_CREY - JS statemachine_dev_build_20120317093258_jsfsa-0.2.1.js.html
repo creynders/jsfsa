@@ -9,8 +9,8 @@
 <span class='line'>  2</span> 
 <span class='line'>  3</span> </span><span class="COMM">/**
 <span class='line'>  4</span>  * @author Camille Reynders
-<span class='line'>  5</span>  * @version %VERSION%
-<span class='line'>  6</span>  * built: %TIMESTAMP%
+<span class='line'>  5</span>  * @version 0.2.1
+<span class='line'>  6</span>  * built: 20120317093258
 <span class='line'>  7</span>  */</span><span class="WHIT">
 <span class='line'>  8</span> 
 <span class='line'>  9</span> 
@@ -30,15 +30,15 @@
 <span class='line'> 23</span> </span><span class="WHIT">    </span><span class="COMM">/**
 <span class='line'> 24</span>      * @namespace
 <span class='line'> 25</span>      * @name jsfsa
-<span class='line'> 26</span>      * @version %VERSION%
+<span class='line'> 26</span>      * @version 0.2.1
 <span class='line'> 27</span>      */</span><span class="WHIT">
 <span class='line'> 28</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">jsfsa</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'> 29</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 30</span> </span><span class="WHIT">    </span><span class="COMM">/**
 <span class='line'> 31</span>      * @static
-<span class='line'> 32</span>      * @default %VERSION%
+<span class='line'> 32</span>      * @default 0.2.1
 <span class='line'> 33</span>      */</span><span class="WHIT">
-<span class='line'> 34</span> </span><span class="WHIT">    </span><span class="NAME">jsfsa.VERSION</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'%VERSION%'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 34</span> </span><span class="WHIT">    </span><span class="NAME">jsfsa.VERSION</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'0.2.1'</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 35</span> 
 <span class='line'> 36</span> </span><span class="WHIT"> </span><span class="COMM">//--( Dispatcher )--//</span><span class="WHIT">
 <span class='line'> 37</span> 
@@ -183,7 +183,7 @@
 <span class='line'>176</span>          * The name of the transition.
 <span class='line'>177</span>          * @type String
 <span class='line'>178</span>          */</span><span class="WHIT">
-<span class='line'>179</span> </span><span class="WHIT">        </span><span class="NAME">this.transition</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">transition</span><span class="WHIT">
+<span class='line'>179</span> </span><span class="WHIT">        </span><span class="NAME">this.transition</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">transition</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>180</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>181</span> 
 <span class='line'>182</span> </span><span class="WHIT">    </span><span class="COMM">/**
@@ -233,7 +233,7 @@
 <span class='line'>226</span>          * @return {jsfsa.StateEvent}
 <span class='line'>227</span>          */</span><span class="WHIT">
 <span class='line'>228</span> </span><span class="WHIT">        </span><span class="NAME">clone</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>229</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">result</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">jsfsa.StateEvent</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">this.type</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.from</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.to</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.transition</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>229</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">result</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">jsfsa.StateEvent</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">this.type</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.from</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.to</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.transition</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>230</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">result</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>231</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'>232</span> 
@@ -832,7 +832,7 @@
 <span class='line'>825</span> </span><span class="WHIT">                </span><span class="NAME">this._newBranch</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._getBranchFromRoot</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">targetNode</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">concat</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">initialNodes</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>826</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">streams</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._getShortestRoute</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">this._currentBranch</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._newBranch</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>827</span> </span><span class="WHIT">                </span><span class="NAME">this._internalState</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'guarding'</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>828</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">args</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">cloneAndUnshift</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">payload</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">event.clone</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">_setType</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">jsfsa.Action.EXIT</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>828</span> </span><span class="WHIT">                </span><span class="NAME">args</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">cloneAndUnshift</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">payload</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">event.clone</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">_setType</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">jsfsa.Action.EXIT</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>829</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">proceed</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._executeGuards</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">streams.up</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="WHIT">  </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>830</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">proceed</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>831</span> </span><span class="WHIT">                    </span><span class="NAME">args</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">cloneAndUnshift</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">payload</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">event.clone</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">_setType</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">jsfsa.StateEvent.EXIT_DENIED</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">

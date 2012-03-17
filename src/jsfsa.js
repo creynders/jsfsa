@@ -176,7 +176,7 @@
          * The name of the transition.
          * @type String
          */
-        this.transition = transition
+        this.transition = transition;
     };
 
     /**
@@ -226,7 +226,7 @@
          * @return {jsfsa.StateEvent}
          */
         clone : function(){
-            var result = new jsfsa.StateEvent( this.type, this.from, this.to, this.transition )
+            var result = new jsfsa.StateEvent( this.type, this.from, this.to, this.transition );
             return result;
         },
 
@@ -825,7 +825,7 @@
                 this._newBranch = this._getBranchFromRoot( targetNode ).concat( initialNodes );
                 var streams = this._getShortestRoute( this._currentBranch, this._newBranch );
                 this._internalState = 'guarding';
-                var args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.Action.EXIT ) );
+                args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.Action.EXIT ) );
                 var proceed = this._executeGuards( streams.up, args  );
                 if( !proceed ){
                     args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.StateEvent.EXIT_DENIED ) );
