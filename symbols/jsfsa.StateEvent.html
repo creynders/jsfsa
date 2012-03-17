@@ -221,7 +221,7 @@ ul.inheritsList
 				
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/_Users_creynder_Dropbox_Work_Projects_CREY - JS statemachine_dev_build_20120316114029_jsfsa-0.2.0.js.html">jsfsa-0.2.0.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/_Users_creynder_Dropbox_Work_Projects_CREY - JS statemachine_dev_src_jsfsa.js.html">jsfsa.js</a>.
 				
 			</p>
 
@@ -240,7 +240,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/jsfsa.StateEvent.html#constructor">jsfsa.StateEvent</a></b>(type, from, to)
+								<b><a href="../symbols/jsfsa.StateEvent.html#constructor">jsfsa.StateEvent</a></b>(type, from, to, transition)
 							</div>
 							<div class="description"></div>
 						</td>
@@ -269,7 +269,7 @@ ul.inheritsList
 								<div class="fixedFont">
 								jsfsa.StateEvent.<b><a href="../symbols/jsfsa.StateEvent.html#.ENTERED">ENTERED</a></b>
 								</div>
-								<div class="description"></div>
+								<div class="description">Dispatched when a state has been entered</div>
 							</td>
 						</tr>
 					
@@ -279,7 +279,7 @@ ul.inheritsList
 								<div class="fixedFont">
 								jsfsa.StateEvent.<b><a href="../symbols/jsfsa.StateEvent.html#.ENTRY_DENIED">ENTRY_DENIED</a></b>
 								</div>
-								<div class="description"></div>
+								<div class="description">Dispatched when entry to a state has been denied by a guard</div>
 							</td>
 						</tr>
 					
@@ -289,7 +289,7 @@ ul.inheritsList
 								<div class="fixedFont">
 								jsfsa.StateEvent.<b><a href="../symbols/jsfsa.StateEvent.html#.EXIT_DENIED">EXIT_DENIED</a></b>
 								</div>
-								<div class="description"></div>
+								<div class="description">Dispatched when exit from a state has been denied by a guard.</div>
 							</td>
 						</tr>
 					
@@ -299,7 +299,7 @@ ul.inheritsList
 								<div class="fixedFont">
 								jsfsa.StateEvent.<b><a href="../symbols/jsfsa.StateEvent.html#.EXITED">EXITED</a></b>
 								</div>
-								<div class="description"></div>
+								<div class="description">Dispatched when a state has been exited</div>
 							</td>
 						</tr>
 					
@@ -319,7 +319,7 @@ ul.inheritsList
 								<div class="fixedFont">
 								<b><a href="../symbols/jsfsa.StateEvent.html#from">from</a></b>
 								</div>
-								<div class="description"></div>
+								<div class="description">The name of the state we're (trying to) transition from.</div>
 							</td>
 						</tr>
 					
@@ -329,7 +329,28 @@ ul.inheritsList
 								<div class="fixedFont">
 								<b><a href="../symbols/jsfsa.StateEvent.html#to">to</a></b>
 								</div>
-								<div class="description"></div>
+								<div class="description">The name of the state we're (trying to) transition to.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/jsfsa.StateEvent.html#transition">transition</a></b>
+								</div>
+								<div class="description">The name of the transition.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								jsfsa.StateEvent.<b><a href="../symbols/jsfsa.StateEvent.html#.TRANSITION_DENIED">TRANSITION_DENIED</a></b>
+								</div>
+								<div class="description">Dispatched when the current state has no transition with the specified name
+or if the <code>to</code> state was not found.</div>
 							</td>
 						</tr>
 					
@@ -339,7 +360,7 @@ ul.inheritsList
 								<div class="fixedFont">
 								<b><a href="../symbols/jsfsa.StateEvent.html#type">type</a></b>
 								</div>
-								<div class="description"></div>
+								<div class="description">The name of the dispatched event.</div>
 							</td>
 						</tr>
 					
@@ -390,7 +411,7 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>jsfsa.StateEvent</b>(type, from, to)
+						<b>jsfsa.StateEvent</b>(type, from, to, transition)
 				</div>
 				
 				<div class="description">
@@ -423,6 +444,12 @@ ul.inheritsList
 							</dt>
 								<dd>name of the entering/entered state</dd>
 						
+							<dt>
+								<span class="light fixedFont">{transition}</span>  <b>transition</b>
+								
+							</dt>
+								<dd>name of the transition</dd>
+						
 						</dl>
 					
 					
@@ -449,7 +476,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Dispatched when a state has been entered
 						
 						
 					</div>
@@ -478,7 +505,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Dispatched when entry to a state has been denied by a guard
 						
 						
 					</div>
@@ -507,7 +534,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Dispatched when exit from a state has been denied by a guard.
 						
 						
 					</div>
@@ -536,7 +563,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Dispatched when a state has been exited
 						
 						
 					</div>
@@ -587,7 +614,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						The name of the state we're (trying to) transition from.
 						
 						
 					</div>
@@ -609,7 +636,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						The name of the state we're (trying to) transition to.
 						
 						
 					</div>
@@ -623,15 +650,15 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name="type"> </a>
+					<a name="transition"> </a>
 					<div class="fixedFont">
 					
 					<span class="light">{String}</span>
-					<b>type</b>
+					<b>transition</b>
 					
 					</div>
 					<div class="description">
-						
+						The name of the transition.
 						
 						
 					</div>
@@ -640,6 +667,74 @@ ul.inheritsList
 
 						
 						
+						
+						
+
+					<hr />
+				
+					<a name=".TRANSITION_DENIED"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">jsfsa.StateEvent.</span><b>TRANSITION_DENIED</b>
+					
+					</div>
+					<div class="description">
+						Dispatched when the current state has no transition with the specified name
+or if the <code>to</code> state was not found.</br>
+This event is only dispatched by <a href="../symbols/jsfsa.Automaton.html">jsfsa.Automaton</a>
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Default Value:</dt>
+							<dd>
+								'transitionDenied'
+							</dd>
+							</dl>
+						
+
+					<hr />
+				
+					<a name="type"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{String}</span>
+					<b>type</b>
+					
+					</div>
+					<div class="description">
+						The name of the dispatched event.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+							<dd><a href="../symbols/jsfsa.StateEvent.html#.ENTERED">jsfsa.StateEvent.ENTERED</a></dd>
+							
+							<dd><a href="../symbols/jsfsa.StateEvent.html#.EXITED">jsfsa.StateEvent.EXITED</a></dd>
+							
+							<dd><a href="../symbols/jsfsa.StateEvent.html#.ENTRY_DENIED">jsfsa.StateEvent.ENTRY_DENIED</a></dd>
+							
+							<dd><a href="../symbols/jsfsa.StateEvent.html#.EXIT_DENIED">jsfsa.StateEvent.EXIT_DENIED</a></dd>
+							
+							<dd><a href="../symbols/jsfsa.StateEvent.html#.TRANSITION_DENIED">jsfsa.StateEvent.TRANSITION_DENIED</a></dd>
+							
+							</dl>
 						
 						
 
@@ -697,7 +792,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.3.2 on Fri Mar 16 2012 11:40:40 GMT+0100 (CET)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.3.2 on Sat Mar 17 2012 09:30:51 GMT+0100 (CET)
 		</div>
 	</body>
 </html>

@@ -221,7 +221,7 @@ ul.inheritsList
 				
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/_Users_creynder_Dropbox_Work_Projects_CREY - JS statemachine_dev_build_20120316114029_jsfsa-0.2.0.js.html">jsfsa-0.2.0.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/_Users_creynder_Dropbox_Work_Projects_CREY - JS statemachine_dev_src_jsfsa.js.html">jsfsa.js</a>.
 				
 			</p>
 
@@ -251,6 +251,34 @@ ul.inheritsList
 
 <!-- ============================== properties summary ===================== -->
 			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class jsfsa.Automaton.">
+					<caption>Field Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Field Attributes</th>
+							<th scope="col">Field Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/jsfsa.Automaton.html#fqn">fqn</a></b>
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+			
 
 <!-- ============================== methods summary ======================== -->
 			
@@ -271,7 +299,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/jsfsa.Automaton.html#addListener">addListener</a></b>(eventName, handler)
 								</div>
-								<div class="description"></div>
+								<div class="description">Registers a <code>handler</code> function to be called when an event with <code>eventName</code> is dispatched.</div>
 							</td>
 						</tr>
 					
@@ -280,7 +308,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/jsfsa.Automaton.html#addListeners">addListeners</a></b>(eventName, handlers)
 								</div>
-								<div class="description"></div>
+								<div class="description">Registers several <code>handlers</code> for an event with name <code>eventName</code></div>
 							</td>
 						</tr>
 					
@@ -316,7 +344,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/jsfsa.Automaton.html#dispatch">dispatch</a></b>(e)
 								</div>
-								<div class="description"></div>
+								<div class="description">Dispatches an event.</div>
 							</td>
 						</tr>
 					
@@ -362,7 +390,7 @@ guards and actions</div>
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/jsfsa.Automaton.html#hasListener">hasListener</a></b>(eventName, handler)
 								</div>
-								<div class="description"></div>
+								<div class="description">Checks whether the dispatcher has a specific <code>handler</code> registered for <code>eventName</code></div>
 							</td>
 						</tr>
 					
@@ -407,7 +435,7 @@ guards and actions</div>
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/jsfsa.Automaton.html#removeListener">removeListener</a></b>(eventName, handler)
 								</div>
-								<div class="description"></div>
+								<div class="description">Unregisters a <code>handler</code> for <code>eventName</code></div>
 							</td>
 						</tr>
 					
@@ -472,6 +500,33 @@ guards and actions</div>
 
 <!-- ============================== field details ========================== -->		
 			
+				<div class="sectionTitle">
+					Field Detail
+				</div>
+				
+					<a name="fqn"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>fqn</b>
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					
+				
+			
 
 <!-- ============================== method details ========================= -->		
 			
@@ -482,12 +537,13 @@ guards and actions</div>
 					<a name="addListener"> </a>
 					<div class="fixedFont">
 					
-					
+					<span class="light">{Object}</span>
 					<b>addListener</b>(eventName, handler)
 					
 					</div>
 					<div class="description">
-						
+						Registers a <code>handler</code> function to be called when an event with <code>eventName</code> is dispatched.
+The <code>handler</code> is called within the scope of the dispatcher.
 						
 						
 					</div>
@@ -516,6 +572,13 @@ guards and actions</div>
 						
 						
 						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Object}</span> the dispatcher</dd>
+							
+							</dl>
+						
 						
 						
 
@@ -524,12 +587,12 @@ guards and actions</div>
 					<a name="addListeners"> </a>
 					<div class="fixedFont">
 					
-					
+					<span class="light">{Object}</span>
 					<b>addListeners</b>(eventName, handlers)
 					
 					</div>
 					<div class="description">
-						
+						Registers several <code>handlers</code> for an event with name <code>eventName</code>
 						
 						
 					</div>
@@ -557,6 +620,13 @@ guards and actions</div>
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Object}</span> the dispatcher</dd>
+							
+							</dl>
 						
 						
 						
@@ -683,12 +753,12 @@ guards and actions</div>
 					<a name="dispatch"> </a>
 					<div class="fixedFont">
 					
-					
+					<span class="light">{Boolean}</span>
 					<b>dispatch</b>(e)
 					
 					</div>
 					<div class="description">
-						
+						Dispatches an event.
 						
 						
 					</div>
@@ -716,6 +786,13 @@ guards and actions</div>
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Boolean}</span> the result of the registered handlers</dd>
+							
+							</dl>
 						
 						
 						
@@ -881,7 +958,7 @@ guards and actions
 					
 					</div>
 					<div class="description">
-						
+						Checks whether the dispatcher has a specific <code>handler</code> registered for <code>eventName</code>
 						
 						
 					</div>
@@ -1075,12 +1152,12 @@ guards and actions
 					<a name="removeListener"> </a>
 					<div class="fixedFont">
 					
-					
+					<span class="light">{Object}</span>
 					<b>removeListener</b>(eventName, handler)
 					
 					</div>
 					<div class="description">
-						
+						Unregisters a <code>handler</code> for <code>eventName</code>
 						
 						
 					</div>
@@ -1108,6 +1185,13 @@ guards and actions
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Object}</span> the dispatcher</dd>
+							
+							</dl>
 						
 						
 						
@@ -1169,7 +1253,7 @@ guards and actions
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.3.2 on Fri Mar 16 2012 11:40:40 GMT+0100 (CET)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.3.2 on Sat Mar 17 2012 09:30:51 GMT+0100 (CET)
 		</div>
 	</body>
 </html>
