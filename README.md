@@ -5,6 +5,10 @@ asynchronous, non-deterministic, hierarchical finite-state machines in JavaScrip
 
 [Find out more here](http://en.wikipedia.org/wiki/Finite-state_machine)
 
+## Status
+
+JSFSA is in a stable state. The reason why it's not v1.x yet is because I want to nail down the API first.
+
 ## Features
 
 * __Hierarchical states__: states can be configured to have an unlimited number of substates, an unlimited number of levels deep.
