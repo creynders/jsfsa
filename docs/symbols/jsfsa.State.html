@@ -221,7 +221,7 @@ ul.inheritsList
 				
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/_Users_creynder_Dropbox_Work_Projects_CREY - JS statemachine_dev_build_20120316114029_jsfsa-0.2.0.js.html">jsfsa-0.2.0.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/_Users_creynder_Dropbox_Work_Projects_CREY - JS statemachine_dev_src_jsfsa.js.html">jsfsa.js</a>.
 				
 			</p>
 
@@ -279,7 +279,7 @@ ul.inheritsList
 								<div class="fixedFont">
 								<b><a href="../symbols/jsfsa.State.html#isInitial">isInitial</a></b>
 								</div>
-								<div class="description"></div>
+								<div class="description">Whether this state will be used as the initial state of the <a href="../symbols/jsfsa.State.html#parent">jsfsa.State#parent</a></div>
 							</td>
 						</tr>
 					
@@ -289,7 +289,7 @@ ul.inheritsList
 								<div class="fixedFont">
 								<b><a href="../symbols/jsfsa.State.html#name">name</a></b>
 								</div>
-								<div class="description"></div>
+								<div class="description">The name of the state</div>
 							</td>
 						</tr>
 					
@@ -299,7 +299,7 @@ ul.inheritsList
 								<div class="fixedFont">
 								<b><a href="../symbols/jsfsa.State.html#parent">parent</a></b>
 								</div>
-								<div class="description">name of the parent state</div>
+								<div class="description">Name of the parent state</div>
 							</td>
 						</tr>
 					
@@ -327,18 +327,18 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/jsfsa.State.html#addGuard">addGuard</a></b>(eventName, guard)
+								<div class="fixedFont"><b><a href="../symbols/jsfsa.State.html#addGuard">addGuard</a></b>(action, guard)
 								</div>
-								<div class="description"></div>
+								<div class="description">Sets up <code>guard</code> to be called if entry/exit of a state has been requested.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/jsfsa.State.html#addGuards">addGuards</a></b>(eventName, guards)
+								<div class="fixedFont"><b><a href="../symbols/jsfsa.State.html#addGuards">addGuards</a></b>(action, guards)
 								</div>
-								<div class="description"></div>
+								<div class="description">Registers multiple <code>guards</code> to be called on <code>action</code></div>
 							</td>
 						</tr>
 					
@@ -347,7 +347,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/jsfsa.State.html#addListener">addListener</a></b>(eventName, handler)
 								</div>
-								<div class="description"></div>
+								<div class="description">Registers a <code>handler</code> function to be called when an event with <code>eventName</code> is dispatched.</div>
 							</td>
 						</tr>
 					
@@ -356,7 +356,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/jsfsa.State.html#addListeners">addListeners</a></b>(eventName, handlers)
 								</div>
-								<div class="description"></div>
+								<div class="description">Registers several <code>handlers</code> for an event with name <code>eventName</code></div>
 							</td>
 						</tr>
 					
@@ -365,7 +365,8 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/jsfsa.State.html#addTransition">addTransition</a></b>(transitionName, stateName)
 								</div>
-								<div class="description"></div>
+								<div class="description">Tells this state to allow a transition with name <code>transitionName</code> from this state to <code>stateName</code></br>
+Overwrites transitions with the same name already registered with this state.</div>
 							</td>
 						</tr>
 					
@@ -374,7 +375,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/jsfsa.State.html#destroy">destroy</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Releases all resources.</div>
 							</td>
 						</tr>
 					
@@ -383,7 +384,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/jsfsa.State.html#dispatch">dispatch</a></b>(e)
 								</div>
-								<div class="description"></div>
+								<div class="description">Dispatches an event.</div>
 							</td>
 						</tr>
 					
@@ -392,16 +393,16 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/jsfsa.State.html#getTransition">getTransition</a></b>(transitionName)
 								</div>
-								<div class="description"></div>
+								<div class="description">Retrieves the name of the state that will be transitioned with <code>transitionName</code></div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/jsfsa.State.html#hasGuard">hasGuard</a></b>(eventName, guard)
+								<div class="fixedFont"><b><a href="../symbols/jsfsa.State.html#hasGuard">hasGuard</a></b>(action, guard)
 								</div>
-								<div class="description"></div>
+								<div class="description">Checks if a <code>guard</code> has been registered to control transitioning to/from this state.</div>
 							</td>
 						</tr>
 					
@@ -410,7 +411,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/jsfsa.State.html#hasListener">hasListener</a></b>(eventName, handler)
 								</div>
-								<div class="description"></div>
+								<div class="description">Checks whether the dispatcher has a specific <code>handler</code> registered for <code>eventName</code></div>
 							</td>
 						</tr>
 					
@@ -419,16 +420,25 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/jsfsa.State.html#hasTransition">hasTransition</a></b>(transitionName)
 								</div>
-								<div class="description"></div>
+								<div class="description">Checks whether a transition with <code>transitionName</code> has been registered for this state.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/jsfsa.State.html#removeGuard">removeGuard</a></b>(eventName, guard)
+								<div class="fixedFont"><b><a href="../symbols/jsfsa.State.html#parseData">parseData</a></b>(data)
 								</div>
-								<div class="description"></div>
+								<div class="description">Parses the <code>data</code> to configure the state.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/jsfsa.State.html#removeGuard">removeGuard</a></b>(action, guard)
+								</div>
+								<div class="description">Unregisters a <code>guard</code> for <code>action</code></div>
 							</td>
 						</tr>
 					
@@ -437,7 +447,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/jsfsa.State.html#removeListener">removeListener</a></b>(eventName, handler)
 								</div>
-								<div class="description"></div>
+								<div class="description">Unregisters a <code>handler</code> for <code>eventName</code></div>
 							</td>
 						</tr>
 					
@@ -446,7 +456,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/jsfsa.State.html#removeTransition">removeTransition</a></b>(transitionName)
 								</div>
-								<div class="description"></div>
+								<div class="description">Removes a registered transition with name <code>transitionName</code>.</div>
 							</td>
 						</tr>
 					
@@ -492,7 +502,7 @@ ul.inheritsList
 								<span class="light fixedFont">{Object}</span>  <b>data</b>
 								<i>Optional</i>
 							</dt>
-								<dd></dd>
+								<dd>object with configuration data, see <a href="../symbols/jsfsa.State.html#parseData">jsfsa.State#parseData</a> for syntax</dd>
 						
 						</dl>
 					
@@ -542,7 +552,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Whether this state will be used as the initial state of the <a href="../symbols/jsfsa.State.html#parent">jsfsa.State#parent</a>
 						
 						
 					</div>
@@ -564,7 +574,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						The name of the state
 						
 						
 					</div>
@@ -586,7 +596,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						name of the parent state
+						Name of the parent state
 						
 						
 					</div>
@@ -612,11 +622,14 @@ ul.inheritsList
 					<div class="fixedFont">
 					
 					<span class="light">{<a href="../symbols/jsfsa.State.html">jsfsa.State</a>}</span>
-					<b>addGuard</b>(eventName, guard)
+					<b>addGuard</b>(action, guard)
 					
 					</div>
 					<div class="description">
-						
+						Sets up <code>guard</code> to be called if entry/exit of a state has been requested.</br>
+The <code>guard</code> should return <code>true</code> to allow the <code>action</code> to happen.
+Anything <code>falsy</code> will deny transition to/from this state.</br>
+The <code>guard</code> receives a <a href="../symbols/jsfsa.StateEvent.html">jsfsa.StateEvent</a> object as a first parameter.
 						
 						
 					</div>
@@ -628,10 +641,10 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{String}</span> <b>eventName</b>
+									<span class="light fixedFont">{String}</span> <b>action</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>One of the static property values of <a href="../symbols/jsfsa.Action.html">jsfsa.Action</a></dd>
 							
 								<dt>
 									<span class="light fixedFont">{Function}</span> <b>guard</b>
@@ -654,6 +667,17 @@ ul.inheritsList
 						
 						
 						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/jsfsa.State.html#addGuards">jsfsa.State#addGuards</a></dd>
+							
+								<dd><a href="../symbols/jsfsa.State.html#hasGuard">jsfsa.State#hasGuard</a></dd>
+							
+								<dd><a href="../symbols/jsfsa.State.html#removeGuard">jsfsa.State#removeGuard</a></dd>
+							
+							</dl>
+						
 
 					<hr />
 				
@@ -661,11 +685,11 @@ ul.inheritsList
 					<div class="fixedFont">
 					
 					<span class="light">{<a href="../symbols/jsfsa.State.html">jsfsa.State</a>}</span>
-					<b>addGuards</b>(eventName, guards)
+					<b>addGuards</b>(action, guards)
 					
 					</div>
 					<div class="description">
-						
+						Registers multiple <code>guards</code> to be called on <code>action</code>
 						
 						
 					</div>
@@ -677,10 +701,10 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{String}</span> <b>eventName</b>
+									<span class="light fixedFont">{String}</span> <b>action</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>One of the static property values of <a href="../symbols/jsfsa.Action.html">jsfsa.Action</a></dd>
 							
 								<dt>
 									<span class="light fixedFont">{Function[]}</span> <b>guards</b>
@@ -703,18 +727,30 @@ ul.inheritsList
 						
 						
 						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/jsfsa.State.html#addGuard">jsfsa.State#addGuard</a></dd>
+							
+								<dd><a href="../symbols/jsfsa.State.html#hasGuard">jsfsa.State#hasGuard</a></dd>
+							
+								<dd><a href="../symbols/jsfsa.State.html#removeGuard">jsfsa.State#removeGuard</a></dd>
+							
+							</dl>
+						
 
 					<hr />
 				
 					<a name="addListener"> </a>
 					<div class="fixedFont">
 					
-					
+					<span class="light">{Object}</span>
 					<b>addListener</b>(eventName, handler)
 					
 					</div>
 					<div class="description">
-						
+						Registers a <code>handler</code> function to be called when an event with <code>eventName</code> is dispatched.
+The <code>handler</code> is called within the scope of the dispatcher.
 						
 						
 					</div>
@@ -743,6 +779,13 @@ ul.inheritsList
 						
 						
 						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Object}</span> the dispatcher</dd>
+							
+							</dl>
+						
 						
 						
 
@@ -751,12 +794,12 @@ ul.inheritsList
 					<a name="addListeners"> </a>
 					<div class="fixedFont">
 					
-					
+					<span class="light">{Object}</span>
 					<b>addListeners</b>(eventName, handlers)
 					
 					</div>
 					<div class="description">
-						
+						Registers several <code>handlers</code> for an event with name <code>eventName</code>
 						
 						
 					</div>
@@ -785,6 +828,13 @@ ul.inheritsList
 						
 						
 						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Object}</span> the dispatcher</dd>
+							
+							</dl>
+						
 						
 						
 
@@ -798,7 +848,8 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Tells this state to allow a transition with name <code>transitionName</code> from this state to <code>stateName</code></br>
+Overwrites transitions with the same name already registered with this state.
 						
 						
 					</div>
@@ -826,21 +877,6 @@ ul.inheritsList
 						
 						
 						
-							<dl class="detailList">
-							<dt class="heading">Throws:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{Error}</span>  <b></b>
-								</dt>
-								<dd>1040</dd>
-							
-								<dt>
-									<span class="light fixedFont">{Error}</span>  <b></b>
-								</dt>
-								<dd>1041</dd>
-							
-							</dl>
-						
 						
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
@@ -850,6 +886,17 @@ ul.inheritsList
 							</dl>
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/jsfsa.State.html#removeTransition">jsfsa.State#removeTransition</a></dd>
+							
+								<dd><a href="../symbols/jsfsa.State.html#hasTransition">jsfsa.State#hasTransition</a></dd>
+							
+								<dd><a href="../symbols/jsfsa.State.html#getTransition">jsfsa.State#getTransition</a></dd>
+							
+							</dl>
 						
 
 					<hr />
@@ -857,12 +904,12 @@ ul.inheritsList
 					<a name="destroy"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/jsfsa.State.html">jsfsa.State</a>}</span>
+					
 					<b>destroy</b>()
 					
 					</div>
 					<div class="description">
-						
+						Releases all resources. After calling this method, the State instance can/should no longer be used.
 						
 						
 					</div>
@@ -873,13 +920,6 @@ ul.inheritsList
 						
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{<a href="../symbols/jsfsa.State.html">jsfsa.State</a>}</span> the instance of <a href="../symbols/jsfsa.State.html">jsfsa.State</a> that is acted upon</dd>
-							
-							</dl>
 						
 						
 						
@@ -889,12 +929,12 @@ ul.inheritsList
 					<a name="dispatch"> </a>
 					<div class="fixedFont">
 					
-					
+					<span class="light">{Boolean}</span>
 					<b>dispatch</b>(e)
 					
 					</div>
 					<div class="description">
-						
+						Dispatches an event.
 						
 						
 					</div>
@@ -923,6 +963,13 @@ ul.inheritsList
 						
 						
 						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Boolean}</span> the result of the registered handlers</dd>
+							
+							</dl>
+						
 						
 						
 
@@ -936,7 +983,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Retrieves the name of the state that will be transitioned with <code>transitionName</code>
 						
 						
 					</div>
@@ -968,6 +1015,17 @@ ul.inheritsList
 						
 						
 						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/jsfsa.State.html#addTransition">jsfsa.State#addTransition</a></dd>
+							
+								<dd><a href="../symbols/jsfsa.State.html#hasTransition">jsfsa.State#hasTransition</a></dd>
+							
+								<dd><a href="../symbols/jsfsa.State.html#removeTransition">jsfsa.State#removeTransition</a></dd>
+							
+							</dl>
+						
 
 					<hr />
 				
@@ -975,11 +1033,11 @@ ul.inheritsList
 					<div class="fixedFont">
 					
 					<span class="light">{Boolean}</span>
-					<b>hasGuard</b>(eventName, guard)
+					<b>hasGuard</b>(action, guard)
 					
 					</div>
 					<div class="description">
-						
+						Checks if a <code>guard</code> has been registered to control transitioning to/from this state.
 						
 						
 					</div>
@@ -991,10 +1049,10 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{String}</span> <b>eventName</b>
+									<span class="light fixedFont">{String}</span> <b>action</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>One of the static property values of <a href="../symbols/jsfsa.Action.html">jsfsa.Action</a></dd>
 							
 								<dt>
 									<span class="light fixedFont">{Function}</span> <b>guard</b>
@@ -1017,6 +1075,17 @@ ul.inheritsList
 						
 						
 						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/jsfsa.State.html#addGuard">jsfsa.State#addGuard</a></dd>
+							
+								<dd><a href="../symbols/jsfsa.State.html#addGuards">jsfsa.State#addGuards</a></dd>
+							
+								<dd><a href="../symbols/jsfsa.State.html#removeGuard">jsfsa.State#removeGuard</a></dd>
+							
+							</dl>
+						
 
 					<hr />
 				
@@ -1028,7 +1097,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Checks whether the dispatcher has a specific <code>handler</code> registered for <code>eventName</code>
 						
 						
 					</div>
@@ -1077,7 +1146,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Checks whether a transition with <code>transitionName</code> has been registered for this state.
 						
 						
 					</div>
@@ -1109,6 +1178,103 @@ ul.inheritsList
 						
 						
 						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/jsfsa.State.html#addTransition">jsfsa.State#addTransition</a></dd>
+							
+								<dd><a href="../symbols/jsfsa.State.html#getTransition">jsfsa.State#getTransition</a></dd>
+							
+								<dd><a href="../symbols/jsfsa.State.html#removeTransition">jsfsa.State#removeTransition</a></dd>
+							
+							</dl>
+						
+
+					<hr />
+				
+					<a name="parseData"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>parseData</b>(data)
+					
+					</div>
+					<div class="description">
+						Parses the <code>data</code> to configure the state.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">//Strict syntax
+    var guard = function( e ){
+        return false;
+    };
+    var listener = function( e ){
+        console.log( e );
+    }
+    var config = {
+        isInitial : true,
+        transitions : {
+            'ignite' : 'on', //transitionName : targetStateName
+            'fail' : 'broken'
+        },
+        guards : {
+            entry : [ guard ],
+            exit : [ guard ]
+        },
+        listeners : {
+            entryDenied : [ listener ],
+            entered : [ listener ],
+            exitDenied : [ listener ],
+            exited : [ listener ]
+        }
+    }</pre>
+					
+					<pre class="code">//Loose syntax
+    var guard = function( e ){
+        return false;
+    };
+    var listener = function( e ){
+        console.log( e );
+    }
+    var config = {
+        isInitial : true,
+        'ignite' : 'on', //transitionName : targetStateName
+        'fail' : 'broken'
+        guards : {
+            entry : guard,
+            exit : guard
+        },
+        listeners : {
+            entryDenied : listener,
+            entered : listener,
+            exitDenied : listener,
+            exited : listener
+        }
+    }</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>data</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
 
 					<hr />
 				
@@ -1116,11 +1282,11 @@ ul.inheritsList
 					<div class="fixedFont">
 					
 					<span class="light">{<a href="../symbols/jsfsa.State.html">jsfsa.State</a>}</span>
-					<b>removeGuard</b>(eventName, guard)
+					<b>removeGuard</b>(action, guard)
 					
 					</div>
 					<div class="description">
-						
+						Unregisters a <code>guard</code> for <code>action</code>
 						
 						
 					</div>
@@ -1132,10 +1298,10 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{String}</span> <b>eventName</b>
+									<span class="light fixedFont">{String}</span> <b>action</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>One of the static property values of <a href="../symbols/jsfsa.Action.html">jsfsa.Action</a></dd>
 							
 								<dt>
 									<span class="light fixedFont">{Function}</span> <b>guard</b>
@@ -1158,18 +1324,29 @@ ul.inheritsList
 						
 						
 						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/jsfsa.State.html#addGuard">jsfsa.State#addGuard</a></dd>
+							
+								<dd><a href="../symbols/jsfsa.State.html#addGuards">jsfsa.State#addGuards</a></dd>
+							
+								<dd><a href="../symbols/jsfsa.State.html#hasGuard">jsfsa.State#hasGuard</a></dd>
+							
+							</dl>
+						
 
 					<hr />
 				
 					<a name="removeListener"> </a>
 					<div class="fixedFont">
 					
-					
+					<span class="light">{Object}</span>
 					<b>removeListener</b>(eventName, handler)
 					
 					</div>
 					<div class="description">
-						
+						Unregisters a <code>handler</code> for <code>eventName</code>
 						
 						
 					</div>
@@ -1198,6 +1375,13 @@ ul.inheritsList
 						
 						
 						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Object}</span> the dispatcher</dd>
+							
+							</dl>
+						
 						
 						
 
@@ -1211,7 +1395,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Removes a registered transition with name <code>transitionName</code>. Fails silently if such a transition was not found.
 						
 						
 					</div>
@@ -1243,6 +1427,17 @@ ul.inheritsList
 						
 						
 						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/jsfsa.State.html#addTransition">jsfsa.State#addTransition</a></dd>
+							
+								<dd><a href="../symbols/jsfsa.State.html#hasTransition">jsfsa.State#hasTransition</a></dd>
+							
+								<dd><a href="../symbols/jsfsa.State.html#getTransition">jsfsa.State#getTransition</a></dd>
+							
+							</dl>
+						
 
 					
 				
@@ -1258,7 +1453,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.3.2 on Fri Mar 16 2012 11:40:40 GMT+0100 (CET)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.3.2 on Sat Mar 17 2012 09:30:51 GMT+0100 (CET)
 		</div>
 	</body>
 </html>
