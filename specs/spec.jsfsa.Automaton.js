@@ -220,5 +220,14 @@ describe("jsfsa.Automaton", function(){
             expect( spy ).toHaveBeenCalledWith( e );
         });
 
+        it( "should dispatch a changed evnet after transitioning has finished", function(){
+            var spy = jasmine.createSpy( 'changed' );
+            sm.addListener( jsfsa.StateEvent.CHANGED, spy );
+            var state = sm.getState('green');
+            sm.doTransition( 'next' );
+            var e= new jsfsa.StateEvent( jsfsa.StateEvent.CHANGED, 'green', 'orange', 'next' );
+            expect( spy ).toHaveBeenCalledWith( e );
+        });
+
     });
 });

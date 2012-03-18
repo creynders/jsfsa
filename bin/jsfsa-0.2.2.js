@@ -2,8 +2,8 @@
 
 /**
  * @author Camille Reynders
- * @version 0.2.1
- * built: 20120317093258
+ * @version 0.2.2
+ * built: 20120318185720
  */
 
 
@@ -23,15 +23,15 @@
     /**
      * @namespace
      * @name jsfsa
-     * @version 0.2.1
+     * @version 0.2.2
      */
     var jsfsa = {
     };
     /**
      * @static
-     * @default 0.2.1
+     * @default 0.2.2
      */
-    jsfsa.VERSION = '0.2.1';
+    jsfsa.VERSION = '0.2.2';
 
  //--( Dispatcher )--//
 
@@ -220,6 +220,15 @@
      * @default 'transitionDenied'
      */
     jsfsa.StateEvent.TRANSITION_DENIED = 'transitionDenied';
+
+    /**
+     * Dispatched after transitioning has completely finished.
+     * @static
+     * @const
+     * @default 'changed'
+     */
+    jsfsa.StateEvent.CHANGED = 'changed';
+
 
     jsfsa.StateEvent.prototype = {
         /**
@@ -789,70 +798,73 @@
      * @return {jsfsa.Automaton} the instance of {@link jsfsa.Automaton} that is acted upon
      */
     jsfsa.Automaton.prototype.doTransition = function( transitionName ){
-        var runner;
-        var found = false;
-        for( var i=this._currentBranch.length -1, n = 0  ; i>=n ; i-- ){
-            runner = this._currentBranch[ i ].state;
-            if( runner.hasTransition( transitionName ) ){
-                found = true;
-                break;
+        if( this._internalState === 'ready' ){
+            var runner;
+            var found = false;
+            for( var i=this._currentBranch.length -1, n = 0  ; i>=n ; i-- ){
+                runner = this._currentBranch[ i ].state;
+                if( runner.hasTransition( transitionName ) ){
+                    found = true;
+                    break;
+                }
             }
-        }
 
-        var payload;
-        if( arguments.length > 1 ){
-            payload =  Array.prototype.slice.call( arguments );
-            payload.shift(); //drop transitionname
-        }else{
-            payload = [];
-        }
+            var payload;
+            if( arguments.length > 1 ){
+                payload =  Array.prototype.slice.call( arguments );
+                payload.shift(); //drop transitionname
+            }else{
+                payload = [];
+            }
 
-        var event = new jsfsa.StateEvent( '', this.getCurrentState().name, undefined, transitionName );
-        var args = cloneAndUnshift( payload, event.clone()._setType(jsfsa.StateEvent.TRANSITION_DENIED) );
+            var event = new jsfsa.StateEvent( '', this.getCurrentState().name, undefined, transitionName );
+            var args = cloneAndUnshift( payload, event.clone()._setType(jsfsa.StateEvent.TRANSITION_DENIED) );
 
-        if( ! found ){
-            //there's no transition with that name in the current state branch
-            this.dispatch.apply( this, args );
-        }else{
-            //transition found somewhere in the _currentStateBranch
-            var targetNode = this._nodes[ runner.getTransition( transitionName ) ];
-            if( ! targetNode ){
-                //state doesn't exist
+            if( ! found ){
+                //there's no transition with that name in the current state branch
                 this.dispatch.apply( this, args );
             }else{
-                event.to = targetNode.state.name;
-                var initialNodes = targetNode.getInitialBranch();
-                this._newBranch = this._getBranchFromRoot( targetNode ).concat( initialNodes );
-                var streams = this._getShortestRoute( this._currentBranch, this._newBranch );
-                this._internalState = 'guarding';
-                args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.Action.EXIT ) );
-                var proceed = this._executeGuards( streams.up, args  );
-                if( !proceed ){
-                    args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.StateEvent.EXIT_DENIED ) );
+                //transition found somewhere in the _currentStateBranch
+                var targetNode = this._nodes[ runner.getTransition( transitionName ) ];
+                if( ! targetNode ){
+                    //state doesn't exist
                     this.dispatch.apply( this, args );
                 }else{
-                    args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.Action.ENTRY ) );
-                    proceed = this._executeGuards( streams.down, args );
-                }
+                    event.to = targetNode.state.name;
+                    var initialNodes = targetNode.getInitialBranch();
+                    this._newBranch = this._getBranchFromRoot( targetNode ).concat( initialNodes );
+                    var streams = this._getShortestRoute( this._currentBranch, this._newBranch );
+                    this._internalState = 'guarding';
+                    args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.Action.EXIT ) );
+                    var proceed = this._executeGuards( streams.up, args  );
+                    if( !proceed ){
+                        args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.StateEvent.EXIT_DENIED ) );
+                        this.dispatch.apply( this, args );
+                    }else{
+                        args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.Action.ENTRY ) );
+                        proceed = this._executeGuards( streams.down, args );
+                    }
 
-                if( ! proceed ){
-                    args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.StateEvent.ENTRY_DENIED ) );
-                    this.dispatch.apply( this, args );
-                    this._internalState = 'ready';
-                }else{
-                    this._internalState = 'transitioning';
-                    var referer = [ { state : this } ];
-                    args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.StateEvent.EXITED ) );
-                    this._addToQueue( streams.up, args );
-                    this._addToQueue( referer, args );
-                    args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.StateEvent.ENTERED ) );
-                    this._addToQueue( streams.down, args );
-                    this._addToQueue( referer, args );
-                    this.proceed();
+                    if( ! proceed ){
+                        args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.StateEvent.ENTRY_DENIED ) );
+                        this.dispatch.apply( this, args );
+                        this._internalState = 'ready';
+                    }else{
+                        this._internalState = 'transitioning';
+                        var referer = [ { state : this } ];
+                        args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.StateEvent.EXITED ) );
+                        this._addToQueue( streams.up, '_executeAction', args );
+                        this._addToQueue( referer, '_executeAction', args );
+                        args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.StateEvent.ENTERED ) );
+                        this._addToQueue( streams.down, '_executeAction', args );
+                        this._addToQueue( referer, '_executeAction', args );
+                        args = cloneAndUnshift( payload, event.clone()._setType( jsfsa.StateEvent.CHANGED ) );
+                        this._addToQueue( referer, '_finishTransition', args );
+                        this.proceed();
+                    }
                 }
             }
         }
-
         return this;
     };
 
@@ -880,13 +892,11 @@
             if( this._queue.length > 0 ){
                 this._internalState = 'transitioning';
                 var o = this._queue.shift();
-                var state = o.obj.state;
-                state._executeAction( o.args );
+                var item = o.obj.state;
+                item[ o.method ].call ( item, o.args );
                 if( this._internalState !== "paused" ){
                     this.proceed();
                 }
-            }else{
-                this._finishTransition();
             }
         }
 
@@ -967,16 +977,17 @@
         return result;
     };
 
-    jsfsa.Automaton.prototype._addToQueue = function( list, args ){
+    jsfsa.Automaton.prototype._addToQueue = function( list, method, args ){
         for( var i=0, n=list.length ; i<n ; i++ ){
-            this._queue.push( { obj : list[ i ], args : args } );
+            this._queue.push( { obj : list[ i ], args : args, method: method} );
         }
     };
 
-    jsfsa.Automaton.prototype._finishTransition = function(){
+    jsfsa.Automaton.prototype._finishTransition = function( args ){
         this._internalState = 'ready';
         this._currentBranch = this._newBranch;
         this._newBranch = undefined;
+        this._executeAction( args );
     };
 
     jsfsa.Automaton.prototype._executeAction = jsfsa.State.prototype._executeAction;
