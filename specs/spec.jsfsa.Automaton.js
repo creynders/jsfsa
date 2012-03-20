@@ -174,7 +174,7 @@ describe("jsfsa.Automaton", function(){
         });
     });
 
-    describe( "the automaton's dispacther", function(){
+    describe( "the automaton's dispatcher", function(){
         beforeEach( function(){
             sm.createState( 'green',    { transitions : { 'next' : 'orange' }, isInitial : true } );
             sm.createState( 'orange',   { transitions : { 'next' : 'red'    } } );
@@ -223,11 +223,21 @@ describe("jsfsa.Automaton", function(){
         it( "should dispatch a changed event after transitioning has finished", function(){
             var spy = jasmine.createSpy( 'changed' );
             sm.addListener( jsfsa.StateEvent.CHANGED, spy );
-            var state = sm.getState('green');
             sm.doTransition( 'next' );
             var e= new jsfsa.StateEvent( jsfsa.StateEvent.CHANGED, 'green', 'orange', 'next' );
             expect( spy ).toHaveBeenCalledWith( e );
         });
 
+        it( "should dispatch a transitionDenied event if the transition is not allowed", function(){
+            var green = sm.getState( 'green' );
+            sm.removeState( 'green' );
+            green.isInitial = false;
+            sm.addState( green );
+            var spy = jasmine.createSpy( jsfsa.StateEvent.TRANSITION_DENIED );
+            sm.addListener( jsfsa.StateEvent.TRANSITION_DENIED, spy );
+            sm.doTransition( 'next' );
+            var e= new jsfsa.StateEvent( jsfsa.StateEvent.TRANSITION_DENIED, sm.getRootState().name, undefined, 'next' );
+            expect( spy ).toHaveBeenCalledWith( e );
+        });
     });
 });
