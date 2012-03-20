@@ -1,4 +1,5 @@
 #TODO
 
+## v0.2.3
+
 * patch State#isInitial to fsm
-* add pause and proceed patching meths to State
