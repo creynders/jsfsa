@@ -198,6 +198,7 @@ describe( "jsfsa.State", function(){
             });
 
             runs( function(){
+                var s = sm;
                 sm.doTransition( 'next' );
                 expect( sm.isTransitioning() ).toBeTruthy();
             });

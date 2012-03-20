@@ -696,7 +696,7 @@
     jsfsa.Automaton.prototype.constructor = jsfsa.Automaton;
 
     jsfsa.Automaton.prototype.isTransitioning = function(){
-        return this._internalState === 'transitioning' || this._internalState === 'paused';
+        return this._internalState !== 'ready';
     };
 
     /**
@@ -888,7 +888,7 @@
      * @return {jsfsa.Automaton} the instance of {@link jsfsa.Automaton} that is acted upon
      */
     jsfsa.Automaton.prototype.proceed = function(){
-        if( this._internalState !== 'ready' && this._internalState !== 'guarding' ){
+        if( this._internalState === 'transitioning' || this._internalState === 'paused' ){
             if( this._queue.length > 0 ){
                 this._internalState = 'transitioning';
                 var o = this._queue.shift();
