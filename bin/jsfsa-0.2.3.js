@@ -2,8 +2,8 @@
 
 /**
  * @author Camille Reynders
- * @version %VERSION%
- * built: %TIMESTAMP%
+ * @version 0.2.3
+ * built: 20120322094056
  */
 
 
@@ -17,15 +17,15 @@
     /**
      * @namespace
      * @name jsfsa
-     * @version %VERSION%
+     * @version 0.2.3
      */
     var jsfsa = {
     };
     /**
      * @static
-     * @default %VERSION%
+     * @default 0.2.3
      */
-    jsfsa.VERSION = '%VERSION%';
+    jsfsa.VERSION = '0.2.3';
 
  //--( Dispatcher )--//
 
@@ -906,7 +906,7 @@
         this._nodes = undefined;
         this._currentBranch = undefined;
     };
-
+    
     jsfsa.Automaton.prototype._hasTransitionInCurrentBranch = function ( transitionName ) {
         var runner;
         var found = false;

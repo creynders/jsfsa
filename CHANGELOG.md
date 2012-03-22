@@ -1,9 +1,5 @@
 # CHANGELOG
 
-## v0.2.3
-
-* added patching methods
-
 ## v0.2.2
 
 * added changed event and prevention of babushka transitions
