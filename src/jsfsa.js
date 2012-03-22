@@ -150,6 +150,7 @@
          * @see jsfsa.StateEvent.ENTRY_DENIED
          * @see jsfsa.StateEvent.EXIT_DENIED
          * @see jsfsa.StateEvent.TRANSITION_DENIED
+         * @see jsfsa.StateEvent.CHANGED
          * @type String
          */
         this.type = type;
@@ -522,10 +523,10 @@
      * Releases all resources. After calling this method, the State instance can/should no longer be used.
      */
     jsfsa.State.prototype.destroy = function(){
-        this._guardian = undefined;
-        this._transitions = undefined;
-        this._listeners = undefined;
-        this.name = undefined;
+        this._guardian      = undefined;
+        this._transitions   = undefined;
+        this._listeners     = undefined;
+        this.name           = undefined;
     };
 
     jsfsa.State.prototype._getGuardian = function(){
@@ -583,7 +584,7 @@
      * @private
      * @param {Array} args
      */
-    jsfsa.State.prototype._executeAction = function( args ){
+    jsfsa.State.prototype._dispatchArgs = function( args ){
         this.dispatch.apply( this, args );
     };
 
@@ -819,6 +820,38 @@
         return this;
     };
 
+    jsfsa.Automaton.prototype._doEntryGuardPhase = function ( streams, eventFactory, newBranch ) {
+        var proceed = this._executeGuards( streams.down, eventFactory.createArgsArray( jsfsa.Action.ENTRY ) );
+        if ( !proceed ) {
+            this._finishTransition( eventFactory.createArgsArray( jsfsa.StateEvent.ENTRY_DENIED ) );
+        } else {
+            this._startTransition( eventFactory, streams, newBranch );
+        }
+        return proceed;
+    };
+    jsfsa.Automaton.prototype._doExitGuardPhase = function ( streams, eventFactory, newBranch ) {
+        this._internalState = 'guarding';
+        var proceed = this._executeGuards( streams.up, eventFactory.createArgsArray( jsfsa.Action.EXIT ) );
+        if ( !proceed ) {
+            this._finishTransition( eventFactory.createArgsArray( jsfsa.StateEvent.EXIT_DENIED ) );
+        } else {
+            proceed = this._doEntryGuardPhase( streams, eventFactory, newBranch );
+        }
+        return proceed;
+    };
+    jsfsa.Automaton.prototype._attemptTransition = function ( sourceNode, eventFactory ) {
+        var targetNode = this._nodes[ sourceNode.getTransition( eventFactory.transition ) ];
+        if ( !targetNode ) {
+            //state doesn't exist
+            this._finishTransition( eventFactory.createArgsArray( jsfsa.StateEvent.TRANSITION_DENIED ) );
+        } else {
+            eventFactory.to = targetNode.state.name;
+            var initialNodes = targetNode.getInitialBranch();
+            var newBranch = this._getBranchFromRoot( targetNode ).concat( initialNodes );
+            var streams = this._getShortestRoute( this._currentBranch, newBranch );
+            this._doExitGuardPhase( streams, eventFactory, newBranch );
+        }
+    };
     /**
      * Accepts any number of arguments after <code>transitionName</code> that will be passed on to the
      * guards and actions
@@ -826,66 +859,25 @@
      * @return {jsfsa.Automaton} the instance of {@link jsfsa.Automaton} that is acted upon
      */
     jsfsa.Automaton.prototype.doTransition = function( transitionName ){
-        if( this._internalState === 'ready' ){
-            var runner;
-            var found = false;
-            for( var i=this._currentBranch.length -1, n = 0  ; i>=n ; i-- ){
-                runner = this._currentBranch[ i ].state;
-                if( runner.hasTransition( transitionName ) ){
-                    found = true;
-                    break;
-                }
-            }
-
+        if( this._internalState === 'ready' ) {
             var payload;
-            if( arguments.length > 1 ){
-                payload =  Array.prototype.slice.call( arguments );
+            if ( arguments.length > 1 ) {
+                payload = Array.prototype.slice.call( arguments );
                 payload.shift(); //drop transitionname
-            }else{
+            } else {
                 payload = [];
             }
 
-            var eventFactory = new StateEventFactory( payload, transitionName, this.getCurrentState().name );
-            var args = eventFactory.createArgsArray( jsfsa.StateEvent.TRANSITION_DENIED );
+            this._newBranch     = this._currentBranch;
+            var eventFactory    = new StateEventFactory( payload, transitionName, this.getCurrentState().name );
+            var sourceNode      = this._hasTransitionInCurrentBranch( transitionName );
 
-            if( ! found ){
+            if ( sourceNode === undefined ) {
                 //there's no transition with that name in the current state branch
-                this.dispatch.apply( this, args );
-            }else{
+                this._finishTransition( eventFactory.createArgsArray( jsfsa.StateEvent.TRANSITION_DENIED ) );
+            } else {
                 //transition found somewhere in the _currentStateBranch
-                var targetNode = this._nodes[ runner.getTransition( transitionName ) ];
-                if( ! targetNode ){
-                    //state doesn't exist
-                    this.dispatch.apply( this, args );
-                }else{
-                    eventFactory.to = targetNode.state.name;
-                    var initialNodes = targetNode.getInitialBranch();
-                    this._newBranch = this._getBranchFromRoot( targetNode ).concat( initialNodes );
-                    var streams = this._getShortestRoute( this._currentBranch, this._newBranch );
-                    this._internalState = 'guarding';
-                    var proceed = this._executeGuards( streams.up, eventFactory.createArgsArray(jsfsa.Action.EXIT)  );
-                    if( !proceed ){
-                        this.dispatch.apply( this, eventFactory.createArgsArray(jsfsa.StateEvent.EXIT_DENIED) );
-                    }else{
-                        proceed = this._executeGuards( streams.down, eventFactory.createArgsArray(jsfsa.Action.ENTRY) );
-                    }
-
-                    if( ! proceed ){
-                        this.dispatch.apply( this, eventFactory.createArgsArray(jsfsa.StateEvent.ENTRY_DENIED) );
-                        this._internalState = 'ready';
-                    }else{
-                        this._internalState = 'transitioning';
-                        var referer = [ { state : this } ];
-                        args = eventFactory.createArgsArray(jsfsa.StateEvent.EXITED);
-                        this._addToQueue( streams.up, '_executeAction', args );
-                        this._addToQueue( referer, '_executeAction', args );
-                        args = eventFactory.createArgsArray( jsfsa.StateEvent.ENTERED );
-                        this._addToQueue( streams.down, '_executeAction', args );
-                        this._addToQueue( referer, '_executeAction', args );
-                        this._addToQueue( referer, '_finishTransition', eventFactory.createArgsArray(jsfsa.StateEvent.CHANGED) );
-                        this.proceed();
-                    }
-                }
+                this._attemptTransition( sourceNode, eventFactory );
             }
         }
         return this;
@@ -1000,6 +992,36 @@
         return result;
     };
 
+    jsfsa.Automaton.prototype._hasTransitionInCurrentBranch = function ( transitionName ) {
+        var runner;
+        var found = false;
+        for ( var i = this._currentBranch.length - 1, n = 0 ; i >= n ; i-- ) {
+            runner = this._currentBranch[ i ].state;
+            if ( runner.hasTransition( transitionName ) ) {
+                found = true;
+                break;
+            }
+        }
+        return found ? runner : undefined;
+    };
+    jsfsa.Automaton.prototype._startTransition = function ( eventFactory, streams, newBranch ) {
+        this._internalState = 'transitioning';
+        this._currentBranch = undefined;
+        this._newBranch = newBranch;
+        var referer = [
+            { state:this }
+        ];
+        var args = eventFactory.createArgsArray( jsfsa.StateEvent.EXITED );
+        this._queue = [];
+        this._addToQueue( streams.up, '_dispatchArgs', args );
+        this._addToQueue( referer, '_dispatchArgs', args );
+        args = eventFactory.createArgsArray( jsfsa.StateEvent.ENTERED );
+        this._addToQueue( streams.down, '_dispatchArgs', args );
+        this._addToQueue( referer, '_dispatchArgs', args );
+        this._addToQueue( referer, '_finishTransition', eventFactory.createArgsArray( jsfsa.StateEvent.CHANGED ) );
+        this.proceed();
+    };
+
     jsfsa.Automaton.prototype._addToQueue = function( list, method, args ){
         for( var i=0, n=list.length ; i<n ; i++ ){
             this._queue.push( { obj : list[ i ], args : args, method: method} );
@@ -1010,10 +1032,10 @@
         this._internalState = 'ready';
         this._currentBranch = this._newBranch;
         this._newBranch = undefined;
-        this._executeAction( args );
+        this._dispatchArgs( args );
     };
 
-    jsfsa.Automaton.prototype._executeAction = jsfsa.State.prototype._executeAction;
+    jsfsa.Automaton.prototype._dispatchArgs = jsfsa.State.prototype._dispatchArgs;
 
 
     $.jsfsa = jsfsa;
