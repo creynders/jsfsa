@@ -3,7 +3,7 @@
 /**
  * @author Camille Reynders
  * @version 0.2.3
- * built: 20120322094056
+ * built: 20120322094542
  */
 
 
@@ -906,7 +906,7 @@
         this._nodes = undefined;
         this._currentBranch = undefined;
     };
-    
+
     jsfsa.Automaton.prototype._hasTransitionInCurrentBranch = function ( transitionName ) {
         var runner;
         var found = false;
