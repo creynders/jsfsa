@@ -820,38 +820,6 @@
         return this;
     };
 
-    jsfsa.Automaton.prototype._doEntryGuardPhase = function ( streams, eventFactory, newBranch ) {
-        var proceed = this._executeGuards( streams.down, eventFactory.createArgsArray( jsfsa.Action.ENTRY ) );
-        if ( !proceed ) {
-            this._finishTransition( eventFactory.createArgsArray( jsfsa.StateEvent.ENTRY_DENIED ) );
-        } else {
-            this._startTransition( eventFactory, streams, newBranch );
-        }
-        return proceed;
-    };
-    jsfsa.Automaton.prototype._doExitGuardPhase = function ( streams, eventFactory, newBranch ) {
-        this._internalState = 'guarding';
-        var proceed = this._executeGuards( streams.up, eventFactory.createArgsArray( jsfsa.Action.EXIT ) );
-        if ( !proceed ) {
-            this._finishTransition( eventFactory.createArgsArray( jsfsa.StateEvent.EXIT_DENIED ) );
-        } else {
-            proceed = this._doEntryGuardPhase( streams, eventFactory, newBranch );
-        }
-        return proceed;
-    };
-    jsfsa.Automaton.prototype._attemptTransition = function ( sourceNode, eventFactory ) {
-        var targetNode = this._nodes[ sourceNode.getTransition( eventFactory.transition ) ];
-        if ( !targetNode ) {
-            //state doesn't exist
-            this._finishTransition( eventFactory.createArgsArray( jsfsa.StateEvent.TRANSITION_DENIED ) );
-        } else {
-            eventFactory.to = targetNode.state.name;
-            var initialNodes = targetNode.getInitialBranch();
-            var newBranch = this._getBranchFromRoot( targetNode ).concat( initialNodes );
-            var streams = this._getShortestRoute( this._currentBranch, newBranch );
-            this._doExitGuardPhase( streams, eventFactory, newBranch );
-        }
-    };
     /**
      * Accepts any number of arguments after <code>transitionName</code> that will be passed on to the
      * guards and actions
@@ -938,6 +906,33 @@
         this._nodes = undefined;
         this._currentBranch = undefined;
     };
+    
+    jsfsa.Automaton.prototype._hasTransitionInCurrentBranch = function ( transitionName ) {
+        var runner;
+        var found = false;
+        for ( var i = this._currentBranch.length - 1, n = 0 ; i >= n ; i-- ) {
+            runner = this._currentBranch[ i ].state;
+            if ( runner.hasTransition( transitionName ) ) {
+                found = true;
+                break;
+            }
+        }
+        return found ? runner : undefined;
+    };
+
+    jsfsa.Automaton.prototype._attemptTransition = function ( sourceNode, eventFactory ) {
+        var targetNode = this._nodes[ sourceNode.getTransition( eventFactory.transition ) ];
+        if ( !targetNode ) {
+            //state doesn't exist
+            this._finishTransition( eventFactory.createArgsArray( jsfsa.StateEvent.TRANSITION_DENIED ) );
+        } else {
+            eventFactory.to = targetNode.state.name;
+            var initialNodes = targetNode.getInitialBranch();
+            this._newBranch = this._getBranchFromRoot( targetNode ).concat( initialNodes );
+            var streams = this._getShortestRoute( this._currentBranch, this._newBranch );
+            this._doExitGuardPhase( streams, eventFactory );
+        }
+    };
 
     /**
      * @private
@@ -976,7 +971,27 @@
             down : down
         };
     };
-
+    jsfsa.Automaton.prototype._doExitGuardPhase = function ( streams, eventFactory ) {
+        this._internalState = 'guarding';
+        var proceed = this._executeGuards( streams.up, eventFactory.createArgsArray( jsfsa.Action.EXIT ) );
+        if ( !proceed ) {
+            this._newBranch = undefined;
+            this._finishTransition( eventFactory.createArgsArray( jsfsa.StateEvent.EXIT_DENIED ) );
+        } else {
+            proceed = this._doEntryGuardPhase( streams, eventFactory );
+        }
+        return proceed;
+    };
+    jsfsa.Automaton.prototype._doEntryGuardPhase = function ( streams, eventFactory ) {
+        var proceed = this._executeGuards( streams.down, eventFactory.createArgsArray( jsfsa.Action.ENTRY ) );
+        if ( !proceed ) {
+            this._newBranch = undefined;
+            this._finishTransition( eventFactory.createArgsArray( jsfsa.StateEvent.ENTRY_DENIED ) );
+        } else {
+            this._startTransition( eventFactory, streams );
+        }
+        return proceed;
+    };
     /**
      * @private
      * @param {Node[]} nodesList
@@ -992,22 +1007,9 @@
         return result;
     };
 
-    jsfsa.Automaton.prototype._hasTransitionInCurrentBranch = function ( transitionName ) {
-        var runner;
-        var found = false;
-        for ( var i = this._currentBranch.length - 1, n = 0 ; i >= n ; i-- ) {
-            runner = this._currentBranch[ i ].state;
-            if ( runner.hasTransition( transitionName ) ) {
-                found = true;
-                break;
-            }
-        }
-        return found ? runner : undefined;
-    };
-    jsfsa.Automaton.prototype._startTransition = function ( eventFactory, streams, newBranch ) {
+    jsfsa.Automaton.prototype._startTransition = function ( eventFactory, streams ) {
         this._internalState = 'transitioning';
         this._currentBranch = undefined;
-        this._newBranch = newBranch;
         var referer = [
             { state:this }
         ];
@@ -1029,9 +1031,12 @@
     };
 
     jsfsa.Automaton.prototype._finishTransition = function( args ){
+        if( this._newBranch ){
+            this._currentBranch = this._newBranch;
+        }else{
+            this._newBranch = undefined;
+        }
         this._internalState = 'ready';
-        this._currentBranch = this._newBranch;
-        this._newBranch = undefined;
         this._dispatchArgs( args );
     };
 
