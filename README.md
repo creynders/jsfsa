@@ -142,6 +142,8 @@ console.log( fsm.getCurrentState().name );//outputs 'off'
 
 There are 4 events that can be listened to, either directly on a state instance or on the statemachine instance itself:
 'entered', 'exited', 'entryDenied', 'exitDenied'.
+The automaton dispatches 2 additional events: 'transitionDenied', dispatched if the transition name was not registered for the 
+current state or if the transition target could not've been found and 'changed', dispatched after a transition has been completed. 
 
 * On the state:
 
@@ -178,9 +180,6 @@ var fsm = new jsfsa.Automaton( config )
 
 ```
 //loose syntax
-var blockEntry = function(){
-	return false;
-}
 var outputEvent = function( e ){
 	console.log( e.type + ' from ' + e.from + ' to ' + e.to );
 }
@@ -190,18 +189,15 @@ var config = {
 		isInitial : true
 	},
 	'on' : {
-		guards : {
-			entry : blockEntry
-		},
 		'shutdown' : 'off'
 	}
 };
 var fsm = new jsfsa.Automaton( config )
-	.addListener( jsfsa.StateEvent.ENTRY_DENIED, outputEvent )
+	.addListener( jsfsa.StateEvent.CHANGED, outputEvent )
 	.doTransition( 'ignite' )
 ;
 //output in console:
-//entryDenied from off to on
+//changed from off to on
 ```
 
 ### NESTED STATES
