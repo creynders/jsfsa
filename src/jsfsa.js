@@ -3,7 +3,6 @@
 /**
  * @author Camille Reynders
  * @version %VERSION%
- * built: %TIMESTAMP%
  */
 
 
@@ -20,12 +19,13 @@
      * @version %VERSION%
      */
     var jsfsa = {
+        /**
+         * framework version number
+         * @constant
+         * @type String
+         */
+        VERSION : '%VERSION%'
     };
-    /**
-     * @static
-     * @default %VERSION%
-     */
-    jsfsa.VERSION = '%VERSION%';
 
  //--( Dispatcher )--//
 

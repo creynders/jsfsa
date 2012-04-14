@@ -3,7 +3,6 @@
 /**
  * @author Camille Reynders
  * @version 0.2.3
- * built: 20120322094542
  */
 
 
@@ -20,12 +19,13 @@
      * @version 0.2.3
      */
     var jsfsa = {
+        /**
+         * framework version number
+         * @constant
+         * @type String
+         */
+        VERSION : '0.2.3'
     };
-    /**
-     * @static
-     * @default 0.2.3
-     */
-    jsfsa.VERSION = '0.2.3';
 
  //--( Dispatcher )--//
 
@@ -988,7 +988,7 @@
             this._newBranch = undefined;
             this._finishTransition( eventFactory.createArgsArray( jsfsa.StateEvent.ENTRY_DENIED ) );
         } else {
-            this._startTransition( eventFactory, streams );
+            this._startTransition( streams, eventFactory );
         }
         return proceed;
     };
@@ -1007,7 +1007,7 @@
         return result;
     };
 
-    jsfsa.Automaton.prototype._startTransition = function ( eventFactory, streams ) {
+    jsfsa.Automaton.prototype._startTransition = function ( streams, eventFactory ) {
         this._internalState = 'transitioning';
         this._currentBranch = undefined;
         var referer = [

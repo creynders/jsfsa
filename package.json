@@ -1,0 +1,26 @@
+{
+  "name": "jsfsa",
+  "description": "A lightweight lib for creating finite-state automata (finite-state machines)",
+  "version": "0.2.3",
+  "author": "Camille Reynders (http://www.creynders.be/)",
+  "homepage": "http://github.com/creynders/jsfsa",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/creynders/jsfsa.git"
+  },
+  "bugs": {
+    "url" : "http://github.com/creynders/jsfsa/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/creynders/jsfsa/blob/master/LICENSE"
+    }
+  ],
+  "keywords": [
+    "fsm",
+    "finite-state machine",
+    "automaton",
+    "state"
+  ]
+}
