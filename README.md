@@ -27,7 +27,7 @@ info [at] creynders [dot] be
 
 ## Resources
 
-[API documentation](http://creynders.github.com/jsfsa/docs)
+[API documentation](http://creynders.github.com/jsfsa)
 
 ## Examples
 
