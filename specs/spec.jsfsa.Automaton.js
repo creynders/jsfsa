@@ -123,41 +123,42 @@ describe("jsfsa.Automaton", function(){
             sm.doTransition( 'next' );
             expect( sm.getCurrentState() ).toEqual( sm.getState( 'orange' ) );
         });
-
     });
-    describe( "the automaton's configuration", function(){
-        it( "should be possible with an object", function(){
+    describe( "the hiearachical automaton", function(){
+        beforeEach( function(){
             var config = {
-                "off" : {
-                    isInitial : true,
-                    "powerOn" : "on"
-                },
-                "off/standby" : {
-                    isInitial : true
-                },
-                "off/kaput" : {},
-                "off/kaput/fixable" :{
-                    isInitial : true,
-                    "fixed" : "off/standby"
-                },
-                "off/kaput/pertetotale":{},
-                "on" : {
-                    "powerOff" : "off",
-                    "fail" : "off/kaput",
-                    "vandalize" : "off/kaput/pertetotale"
-                },
-                "on/green" : {
-                    isInitial : true,
-                    "next" : "on/orange"
-                },
-                "on/orange" : {
-                    "next" : "on/red"
-                },
-                "on/red" : {
-                    "next" : "on/green"
-                }
-            };
-            sm.parse( config );
+                 "off" : {
+                     isInitial : true,
+                     "powerOn" : "on"
+                 },
+                 "off/standby" : {
+                     isInitial : true
+                 },
+                 "off/kaput" : {},
+                 "off/kaput/fixable" :{
+                     isInitial : true,
+                     "fixed" : "off/standby"
+                 },
+                 "off/kaput/pertetotale":{},
+                 "on" : {
+                     "powerOff" : "off",
+                     "fail" : "off/kaput",
+                     "vandalize" : "off/kaput/pertetotale"
+                 },
+                 "on/green" : {
+                     isInitial : true,
+                     "next" : "on/orange"
+                 },
+                 "on/orange" : {
+                     "next" : "on/red"
+                 },
+                 "on/red" : {
+                     "next" : "on/green"
+                 }
+             };
+             sm.parse( config );
+        });
+        it( "should be configurable with an object", function(){
             expect( sm.getCurrentState() ).toEqual( sm.getState('off/standby' ) );
             sm.doTransition( 'powerOn' );
             expect( sm.getCurrentState() ).toEqual( sm.getState('on/green' ) );
@@ -171,6 +172,21 @@ describe("jsfsa.Automaton", function(){
             expect( sm.getCurrentState() ).toEqual( sm.getState('on/green' ) );
             sm.doTransition( 'vandalize' );
             expect( sm.getCurrentState() ).toEqual( sm.getState('off/kaput/pertetotale' ) );
+        });
+        it( "should allow for retrieval of the entire path to the current state", function(){
+            sm.doTransition('powerOn');
+            sm.doTransition('vandalize');
+            expect( sm.getCurrentBranch() ).toEqual( [
+                sm.getState('off'),
+                sm.getState('off/kaput'),
+                sm.getState('off/kaput/pertetotale')
+            ]);
+        });
+        it( 'should allow for checking whether a state is part of the current branch', function(){
+            sm.doTransition('powerOn');
+            sm.doTransition('vandalize');
+            expect( sm.isInCurrentBranch('on/red') ).toBe( false );
+            expect( sm.isInCurrentBranch('off/kaput') ).toBe( true );
         });
     });
 

@@ -2,7 +2,7 @@
 
 /**
  * @author Camille Reynders
- * @version %VERSION%
+ * @version 0.2.4
  */
 
 
@@ -16,7 +16,7 @@
     /**
      * @namespace
      * @name jsfsa
-     * @version %VERSION%
+     * @version 0.2.4
      */
     var jsfsa = {
         /**
@@ -24,7 +24,7 @@
          * @constant
          * @type String
          */
-        VERSION : '%VERSION%'
+        VERSION : '0.2.4'
     };
 
  //--( Dispatcher )--//
