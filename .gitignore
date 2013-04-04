@@ -1,2 +1,4 @@
 build
 build.user.properties
+node_modules
+!bin
