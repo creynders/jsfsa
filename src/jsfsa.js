@@ -529,6 +529,11 @@
         this.name           = undefined;
     };
 
+    /**
+     *
+     * @return {Dispatcher}
+     * @private
+     */
     jsfsa.State.prototype._getGuardian = function(){
         if( this._guardian === undefined ){
             this._guardian = new Dispatcher();
@@ -544,10 +549,6 @@
         this.name = name;
     };
 
-    /**
-     * @internal
-     * @param {Array} args
-     */
     jsfsa.State.prototype._executeGuards = function( args ){
         var result = true;
         if( this._guardian ){
@@ -706,7 +707,7 @@
     jsfsa.Automaton = function( data, name ){
         Dispatcher.call( this );
         /**
-         *
+         * @type String
          */
         this.fqn = 'jsfsa.Automaton';
 
@@ -726,11 +727,16 @@
     jsfsa.Automaton.prototype = new DispatcherProxy();
     jsfsa.Automaton.prototype.constructor = jsfsa.Automaton;
 
+    /**
+     * Returns whether the Automaton is currently transitioning from one state to the other
+     * @return {Boolean}
+     */
     jsfsa.Automaton.prototype.isTransitioning = function(){
         return this._internalState !== 'ready';
     };
 
     /**
+     * @private
      * @return {jsfsa.State}
      */
     jsfsa.Automaton.prototype.getRootState = function(){
@@ -738,6 +744,7 @@
     };
 
     /**
+     * Returns the lowest state that is currently active
      * @return {jsfsa.State}
      */
     jsfsa.Automaton.prototype.getCurrentState = function(){
@@ -745,7 +752,7 @@
     };
 
     /**
-     *
+     * Returns a top-down list of the currently active hierarchical states
      * @return {jsfsa.State[]}
      */
     jsfsa.Automaton.prototype.getCurrentBranch = function(){
@@ -760,7 +767,7 @@
     };
 
     /**
-     *
+     * Checks whether a state with name <code>statename</code> is currently active
      * @param stateName
      * @return {Boolean}
      */
@@ -773,7 +780,7 @@
     };
 
     /**
-     *
+     * Creates a state and adds it to the Automaton
      * @param {String} stateName
      * @param {Object} stateData
      * @return {jsfsa.Automaton} the instance of {@link jsfsa.Automaton} that is acted upon
@@ -786,7 +793,7 @@
     };
 
     /**
-     *
+     * Adds a state to the Automaton
      * @param {jsfsa.State} state
      * @return {jsfsa.Automaton} the instance of {@link jsfsa.Automaton} that is acted upon
      */
@@ -808,7 +815,7 @@
     };
 
     /**
-     *
+     * Checks whether the a state with name <code>stateName</code> was added to the Automaton
      * @param {String} stateName
      * @return {Boolean}
      */
@@ -817,7 +824,7 @@
     };
 
     /**
-     *
+     * Retrieves a state
      * @param {String} stateName
      * @return {jsfsa.State} <code>undefined</code> if no state with name <code>stateName</code> was found.
      */
@@ -830,7 +837,7 @@
     };
 
     /**
-     *
+     * Removes the state with name <code>stateName</code> from the Automaton
      * @param {String} stateName
      * @return {jsfsa.Automaton} the instance of {@link jsfsa.Automaton} that is acted upon
      */
@@ -851,6 +858,7 @@
     };
 
     /**
+     * Starts transitioning from the current state to the state as defined by the transition
      * Accepts any number of arguments after <code>transitionName</code> that will be passed on to the
      * guards and actions
      * @param {String} transitionName
@@ -883,7 +891,7 @@
 
 
     /**
-     *
+     * Parses a JSON formatted data object and translates it to states and transitions
      * @param {Object} data JSON formatted data object
      * @return {jsfsa.Automaton} the instance of {@link jsfsa.Automaton} that is acted upon
      */
@@ -898,6 +906,7 @@
     };
 
     /**
+     * Resumes the transitioning between states
      * @return {jsfsa.Automaton} the instance of {@link jsfsa.Automaton} that is acted upon
      */
     jsfsa.Automaton.prototype.proceed = function(){
@@ -917,6 +926,7 @@
     };
 
     /**
+     * Pauses the transitioning between states
      * @return {jsfsa.Automaton} the instance of {@link jsfsa.Automaton} that is acted upon
      */
     jsfsa.Automaton.prototype.pause = function(){
@@ -928,7 +938,10 @@
     };
 
     /**
+     * Destroys all internal states and prepares the Automaton to be dismantled by
+     * -- the horrible GARBAGE COLLECTOR --
      *
+     * Sorry, couldn't resist.
      */
     jsfsa.Automaton.prototype.destroy = function(){
         this._rootNode.destroy();
@@ -1022,11 +1035,6 @@
         }
         return proceed;
     };
-    /**
-     * @private
-     * @param {Node[]} nodesList
-     * @param {Array} args
-     */
     jsfsa.Automaton.prototype._executeGuards = function( nodesList, args ){
         var result = true;
         for( var i=0, n=nodesList.length; i<n ; i++){
@@ -1070,6 +1078,11 @@
         this._dispatchArgs( args );
     };
 
+    /**
+     *
+     * @type {Function}
+     * @private
+     */
     jsfsa.Automaton.prototype._dispatchArgs = jsfsa.State.prototype._dispatchArgs;
 
 

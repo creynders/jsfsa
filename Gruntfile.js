@@ -55,15 +55,25 @@ module.exports = function ( grunt ) {
             options:{
                 specs: ['specs/**/*.js']
             }
+        },
+        jsdoc : {
+            dist : {
+                src: ['src/*.js'],
+                options: {
+                    destination: 'docs',
+                    private: false
+                }
+            }
         }
     } );
 
+    grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     // Default task.
-    grunt.registerTask( 'default', ['jshint', 'jasmine', 'concat', 'uglify', 'inject_vars'] );
+    grunt.registerTask( 'default', ['jshint', 'jasmine', 'concat', 'uglify', 'inject_vars', 'jsdoc'] );
 
 
     grunt.registerMultiTask( "inject_vars", "Injects user defined vars into bin files", function () {
