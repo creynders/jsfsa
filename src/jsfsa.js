@@ -703,12 +703,14 @@
      * @borrows Dispatcher#hasListener as this.hasListener
      * @borrows Dispatcher#dispatch as this.dispatch
      */
-    jsfsa.Automaton = function( data ){
+    jsfsa.Automaton = function( data, name ){
         Dispatcher.call( this );
         /**
          *
          */
         this.fqn = 'jsfsa.Automaton';
+
+        this.name = name || '';
 
         this._nodes = {};
         this._rootNode = new Node( new jsfsa.State('root') );
