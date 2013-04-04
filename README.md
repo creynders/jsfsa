@@ -27,7 +27,7 @@ info [at] creynders [dot] be
 
 ## Resources
 
-[API documentation](http://creynders.github.com/jsfsa/docs)
+[API documentation](http://creynders.github.com/jsfsa)
 
 ## Examples
 
@@ -342,13 +342,7 @@ JSFSA has no dependencies on other frameworks.
 
 ### BUILD
 
-* [Apache Ant](http://ant.apache.org/): build scripting
-* [Jasmine](https://github.com/pivotal/jasmine): unit testing (incl.)
-* [JSDoc Toolkit](http://code.google.com/p/jsdoc-toolkit/): API documentation generation (incl.)
-* [JSHint](http://www.jshint.com/): JS code QA (incl.)
-* [YUI Compressor](http://developer.yahoo.com/yui/compressor/): Minification (incl.)
-* [PhantomJS](http://www.phantomjs.org/): Headless Webkit
-
+* [Grunt](http://gruntjs.com/): JS Task Runner
 
 ## Inspiration
 
