@@ -92,6 +92,18 @@ describe("jsfsa.Automaton", function(){
             expect( sm.getCurrentState() ).toEqual( sm.getRootState() );
         } );
     });
+    describe( "the automaton's out-of-state (w/o initial states)", function(){
+        beforeEach( function(){
+            sm.createState( 'off', { transitions : { 'ignite' : 'on' } } );
+            sm.createState( 'on', { transitions : { 'shutdown' : 'off' } } );
+        });
+        it( "shouldn't allow transitioning to any state", function(){
+            sm.doTransition( 'ignite' );
+            expect( sm.getCurrentState() ).toEqual( sm.getRootState() );
+            sm.doTransition( 'shutdown' );
+            expect( sm.getCurrentState() ).toEqual( sm.getRootState() );
+        } );
+    });
     describe( "the automaton's non-binary, single-level state operation", function(){
         beforeEach( function(){
             sm.createState( 'green',    { transitions : { 'next' : 'orange' }, isInitial : true } );
