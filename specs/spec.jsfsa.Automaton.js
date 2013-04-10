@@ -92,6 +92,41 @@ describe("jsfsa.Automaton", function(){
             sm.removeState( 'on' );
             expect( sm.getCurrentState() ).toEqual( sm.getRootState() );
         } );
+        it( "should allow passing of any number of payload objects to exit guards", function(){
+            var foo, bar;
+            var off = sm.getState('off');
+            off.addGuard( jsfsa.Action.EXIT, function( event, f, b ){
+                foo = f;
+                bar = b;
+                return true;
+            });
+
+            sm.doTransition( 'ignite','foo','bar' );
+            expect( [foo,bar] ).toEqual( ['foo','bar']);
+        });
+        it( "should allow passing of any number of payload objects to entry guards", function(){
+            var foo, bar;
+            var on = sm.getState('on');
+            on.addGuard( jsfsa.Action.ENTRY, function( event, f, b ){
+                foo = f;
+                bar = b;
+                return true;
+            });
+
+            sm.doTransition( 'ignite','foo','bar' );
+            expect( [foo,bar] ).toEqual( ['foo','bar']);
+        });
+        it( "should allow passing of any number of payload objects to listeners", function(){
+            var foo, bar;
+            var on = sm.getState('on');
+            on.addListener( jsfsa.StateEvent.ENTERED, function(event, f, b ){
+                foo = f;
+                bar = b;
+            });
+
+            sm.doTransition( 'ignite','foo','bar' );
+            expect( [foo,bar] ).toEqual( ['foo','bar']);
+        });
     });
     describe( "the automaton's out-of-state (w/o initial states)", function(){
         beforeEach( function(){
