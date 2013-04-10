@@ -1,15 +1,11 @@
-/*jshint forin:true, noarg:true, noempty:true, eqeqeq:true, bitwise:true, strict:true, undef:true, curly:true, browser:true, maxerr:50, laxbreak:true, laxcomma:true */
-
 /**
  * @author Camille Reynders
  * @version %VERSION%
  */
-
-
-( function( $ ){
+(function ($) {
     "use strict";
 
-    if ( $.hasOwnProperty( 'jsfsa' ) ) {
+    if ($.hasOwnProperty('jsfsa')) {
         return;
     }
 
@@ -24,12 +20,12 @@
          * @constant
          * @type String
          */
-        VERSION : '%VERSION%'
+        VERSION: '%VERSION%'
     };
 
- //--( Dispatcher )--//
+    //--( Dispatcher )--//
 
-    var Dispatcher = function(){
+    var Dispatcher = function () {
         this._listeners = {};
     };
 
@@ -40,11 +36,11 @@
      * @param {Function} handler
      * @return {Object} the dispatcher
      */
-    Dispatcher.prototype.addListener = function( eventName, handler ){
-        if( ! this._listeners.hasOwnProperty( eventName ) ){
-            this._listeners[ eventName ] = [];
+    Dispatcher.prototype.addListener = function (eventName, handler) {
+        if (!this._listeners.hasOwnProperty(eventName)) {
+            this._listeners[eventName] = [];
         }
-        this._listeners[ eventName ].push( handler );
+        this._listeners[eventName].push(handler);
 
         return this;
     };
@@ -55,19 +51,19 @@
      * @param {Function} handlers
      * @return {Object} the dispatcher
      */
-    Dispatcher.prototype.addListeners = function( eventName, handlers ){
-        if( typeof handlers === "function" ){
-            return this.addListener( eventName, handlers );
+    Dispatcher.prototype.addListeners = function (eventName, handlers) {
+        if (typeof handlers === "function") {
+            return this.addListener(eventName, handlers);
         }
 
         var arr;
-        if( ! this._listeners.hasOwnProperty( eventName ) ){
+        if (!this._listeners.hasOwnProperty(eventName)) {
             arr = [];
-        }else{
-            arr = this._listeners[ eventName ];
+        } else {
+            arr = this._listeners[eventName];
         }
 
-        this._listeners[ eventName ] = arr.concat( handlers );
+        this._listeners[eventName] = arr.concat(handlers);
 
         return this;
     };
@@ -78,9 +74,9 @@
      * @param {Function} handler
      * @return {Boolean}
      */
-    Dispatcher.prototype.hasListener = function( eventName, handler ){
-        if( this._listeners.hasOwnProperty( eventName ) ){
-            var index = this._listeners[ eventName ].indexOf( handler );
+    Dispatcher.prototype.hasListener = function (eventName, handler) {
+        if (this._listeners.hasOwnProperty(eventName)) {
+            var index = this._listeners[eventName].indexOf(handler);
             return index >= 0;
         }
         return false;
@@ -91,11 +87,11 @@
      * @param {Function} handler
      * @return {Object} the dispatcher
      */
-    Dispatcher.prototype.removeListener = function( eventName, handler ){
-        if( this._listeners.hasOwnProperty( eventName ) ){
-            var index = this._listeners[ eventName ].indexOf( handler );
-            if( index >= 0 ){
-                this._listeners[ eventName ].splice( index, 1 );
+    Dispatcher.prototype.removeListener = function (eventName, handler) {
+        if (this._listeners.hasOwnProperty(eventName)) {
+            var index = this._listeners[eventName].indexOf(handler);
+            if (index >= 0) {
+                this._listeners[eventName].splice(index, 1);
             }
         }
         return this;
@@ -107,26 +103,25 @@
      * @param {String} e.type
      * @return {Boolean} the result of the registered handlers
      */
-    Dispatcher.prototype.dispatch = function( e ){
+    Dispatcher.prototype.dispatch = function (e) {
         var eventName = e.type;
         var result = true;
-        if( this._listeners.hasOwnProperty( eventName ) ){
-            var args = Array.prototype.slice.call( arguments );
-            for( var i=0, n=this._listeners[ eventName ].length ; i<n ; i++ ){
-                var handler = this._listeners[ eventName ][ i ];
-                result = handler.apply( this, args ) && result;
+        if (this._listeners.hasOwnProperty(eventName)) {
+            var args = Array.prototype.slice.call(arguments);
+            for (var i = 0, n = this._listeners[eventName].length; i < n; i++) {
+                var handler = this._listeners[eventName][i];
+                result = handler.apply(this, args) && result;
             }
         }
         return result;
     };
 
-//--( DispatcherProxy )--//
+    //--( DispatcherProxy )--//
 
-    var DispatcherProxy = function(){
-    };
+    var DispatcherProxy = function () {};
     DispatcherProxy.prototype = Dispatcher.prototype;
 
-//--( StateEvent )--//
+    //--( StateEvent )--//
 
     /**
      * @class
@@ -136,7 +131,7 @@
      * @param {String} to name of the entering/entered state
      * @param {transition} transition name of the transition
      */
-    jsfsa.StateEvent = function( type, from, to, transition ){
+    jsfsa.StateEvent = function (type, from, to, transition) {
 
         /**
          * @type String
@@ -224,13 +219,12 @@
      */
     jsfsa.StateEvent.CHANGED = 'changed';
 
-
     jsfsa.StateEvent.prototype = {
         /**
          * @return {jsfsa.StateEvent}
          */
-        clone : function(){
-            var result = new jsfsa.StateEvent( this.type, this.from, this.to, this.transition );
+        clone: function () {
+            var result = new jsfsa.StateEvent(this.type, this.from, this.to, this.transition);
             return result;
         },
 
@@ -238,21 +232,20 @@
          * @internal
          * @param type
          */
-        _setType : function( type ){
+        _setType: function (type) {
             this.type = type;
 
             return this;
         }
     };
 
-//--( Action )--//
+    //--( Action )--//
 
     /**
      * @class
      * @constructor
      */
-    jsfsa.Action = function(){
-    };
+    jsfsa.Action = function () {};
 
     /**
      * @static
@@ -268,7 +261,7 @@
      */
     jsfsa.Action.EXIT = 'exit';
 
-//--( State )--//
+    //--( State )--//
 
     /**
      * @class
@@ -281,8 +274,8 @@
      * @param {String} name
      * @param {Object} [data] object with configuration data, see {@link jsfsa.State#parseData} for syntax
      */
-    jsfsa.State = function( name, data ){
-        Dispatcher.call( this );
+    jsfsa.State = function (name, data) {
+        Dispatcher.call(this);
 
         /**
          * @type String
@@ -296,9 +289,9 @@
         this.name = '';
 
         /**
-        * Name of the parent state
-        * @type String
-        */
+         * Name of the parent state
+         * @type String
+         */
         this.parent = undefined;
 
         /**
@@ -308,25 +301,25 @@
         this.isInitial = false;
 
         /**
-        * @private
-        * @type Dispatcher
-        */
+         * @private
+         * @type Dispatcher
+         */
         this._guardian = undefined;
 
         /**
-        * @private
-        * @type {Object}
-        */
+         * @private
+         * @type {Object}
+         */
         this._transitions = {};
 
-        this._parseName( name );
-        this.parseData( data );
+        this._parseName(name);
+        this.parseData(data);
     };
 
     jsfsa.State.prototype = new DispatcherProxy();
     jsfsa.State.prototype.constructor = jsfsa.State;
 
-    jsfsa.State._configMembers = [ 'isInitial', 'guards', 'listeners', 'parent', 'transitions' ];
+    jsfsa.State._configMembers = ['isInitial', 'guards', 'listeners', 'parent', 'transitions'];
 
     /**
      * Tells this state to allow a transition with name <code>transitionName</code> from this state to <code>stateName</code></br>
@@ -338,8 +331,8 @@
      * @param {String} stateName
      * @return {jsfsa.State} the instance of {@link jsfsa.State} that is acted upon
      */
-    jsfsa.State.prototype.addTransition = function( transitionName, stateName ){
-        this._transitions[ transitionName ] = stateName;
+    jsfsa.State.prototype.addTransition = function (transitionName, stateName) {
+        this._transitions[transitionName] = stateName;
         return this;
     };
 
@@ -351,8 +344,8 @@
      * @param {String} transitionName
      * @return {jsfsa.State} the instance of {@link jsfsa.State} that is acted upon
      */
-    jsfsa.State.prototype.removeTransition = function( transitionName ){
-        delete this._transitions[ transitionName ];
+    jsfsa.State.prototype.removeTransition = function (transitionName) {
+        delete this._transitions[transitionName];
         return this;
     };
 
@@ -364,8 +357,8 @@
      * @param {String} transitionName
      * @return {String} target state name
      */
-    jsfsa.State.prototype.getTransition = function( transitionName ){
-        return this._transitions[ transitionName ];
+    jsfsa.State.prototype.getTransition = function (transitionName) {
+        return this._transitions[transitionName];
     };
 
     /**
@@ -376,8 +369,8 @@
      * @param {String} transitionName
      * @return {Boolean}
      */
-    jsfsa.State.prototype.hasTransition = function( transitionName ){
-        return this._transitions.hasOwnProperty( transitionName );
+    jsfsa.State.prototype.hasTransition = function (transitionName) {
+        return this._transitions.hasOwnProperty(transitionName);
     };
 
     /**
@@ -392,8 +385,9 @@
      * @param {Function} guard
      * @return {jsfsa.State} the instance of {@link jsfsa.State} that is acted upon
      */
-    jsfsa.State.prototype.addGuard = function( action, guard ){
-        this._getGuardian().addListener( action, guard );
+    jsfsa.State.prototype.addGuard = function (action, guard) {
+        this._getGuardian()
+            .addListener(action, guard);
         return this;
     };
 
@@ -406,8 +400,9 @@
      * @param {Function[]} guards
      * @return {jsfsa.State} the instance of {@link jsfsa.State} that is acted upon
      */
-    jsfsa.State.prototype.addGuards = function( action, guards ){
-        this._getGuardian().addListeners( action, guards );
+    jsfsa.State.prototype.addGuards = function (action, guards) {
+        this._getGuardian()
+            .addListeners(action, guards);
         return this;
     };
 
@@ -420,8 +415,8 @@
      * @param {Function} guard
      * @return {Boolean}
      */
-    jsfsa.State.prototype.hasGuard = function( action, guard ){
-        return this._guardian && this._guardian.hasListener( action, guard );
+    jsfsa.State.prototype.hasGuard = function (action, guard) {
+        return this._guardian && this._guardian.hasListener(action, guard);
     };
 
     /**
@@ -433,9 +428,9 @@
      * @param {Function} guard
      * @return {jsfsa.State} the instance of {@link jsfsa.State} that is acted upon
      */
-    jsfsa.State.prototype.removeGuard = function( action, guard ){
-        if( this._guardian ){
-            this._guardian.removeListener( action, guard );
+    jsfsa.State.prototype.removeGuard = function (action, guard) {
+        if (this._guardian) {
+            this._guardian.removeListener(action, guard);
         }
         return this;
     };
@@ -490,43 +485,43 @@
     }
      * @param {Object} data
      */
-    jsfsa.State.prototype.parseData = function( data ){
-        if( data ){
-            if( data.isInitial ) {
+    jsfsa.State.prototype.parseData = function (data) {
+        if (data) {
+            if (data.isInitial) {
                 this.isInitial = true;
             }
-            if( data.guards ){
-                if( data.guards[ jsfsa.Action.ENTRY ] ){
-                    this.addGuards( jsfsa.Action.ENTRY, data.guards[ jsfsa.Action.ENTRY ] );
+            if (data.guards) {
+                if (data.guards[jsfsa.Action.ENTRY]) {
+                    this.addGuards(jsfsa.Action.ENTRY, data.guards[jsfsa.Action.ENTRY]);
                 }
-                if( data.guards[ jsfsa.Action.EXIT ] ){
-                    this.addGuards(jsfsa.Action.EXIT, data.guards[ jsfsa.Action.EXIT ] );
-                }
-            }
-            for( var eventName in data.listeners ){
-                if( data.listeners.hasOwnProperty( eventName ) ){
-                    this.addListeners( eventName, data.listeners[ eventName ] );
+                if (data.guards[jsfsa.Action.EXIT]) {
+                    this.addGuards(jsfsa.Action.EXIT, data.guards[jsfsa.Action.EXIT]);
                 }
             }
-            if( data.parent ){
+            for (var eventName in data.listeners) {
+                if (data.listeners.hasOwnProperty(eventName)) {
+                    this.addListeners(eventName, data.listeners[eventName]);
+                }
+            }
+            if (data.parent) {
                 this.parent = data.parent;
             }
-            if( data.transitions ){
-                this._addTransitions( data.transitions );
+            if (data.transitions) {
+                this._addTransitions(data.transitions);
             }
 
-            this._addTransitions( data, jsfsa.State._configMembers );
+            this._addTransitions(data, jsfsa.State._configMembers);
         }
     };
 
     /**
      * Releases all resources. After calling this method, the State instance can/should no longer be used.
      */
-    jsfsa.State.prototype.destroy = function(){
-        this._guardian      = undefined;
-        this._transitions   = undefined;
-        this._listeners     = undefined;
-        this.name           = undefined;
+    jsfsa.State.prototype.destroy = function () {
+        this._guardian = undefined;
+        this._transitions = undefined;
+        this._listeners = undefined;
+        this.name = undefined;
     };
 
     /**
@@ -534,31 +529,31 @@
      * @return {Dispatcher}
      * @private
      */
-    jsfsa.State.prototype._getGuardian = function(){
-        if( this._guardian === undefined ){
+    jsfsa.State.prototype._getGuardian = function () {
+        if (this._guardian === undefined) {
             this._guardian = new Dispatcher();
         }
         return this._guardian;
     };
 
-    jsfsa.State.prototype._parseName = function( name ){
-        var index = name.lastIndexOf( '/' );
-        if( index >=0 ){
-            this.parent = name.substring( 0, index );
+    jsfsa.State.prototype._parseName = function (name) {
+        var index = name.lastIndexOf('/');
+        if (index >= 0) {
+            this.parent = name.substring(0, index);
         }
         this.name = name;
     };
 
-    jsfsa.State.prototype._executeGuards = function( args ){
+    jsfsa.State.prototype._executeGuards = function (args) {
         var result = true;
-        if( this._guardian ){
-            result = this._guardian.dispatch.apply( this._guardian, args );
-            if( ! result ){
-                args = args.slice( 0 );
-                var e = args[ 0 ].clone();
+        if (this._guardian) {
+            result = this._guardian.dispatch.apply(this._guardian, args);
+            if (!result) {
+                args = args.slice(0);
+                var e = args[0].clone();
                 e.type += 'Denied';
-                args[ 0 ] = e;
-                this.dispatch.apply( this, args );
+                args[0] = e;
+                this.dispatch.apply(this, args);
             }
         }
 
@@ -570,13 +565,13 @@
      * @param {Object} data
      * @param {String[]} [skip]
      */
-    jsfsa.State.prototype._addTransitions = function( data, skip ){
-        for( var transitionName in data ){
-            if( data.hasOwnProperty( transitionName ) ){
-                if( skip && skip.indexOf( transitionName ) >= 0 ) {
+    jsfsa.State.prototype._addTransitions = function (data, skip) {
+        for (var transitionName in data) {
+            if (data.hasOwnProperty(transitionName)) {
+                if (skip && skip.indexOf(transitionName) >= 0) {
                     continue;
                 }
-                this.addTransition( transitionName, data[ transitionName ] );
+                this.addTransition(transitionName, data[transitionName]);
             }
         }
     };
@@ -585,12 +580,11 @@
      * @private
      * @param {Array} args
      */
-    jsfsa.State.prototype._dispatchArgs = function( args ){
-        this.dispatch.apply( this, args );
+    jsfsa.State.prototype._dispatchArgs = function (args) {
+        this.dispatch.apply(this, args);
     };
 
-
-//--( Node )--//
+    //--( Node )--//
 
     /**
      * @ignore
@@ -598,7 +592,7 @@
      * @constructor
      * @param state
      */
-    var Node = function( state ){
+    var Node = function (state) {
         this.state = state;
         this.parent = undefined;
         this.children = undefined;
@@ -611,33 +605,33 @@
          * @ignore
          * @param node
          */
-        addChild : function( node ){
-            if( ! this.children ) {
+        addChild: function (node) {
+            if (!this.children) {
                 this.children = {};
             }
             node.parent = this;
-            if( node.state.isInitial ) {
+            if (node.state.isInitial) {
                 this.initialChild = node;
             }
-            this.children[ node.state.name ] = node;
+            this.children[node.state.name] = node;
         },
         /**
          * @ignore
          * @param node
          */
-        removeChild : function( node ){
-            if( this.initialChild === node ) {
+        removeChild: function (node) {
+            if (this.initialChild === node) {
                 this.initialChild = undefined;
             }
-            delete this.children[ node.state.name ];
+            delete this.children[node.state.name];
         },
         /**
          * @ignore
          */
-        destroy : function(){
-            for( var stateName in this.children ){
-                if( this.children.hasOwnProperty( stateName ) ){
-                    this.children[ stateName ].destroy();
+        destroy: function () {
+            for (var stateName in this.children) {
+                if (this.children.hasOwnProperty(stateName)) {
+                    this.children[stateName].destroy();
                 }
             }
             this.state = undefined;
@@ -647,11 +641,11 @@
         /**
          * @ignore
          */
-        getInitialBranch : function(){
+        getInitialBranch: function () {
             var result = [];
             var initial = this.initialChild;
-            while( initial ){
-                result.push( initial );
+            while (initial) {
+                result.push(initial);
                 initial = initial.initialChild;
             }
 
@@ -659,7 +653,7 @@
         }
     };
 
-//--( StateEventFactory )--//
+    //--( StateEventFactory )--//
 
     /**
      * @ignore
@@ -669,7 +663,7 @@
      * @param {String} from
      * @param {String} to
      */
-    var StateEventFactory = function( payload, transition, from, to  ){
+    var StateEventFactory = function (payload, transition, from, to) {
         this.payload = payload;
         this.from = from;
         this.to = to;
@@ -682,18 +676,18 @@
          * @param type
          * @return {jsfsa.StateEvent}
          */
-        createEvent : function( type ){
-            return new jsfsa.StateEvent( type, this.from, this.to, this.transition );
+        createEvent: function (type) {
+            return new jsfsa.StateEvent(type, this.from, this.to, this.transition);
         },
 
-        createArgsArray : function( type ){
-            var result = this.payload.slice( 0 );
-            result.unshift( this.createEvent( type ) );
+        createArgsArray: function (type) {
+            var result = this.payload.slice(0);
+            result.unshift(this.createEvent(type));
             return result;
         }
     };
 
-//--( Automaton )--//
+    //--( Automaton )--//
 
     /**
      * @class
@@ -704,8 +698,8 @@
      * @borrows Dispatcher#hasListener as this.hasListener
      * @borrows Dispatcher#dispatch as this.dispatch
      */
-    jsfsa.Automaton = function( data, name ){
-        Dispatcher.call( this );
+    jsfsa.Automaton = function (data, name) {
+        Dispatcher.call(this);
         /**
          * @type String
          */
@@ -714,13 +708,13 @@
         this.name = name || '';
 
         this._nodes = {};
-        this._rootNode = new Node( new jsfsa.State('root') );
-        this._currentBranch = [ this._rootNode ];
+        this._rootNode = new Node(new jsfsa.State('root'));
+        this._currentBranch = [this._rootNode];
         this._internalState = 'ready';
         this._queue = [];
         this._newBranch = undefined;
-        if( data ){
-            this.parse( data );
+        if (data) {
+            this.parse(data);
         }
     };
 
@@ -731,7 +725,7 @@
      * Returns whether the Automaton is currently transitioning from one state to the other
      * @return {Boolean}
      */
-    jsfsa.Automaton.prototype.isTransitioning = function(){
+    jsfsa.Automaton.prototype.isTransitioning = function () {
         return this._internalState !== 'ready';
     };
 
@@ -739,7 +733,7 @@
      * @private
      * @return {jsfsa.State}
      */
-    jsfsa.Automaton.prototype.getRootState = function(){
+    jsfsa.Automaton.prototype.getRootState = function () {
         return this._rootNode.state;
     };
 
@@ -747,21 +741,21 @@
      * Returns the lowest state that is currently active
      * @return {jsfsa.State}
      */
-    jsfsa.Automaton.prototype.getCurrentState = function(){
-        return this._currentBranch[ this._currentBranch.length -1 ].state;
+    jsfsa.Automaton.prototype.getCurrentState = function () {
+        return this._currentBranch[this._currentBranch.length - 1].state;
     };
 
     /**
      * Returns a top-down list of the currently active hierarchical states
      * @return {jsfsa.State[]}
      */
-    jsfsa.Automaton.prototype.getCurrentBranch = function(){
+    jsfsa.Automaton.prototype.getCurrentBranch = function () {
         var branch = this._currentBranch;
         var output = [];
         //we're skipping the root node!
-        for( var i=1; i<branch.length; i++ ){
+        for (var i = 1; i < branch.length; i++) {
             var node = branch[i];
-            output.push( node.state );
+            output.push(node.state);
         }
         return output;
     };
@@ -771,10 +765,10 @@
      * @param stateName
      * @return {Boolean}
      */
-    jsfsa.Automaton.prototype.isInCurrentBranch = function( stateName ){
-        var node = this._nodes[ stateName ];
-        if( node ){
-            return this._currentBranch.indexOf( node ) > -1;
+    jsfsa.Automaton.prototype.isInCurrentBranch = function (stateName) {
+        var node = this._nodes[stateName];
+        if (node) {
+            return this._currentBranch.indexOf(node) > -1;
         }
         return false;
     };
@@ -785,9 +779,9 @@
      * @param {Object} stateData
      * @return {jsfsa.Automaton} the instance of {@link jsfsa.Automaton} that is acted upon
      */
-    jsfsa.Automaton.prototype.createState = function( stateName, stateData ){
-        var state = new jsfsa.State( stateName, stateData );
-        this.addState( state );
+    jsfsa.Automaton.prototype.createState = function (stateName, stateData) {
+        var state = new jsfsa.State(stateName, stateData);
+        this.addState(state);
 
         return this;
     };
@@ -797,18 +791,15 @@
      * @param {jsfsa.State} state
      * @return {jsfsa.Automaton} the instance of {@link jsfsa.Automaton} that is acted upon
      */
-    jsfsa.Automaton.prototype.addState = function( state ){
-        if( ! this.hasState( state.name ) ){
-            var node = new Node( state );
-            var parentNode = ( state.parent )
-                ? this._nodes[ state.parent ]
-                : this._rootNode
-            ;
-            parentNode.addChild( node );
-            if( state.isInitial && parentNode.state === this.getCurrentState() ){
-                this._currentBranch.push( node );
+    jsfsa.Automaton.prototype.addState = function (state) {
+        if (!this.hasState(state.name)) {
+            var node = new Node(state);
+            var parentNode = (state.parent) ? this._nodes[state.parent] : this._rootNode;
+            parentNode.addChild(node);
+            if (state.isInitial && parentNode.state === this.getCurrentState()) {
+                this._currentBranch.push(node);
             }
-            this._nodes[ state.name ] = node;
+            this._nodes[state.name] = node;
         }
 
         return this;
@@ -819,8 +810,8 @@
      * @param {String} stateName
      * @return {Boolean}
      */
-    jsfsa.Automaton.prototype.hasState = function( stateName ){
-        return this._nodes.hasOwnProperty( stateName );
+    jsfsa.Automaton.prototype.hasState = function (stateName) {
+        return this._nodes.hasOwnProperty(stateName);
     };
 
     /**
@@ -828,9 +819,9 @@
      * @param {String} stateName
      * @return {jsfsa.State} <code>undefined</code> if no state with name <code>stateName</code> was found.
      */
-    jsfsa.Automaton.prototype.getState = function( stateName ){
-        if( this.hasState( stateName ) ){
-            return this._nodes[ stateName ].state;
+    jsfsa.Automaton.prototype.getState = function (stateName) {
+        if (this.hasState(stateName)) {
+            return this._nodes[stateName].state;
         }
 
         return undefined;
@@ -841,17 +832,17 @@
      * @param {String} stateName
      * @return {jsfsa.Automaton} the instance of {@link jsfsa.Automaton} that is acted upon
      */
-    jsfsa.Automaton.prototype.removeState = function( stateName ){
-        if( this.hasState( stateName ) ){
-            var node = this._nodes[ stateName ];
+    jsfsa.Automaton.prototype.removeState = function (stateName) {
+        if (this.hasState(stateName)) {
+            var node = this._nodes[stateName];
             var parentNode = node.parent;
-            parentNode.removeChild( node );
-            var index = this._currentBranch.indexOf( node );
-            if( index >= 0 ){
-                this._currentBranch.splice( index, this._currentBranch.length - index );
+            parentNode.removeChild(node);
+            var index = this._currentBranch.indexOf(node);
+            if (index >= 0) {
+                this._currentBranch.splice(index, this._currentBranch.length - index);
             }
             node.destroy();
-            delete this._nodes[ stateName ];
+            delete this._nodes[stateName];
         }
 
         return this;
@@ -864,41 +855,40 @@
      * @param {String} transitionName
      * @return {jsfsa.Automaton} the instance of {@link jsfsa.Automaton} that is acted upon
      */
-    jsfsa.Automaton.prototype.doTransition = function( transitionName ){
-        if( this._internalState === 'ready' ) {
+    jsfsa.Automaton.prototype.doTransition = function (transitionName) {
+        if (this._internalState === 'ready') {
             var payload;
-            if ( arguments.length > 1 ) {
-                payload = Array.prototype.slice.call( arguments );
+            if (arguments.length > 1) {
+                payload = Array.prototype.slice.call(arguments);
                 payload.shift(); //drop transitionname
             } else {
                 payload = [];
             }
 
-            this._newBranch     = this._currentBranch;
-            var eventFactory    = new StateEventFactory( payload, transitionName, this.getCurrentState().name );
-            var sourceNode      = this._hasTransitionInCurrentBranch( transitionName );
+            this._newBranch = this._currentBranch;
+            var eventFactory = new StateEventFactory(payload, transitionName, this.getCurrentState().name);
+            var sourceNode = this._hasTransitionInCurrentBranch(transitionName);
 
-            if ( sourceNode === undefined ) {
+            if (sourceNode === undefined) {
                 //there's no transition with that name in the current state branch
-                this._finishTransition( eventFactory.createArgsArray( jsfsa.StateEvent.TRANSITION_DENIED ) );
+                this._finishTransition(eventFactory.createArgsArray(jsfsa.StateEvent.TRANSITION_DENIED));
             } else {
                 //transition found somewhere in the _currentStateBranch
-                this._attemptTransition( sourceNode, eventFactory );
+                this._attemptTransition(sourceNode, eventFactory);
             }
         }
         return this;
     };
-
 
     /**
      * Parses a JSON formatted data object and translates it to states and transitions
      * @param {Object} data JSON formatted data object
      * @return {jsfsa.Automaton} the instance of {@link jsfsa.Automaton} that is acted upon
      */
-    jsfsa.Automaton.prototype.parse = function( data ){
-        for( var stateName in data ){
-            if( data.hasOwnProperty( stateName ) ){
-                this.createState( stateName, data[ stateName ] );
+    jsfsa.Automaton.prototype.parse = function (data) {
+        for (var stateName in data) {
+            if (data.hasOwnProperty(stateName)) {
+                this.createState(stateName, data[stateName]);
             }
         }
 
@@ -909,14 +899,14 @@
      * Resumes the transitioning between states
      * @return {jsfsa.Automaton} the instance of {@link jsfsa.Automaton} that is acted upon
      */
-    jsfsa.Automaton.prototype.proceed = function(){
-        if( this._internalState === 'transitioning' || this._internalState === 'paused' ){
-            if( this._queue.length > 0 ){
+    jsfsa.Automaton.prototype.proceed = function () {
+        if (this._internalState === 'transitioning' || this._internalState === 'paused') {
+            if (this._queue.length > 0) {
                 this._internalState = 'transitioning';
                 var o = this._queue.shift();
                 var item = o.obj.state;
-                item[ o.method ].call ( item, o.args );
-                if( this._internalState !== "paused" ){
+                item[o.method].call(item, o.args);
+                if (this._internalState !== "paused") {
                     this.proceed();
                 }
             }
@@ -929,8 +919,8 @@
      * Pauses the transitioning between states
      * @return {jsfsa.Automaton} the instance of {@link jsfsa.Automaton} that is acted upon
      */
-    jsfsa.Automaton.prototype.pause = function(){
-        if( this._internalState === 'transitioning' ){
+    jsfsa.Automaton.prototype.pause = function () {
+        if (this._internalState === 'transitioning') {
             this._internalState = 'paused';
         }
 
@@ -943,19 +933,19 @@
      *
      * Sorry, couldn't resist.
      */
-    jsfsa.Automaton.prototype.destroy = function(){
+    jsfsa.Automaton.prototype.destroy = function () {
         this._rootNode.destroy();
         this._rootNode = undefined;
         this._nodes = undefined;
         this._currentBranch = undefined;
     };
 
-    jsfsa.Automaton.prototype._hasTransitionInCurrentBranch = function ( transitionName ) {
+    jsfsa.Automaton.prototype._hasTransitionInCurrentBranch = function (transitionName) {
         var runner;
         var found = false;
-        for ( var i = this._currentBranch.length - 1, n = 0 ; i >= n ; i-- ) {
-            runner = this._currentBranch[ i ].state;
-            if ( runner.hasTransition( transitionName ) ) {
+        for (var i = this._currentBranch.length - 1, n = 0; i >= n; i--) {
+            runner = this._currentBranch[i].state;
+            if (runner.hasTransition(transitionName)) {
                 found = true;
                 break;
             }
@@ -963,17 +953,18 @@
         return found ? runner : undefined;
     };
 
-    jsfsa.Automaton.prototype._attemptTransition = function ( sourceNode, eventFactory ) {
-        var targetNode = this._nodes[ sourceNode.getTransition( eventFactory.transition ) ];
-        if ( !targetNode ) {
+    jsfsa.Automaton.prototype._attemptTransition = function (sourceNode, eventFactory) {
+        var targetNode = this._nodes[sourceNode.getTransition(eventFactory.transition)];
+        if (!targetNode) {
             //state doesn't exist
-            this._finishTransition( eventFactory.createArgsArray( jsfsa.StateEvent.TRANSITION_DENIED ) );
+            this._finishTransition(eventFactory.createArgsArray(jsfsa.StateEvent.TRANSITION_DENIED));
         } else {
             eventFactory.to = targetNode.state.name;
             var initialNodes = targetNode.getInitialBranch();
-            this._newBranch = this._getBranchFromRoot( targetNode ).concat( initialNodes );
-            var streams = this._getShortestRoute( this._currentBranch, this._newBranch );
-            this._doExitGuardPhase( streams, eventFactory );
+            this._newBranch = this._getBranchFromRoot(targetNode)
+                .concat(initialNodes);
+            var streams = this._getShortestRoute(this._currentBranch, this._newBranch);
+            this._doExitGuardPhase(streams, eventFactory);
         }
     };
 
@@ -982,15 +973,14 @@
      * @param {Node} node
      * @return {Node[]}
      */
-    jsfsa.Automaton.prototype._getBranchFromRoot = function( node ){
+    jsfsa.Automaton.prototype._getBranchFromRoot = function (node) {
         var branch = [];
-        while( node ){
-            branch.unshift( node );
+        while (node) {
+            branch.unshift(node);
             node = node.parent;
         }
         return branch;
     };
-
 
     /**
      * @private
@@ -998,84 +988,91 @@
      * @param {Node[]} rootToEnd
      * @return {Object}
      */
-    jsfsa.Automaton.prototype._getShortestRoute = function( rootToBegin, rootToEnd ){
-        var i, n = Math.min( rootToBegin.length, rootToEnd.length );
-        for( i=0 ; i<n ; i++ ){
-            if( rootToBegin[ i ] !== rootToEnd[ i ] ){
+    jsfsa.Automaton.prototype._getShortestRoute = function (rootToBegin, rootToEnd) {
+        var i, n = Math.min(rootToBegin.length, rootToEnd.length);
+        for (i = 0; i < n; i++) {
+            if (rootToBegin[i] !== rootToEnd[i]) {
                 break;
             }
         }
 
-        var up = rootToBegin.slice( i ).reverse();
-        var down = rootToEnd.slice( i );
+        var up = rootToBegin.slice(i)
+            .reverse();
+        var down = rootToEnd.slice(i);
 
         return {
-            up : up,
-            down : down
+            up: up,
+            down: down
         };
     };
-    jsfsa.Automaton.prototype._doExitGuardPhase = function ( streams, eventFactory ) {
+    jsfsa.Automaton.prototype._doExitGuardPhase = function (streams, eventFactory) {
         this._internalState = 'guarding';
-        var proceed = this._executeGuards( streams.up, eventFactory.createArgsArray( jsfsa.Action.EXIT ) );
-        if ( !proceed ) {
+        var proceed = this._executeGuards(streams.up, eventFactory.createArgsArray(jsfsa.Action.EXIT));
+        if (!proceed) {
             this._newBranch = undefined;
-            this._finishTransition( eventFactory.createArgsArray( jsfsa.StateEvent.EXIT_DENIED ) );
+            this._finishTransition(eventFactory.createArgsArray(jsfsa.StateEvent.EXIT_DENIED));
         } else {
-            proceed = this._doEntryGuardPhase( streams, eventFactory );
+            proceed = this._doEntryGuardPhase(streams, eventFactory);
         }
         return proceed;
     };
-    jsfsa.Automaton.prototype._doEntryGuardPhase = function ( streams, eventFactory ) {
-        var proceed = this._executeGuards( streams.down, eventFactory.createArgsArray( jsfsa.Action.ENTRY ) );
-        if ( !proceed ) {
+    jsfsa.Automaton.prototype._doEntryGuardPhase = function (streams, eventFactory) {
+        var proceed = this._executeGuards(streams.down, eventFactory.createArgsArray(jsfsa.Action.ENTRY));
+        if (!proceed) {
             this._newBranch = undefined;
-            this._finishTransition( eventFactory.createArgsArray( jsfsa.StateEvent.ENTRY_DENIED ) );
+            this._finishTransition(eventFactory.createArgsArray(jsfsa.StateEvent.ENTRY_DENIED));
         } else {
-            this._startTransition( streams, eventFactory );
+            this._startTransition(streams, eventFactory);
         }
         return proceed;
     };
-    jsfsa.Automaton.prototype._executeGuards = function( nodesList, args ){
+    jsfsa.Automaton.prototype._executeGuards = function (nodesList, args) {
         var result = true;
-        for( var i=0, n=nodesList.length; i<n ; i++){
-            var state = nodesList[ i ].state;
-            result = state._executeGuards( args ) && result;
+        for (var i = 0, n = nodesList.length; i < n; i++) {
+            var state = nodesList[i].state;
+            result = state._executeGuards(args) && result;
         }
 
         return result;
     };
 
-    jsfsa.Automaton.prototype._startTransition = function ( streams, eventFactory ) {
+    jsfsa.Automaton.prototype._startTransition = function (streams, eventFactory) {
         this._internalState = 'transitioning';
         this._currentBranch = undefined;
         var referer = [
-            { state:this }
+        {
+            state: this
+        }
         ];
-        var args = eventFactory.createArgsArray( jsfsa.StateEvent.EXITED );
+        var args = eventFactory.createArgsArray(jsfsa.StateEvent.EXITED);
         this._queue = [];
-        this._addToQueue( streams.up, '_dispatchArgs', args );
-        this._addToQueue( referer, '_dispatchArgs', args );
-        args = eventFactory.createArgsArray( jsfsa.StateEvent.ENTERED );
-        this._addToQueue( streams.down, '_dispatchArgs', args );
-        this._addToQueue( referer, '_dispatchArgs', args );
-        this._addToQueue( referer, '_finishTransition', eventFactory.createArgsArray( jsfsa.StateEvent.CHANGED ) );
+        this._addToQueue(streams.up, '_dispatchArgs', args);
+        this._addToQueue(referer, '_dispatchArgs', args);
+        args = eventFactory.createArgsArray(jsfsa.StateEvent.ENTERED);
+        this._addToQueue(streams.down, '_dispatchArgs', args);
+        this._addToQueue(referer, '_dispatchArgs', args);
+        this._addToQueue(referer, '_finishTransition', eventFactory.createArgsArray(jsfsa.StateEvent.CHANGED));
         this.proceed();
     };
 
-    jsfsa.Automaton.prototype._addToQueue = function( list, method, args ){
-        for( var i=0, n=list.length ; i<n ; i++ ){
-            this._queue.push( { obj : list[ i ], args : args, method: method} );
+    jsfsa.Automaton.prototype._addToQueue = function (list, method, args) {
+        for (var i = 0, n = list.length; i < n; i++) {
+            this._queue.push({
+                obj: list[i],
+                args: args,
+                method: method
+            });
         }
     };
 
-    jsfsa.Automaton.prototype._finishTransition = function( args ){
-        if( this._newBranch ){
+    jsfsa.Automaton.prototype._finishTransition = function (args) {
+        if (this._newBranch) {
             this._currentBranch = this._newBranch;
-        }else{
+        } else {
             this._newBranch = undefined;
         }
         this._internalState = 'ready';
-        this._dispatchArgs( args );
+        this._dispatchArgs(args);
     };
 
     /**
@@ -1085,10 +1082,6 @@
      */
     jsfsa.Automaton.prototype._dispatchArgs = jsfsa.State.prototype._dispatchArgs;
 
-
     $.jsfsa = jsfsa;
 
-} ( this ) );
-
-
-
+}(this));

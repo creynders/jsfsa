@@ -4,6 +4,7 @@
  * Time: 15:37
  */
 describe( "jsfsa.State", function(){
+    "use strict";
     var main;
     beforeEach( function(){
         main = new jsfsa.State( 'main' );
@@ -16,7 +17,7 @@ describe( "jsfsa.State", function(){
             toBeInstanceOf : function( expected ){
                 return this.actual instanceof expected;
             }
-        })
+        });
     } );
 
     describe( "instance", function(){
@@ -93,7 +94,7 @@ describe( "jsfsa.State", function(){
     describe( "#getTransition", function(){
         it( "should return undefined if no transitionName provided", function(){
             expect( main.getTransition() ).toBeUndefined();
-        })
+        });
     });
     describe( "#hasTransition", function(){
         it( "should return false if no transitionName was provided", function(){
@@ -161,13 +162,13 @@ describe( "jsfsa.State", function(){
             var green = sm.getState( 'green' );
             green.addListener( jsfsa.StateEvent.EXITED, spy );
             sm.doTransition( 'next' );
-            expect( spy ).toHaveBeenCalled()
+            expect( spy ).toHaveBeenCalled();
         });
         it( "should be called upon entry", function(){
             var orange = sm.getState( 'orange' );
             orange.addListener( jsfsa.StateEvent.ENTERED, spy );
             sm.doTransition( 'next' );
-            expect( spy ).toHaveBeenCalled()
+            expect( spy ).toHaveBeenCalled();
         });
         it( "should receive an event object", function(){
             var orange = sm.getState( 'orange' );
@@ -188,7 +189,7 @@ describe( "jsfsa.State", function(){
 
         });
         it( "should be able to pause and restart the fsm", function(){
-            callback = function(){
+            var callback = function(){
                 sm.pause();
             };
 

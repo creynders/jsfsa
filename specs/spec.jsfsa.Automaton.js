@@ -4,6 +4,7 @@
  * Time: 11:44
  */
 describe("jsfsa.Automaton", function(){
+    "use strict";
     var sm;
     beforeEach( function(){
         sm = new jsfsa.Automaton();
@@ -13,8 +14,8 @@ describe("jsfsa.Automaton", function(){
             toBeInstanceOf : function( expected ){
                 return this.actual instanceof expected;
             }
-        })
-    } );
+        });
+    });
     afterEach( function(){
         sm.destroy();
         sm = undefined;
@@ -26,7 +27,7 @@ describe("jsfsa.Automaton", function(){
         });
         it( "should have a root state", function(){
             expect( sm.getRootState() ).toBeInstanceOf( jsfsa.State );
-        })
+        });
     });
 
     describe( "an added state", function(){
@@ -130,7 +131,7 @@ describe("jsfsa.Automaton", function(){
         });
         it( "should terminate transition with guards denying exit", function(){
             var orange = sm.getState( 'orange' );
-            orange.addGuard( jsfsa.Action.EXIT, function( ){return false } );
+            orange.addGuard( jsfsa.Action.EXIT, function( ){ return false; } );
             sm.doTransition( 'next' );
             sm.doTransition( 'next' );
             expect( sm.getCurrentState() ).toEqual( sm.getState( 'orange' ) );
