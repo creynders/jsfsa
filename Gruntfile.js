@@ -37,6 +37,7 @@ module.exports = function (grunt) {
         },
         jasmine: {
             src: ['src/**/*.js'],
+            dist: [ 'bin/*<%= pkg.version %>.min.js' ],
             options: {
                 specs: ['specs/**/*.js']
             }
@@ -58,10 +59,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     // Default task.
-    grunt.registerTask('test', ['jshint', 'jasmine']);
+    grunt.registerTask('test', ['jshint', 'jasmine:src']);
     grunt.registerTask('consolidate', ['concat', 'uglify', 'inject_vars']);
     grunt.registerTask('build', ['test', 'consolidate']);
     grunt.registerTask('docs', ['jsdoc']);
+    grunt.registerTask('travis', ['jshint', 'jasmine']);
 
     grunt.registerMultiTask("inject_vars", "Injects user defined vars into bin files", function () {
         function replaceVersion(content, filepath) {
