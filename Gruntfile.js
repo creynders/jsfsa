@@ -30,13 +30,18 @@ module.exports = function (grunt) {
                 dest: 'bin/<%= pkg.name %>-<%= pkg.version %>.js'
             }
         },
-        inject_vars: {
-            bin: {
-                src: ['bin/*<%= pkg.version %>*.js']
+        replace: {
+            dist: {
+                options: {
+                    variables: {
+                        'version': '<%= pkg.version %>'
+                    }
+                },
+                src: ['bin/**/*<%= pkg.version %>*.js']
             }
         },
         jasmine: {
-            src: ['src/**/*.js'],
+            source: ['src/**/*.js'],
             dist: [ 'bin/*<%= pkg.version %>.min.js' ],
             options: {
                 specs: ['specs/**/*.js']
@@ -58,31 +63,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
+    grunt.loadNpmTasks('grunt-replace');
+
     // Default task.
-    grunt.registerTask('test', ['jshint', 'jasmine:src']);
-    grunt.registerTask('consolidate', ['concat', 'uglify', 'inject_vars']);
+    grunt.registerTask('test', ['jshint', 'jasmine:source']);
+    grunt.registerTask('consolidate', ['concat', 'uglify', 'replace']);
     grunt.registerTask('build', ['test', 'consolidate']);
     grunt.registerTask('docs', ['jsdoc']);
     grunt.registerTask('travis', ['jshint', 'jasmine']);
-
-    grunt.registerMultiTask("inject_vars", "Injects user defined vars into bin files", function () {
-        function replaceVersion(content, filepath) {
-            var result = content;
-            while (result.indexOf('%VERSION%') > -1) {
-                result = result.replace("%VERSION%", grunt.config("pkg.version"));
-            }
-            return result;
-        }
-
-        var sources = this.files; //for legibility
-        sources.forEach(function (files) {
-            grunt.log.writeln("Inject vars into " + files.src);
-            files.src.forEach(function (filepath) {
-                var targetFile = filepath;
-                grunt.file.copy(filepath, targetFile, {
-                    process: replaceVersion
-                });
-            });
-        });
-    });
 };

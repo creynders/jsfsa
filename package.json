@@ -1,35 +1,38 @@
 {
-    "name": "jsfsa",
-    "description": "A lightweight lib for creating finite-state automata (finite-state machines)",
-    "version": "0.2.4",
-    "author": "Camille Reynders (http://www.creynders.be/)",
-    "homepage": "http://github.com/creynders/jsfsa",
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/creynders/jsfsa.git"
-    },
-    "bugs": {
-        "url": "http://github.com/creynders/jsfsa/issues"
-    },
-    "licenses": [{
-        "type": "MIT",
-        "url": "http://github.com/creynders/jsfsa/blob/master/LICENSE"
-    }],
-    "keywords": [
-        "fsm",
-        "finite-state machine",
-        "automaton",
-        "state"
-    ],
-    "scripts": {
-      "test": "grunt travis --verbose"
-    },
-    "devDependencies": {
-        "grunt": "~0.4.1",
-        "grunt-contrib-jshint": "~0.3.0",
-        "grunt-contrib-concat": "~0.1.3",
-        "grunt-contrib-uglify": "~0.2.0",
-        "grunt-contrib-jasmine": "~0.4.1",
-        "grunt-jsdoc": "~0.2.4"
+  "name": "jsfsa",
+  "description": "A lightweight lib for creating finite-state automata (finite-state machines)",
+  "version": "0.2.4",
+  "author": "Camille Reynders (http://www.creynders.be/)",
+  "homepage": "http://github.com/creynders/jsfsa",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/creynders/jsfsa.git"
+  },
+  "bugs": {
+    "url": "http://github.com/creynders/jsfsa/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/creynders/jsfsa/blob/master/LICENSE"
     }
+  ],
+  "keywords": [
+    "fsm",
+    "finite-state machine",
+    "automaton",
+    "state"
+  ],
+  "scripts": {
+    "test": "grunt travis --verbose"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.3.0",
+    "grunt-contrib-concat": "~0.1.3",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-contrib-jasmine": "~0.4.1",
+    "grunt-jsdoc": "~0.2.4",
+    "grunt-replace": "~0.4.3"
+  }
 }

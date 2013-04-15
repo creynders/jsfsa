@@ -1,6 +1,6 @@
 /**
  * @author Camille Reynders
- * @version %VERSION%
+ * @version @@version
  */
 (function ($) {
     "use strict";
@@ -12,7 +12,7 @@
     /**
      * @namespace
      * @name jsfsa
-     * @version %VERSION%
+     * @version @@version
      */
     var jsfsa = {
         /**
@@ -20,7 +20,7 @@
          * @constant
          * @type String
          */
-        VERSION: '%VERSION%'
+        VERSION: '@@version'
     };
 
     //--( Dispatcher )--//
