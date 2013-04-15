@@ -1,4 +1,4 @@
-# JSFSA
+# JSFSA [![Build Status](https://secure.travis-ci.org/creynders/jsfsa.png?branch=master)](http://travis-ci.org/creynders/jsfsa)
 
 JSFSA is an abbreviation for JavaScript Finite State Automaton (or Automata), it is a small lib for creating 
 asynchronous, non-deterministic, hierarchical finite-state machines in JavaScript.
