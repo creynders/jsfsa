@@ -1,7 +1,7 @@
 {
   "name": "jsfsa",
   "description": "A lightweight lib for creating finite-state automata (finite-state machines)",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "author": "Camille Reynders (http://www.creynders.be/)",
   "homepage": "http://github.com/creynders/jsfsa",
   "repository": {
