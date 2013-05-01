@@ -334,6 +334,117 @@ var fsm = new jsfsa.Automaton( config )
 ;
 ```
 
+### DYNAMIC TRANSITIONS WITH GUARDS AND EFFECTS
+
+So far we have seen examples for statically defined transition targets. However,  transitions can also be dynamic, i.e. the transition itself can be conditional, transitions can have an effect and it is possible to determine the target state of a transition based on some calculation within the transition. The event handler has access to payload data.
+
+#### GUARDS AND EFFECTS
+
+* transitions can be guarded by a condition and they can have an effect. As an example, this transition might occur in a simplified football game statemachine:
+
+```
+    goal[valid]/goals++      +----------+
+---------------------------> | kickOff  |
+                             +----------+
+```
+
+When a goal occurs, the effect is that the goals count is increased, but only if the goal is valid. Afterwards the game will be in the kickOff state.
+
+This can be especially useful if there are different effects depending on the event and the condition which brings you to a new state. E.g. you can have one state kickOff which only contains the entry acttions that are common to all kickOffs, rather than distinguishing a kickOffAfterGoal which increases the goal count in its entry action from a kickOffAtBeginning and a kickOffAfterHalftime which don't do that.
+
+For such a guarded transition with effect, define a function as the transition target and return the name of the target state if you want to allow the transition.
+
+```
+    ...
+    transitions : {
+        'goal' : function(e, valid) {
+            if(valid === true) {
+                goals++;
+                return 'kickOff';
+            } 
+        }
+    }
+    ...
+
+    // a valid goal occurs:
+    sm.doTransition('goal', true)
+```
+
+Note that the function returns the target state 'kickOff' if the goal was valid, but it returns undefined if the goal was not valid. In the latter case, the transition is denied and we stay in the current state.
+
+#### INTERNAL TRANSITIONS
+
+* you can also have an internal transition, i.e. you can handle an event without ever leaving a state.
+
+```
+    +-----------------------------------------------+
+    |      Entering password                        |
+    +-----------------------------------------------+
+    | passwordEntered[invalid]/failed++             |
+    |                                               |
+    +-----------------------------------------------+
+```
+
+For such an internal transition the event handler function must always return undefined.
+
+```
+    ...
+    transitions : {
+        'passwordEntered' : function(e, password) {
+            if(!passwordValid(password) {
+                failed++;
+            }
+            return undefined;
+        }
+    }
+    ...
+
+    // wrong password:
+    sm.doTransition('passwordEntered', 'wr0n5')
+```
+
+#### DYNAMIC CHOICES
+
+Finally, this technique also allows you to express a choice, i.e. a transition whose target is determined dynamically. Consider the transitions below which describe what happens if a team scores a goal during a football match in tie state.
+
+```
+                   +-----------+
+                   |    Tie    |
+                   +-----------+
+                         |
+                         | goal
+                        / \
+                    __ /   \__
+                   |   \   /  |
+        [homeTeam] |    \ /   |[visitingTeam]
+ /goals.homeTeam++ |          |  /goals.visitingTeam++
+                   |          | 
+    +----------+<--*          *-->+----------+ 
+    |  Lead    |                  | Lead     |
+    |  Home    |                  | Visiting |
+    |  Team    |                  | Team     |
+    +----------+                  +----------+
+```
+
+The goal event can lead to two different transitions. The transition from Tie to LeadHomeTeam occurs only if the goal was scored by the home team. It effectively increments the goals of the home team (and vice versa). For such a choice, you could write:
+
+```
+    ...
+    transitions : {
+        'goal' : function(e, scorer) {
+            goals[scorer]++;
+            if(scorer === 'homeTeam') {
+                return 'leadHomeTeam';
+            } else {
+                return 'leadVisitingTeam';
+            }
+        }
+    }
+     ...
+    // The home team scores a goal:
+    sm.doTransition('goal', 'homeTeam')
+```
+
 ## Dependencies
 
 ### USAGE

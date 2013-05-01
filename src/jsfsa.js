@@ -938,8 +938,19 @@ var jsfsa;
     };
 
     Automaton.prototype._attemptTransition = function (sourceNode, eventFactory) {
-        var targetNode = this._nodes[sourceNode.getTransition(eventFactory.transition)];
-        if (!targetNode) {
+        var targetSpec = sourceNode.getTransition( eventFactory.transition );
+        var targetName;
+        if (typeof targetSpec === 'function') {
+            var args = eventFactory.createArgsArray();
+            targetName = targetSpec.apply(this, args);
+        } else {
+            targetName = targetSpec;
+        }
+        var targetNode = null;
+        if ( targetName ) {
+            targetNode = this._nodes[ targetName ];
+        }
+        if ( !targetNode ) {
             //state doesn't exist
             this._finishTransition(eventFactory.createArgsArray(StateEvent.TRANSITION_DENIED));
         } else {

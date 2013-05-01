@@ -304,4 +304,71 @@ describe("jsfsa.Automaton", function(){
             expect( spy ).toHaveBeenCalledWith( e );
         });
     });
+    describe( "transition with action and guard", function(){
+        beforeEach( function(){
+            var vendingMachine = jasmine.createSpyObj('vendingMachine',
+                                    [ 'calculatePrice', 'accumulate',
+                                            'pricePayed', 'returnChange',
+                                            'printTicket' ]);
+            sm.vendingMachine = vendingMachine;
+            sm.createState('idle', {
+                transitions : {
+                    'destinationSelected' : 'collectingMoney'
+                },
+                isInitial : true
+            });
+            sm.createState('collectingMoney', {
+                listeners: {
+                    entered: function(e, destination) {
+                        vendingMachine.calculatePrice(destination);
+                    }
+                },
+                transitions : {
+                    'coinInserted' : function(e, amount) {
+                        vendingMachine.accumulate(amount);
+                        if(vendingMachine.pricePayed()) {
+                            return 'printingTicket';
+                        }
+                    },
+                    'cancel':  function(e, amount) {
+                        vendingMachine.returnChange();
+                    }
+                }
+            });
+            sm.createState('printingTicket', {
+                listeners: {
+                    entered: function() {
+                        vendingMachine.printTicket();
+                    },
+                    exited: function() {
+                        vendingMachine.returnChange();
+                    }
+                },
+                transitions : {
+                    'ticketPrinted' : 'idle'
+                }
+            });
+        } );
+        it( "should execute an action before entering the target state", function(){
+            var vendingMachine = sm.vendingMachine;
+            sm.doTransition('destinationSelected', 'Main Station');
+            expect( vendingMachine.calculatePrice ).toHaveBeenCalledWith('Main Station');
+            expect( sm.getCurrentState() ).toEqual( sm.getState( 'collectingMoney' ) );
+
+            vendingMachine.pricePayed.andReturn(false);
+            sm.doTransition('coinInserted', 200);
+            expect( vendingMachine.accumulate ).toHaveBeenCalledWith(200);
+            expect( sm.getCurrentState() ).toEqual( sm.getState( 'collectingMoney' ) );
+
+            vendingMachine.pricePayed.andReturn(true);
+            sm.doTransition('coinInserted', 50);
+            expect( vendingMachine.accumulate ).toHaveBeenCalledWith(50);
+            expect( sm.getCurrentState() ).toEqual( sm.getState( 'printingTicket' ) );
+
+            sm.doTransition('ticketPrinted');
+            expect( vendingMachine.returnChange ).toHaveBeenCalled();
+            expect( sm.getCurrentState() ).toEqual( sm.getState( 'idle' ) );
+            });
+        });
+// });
 });
