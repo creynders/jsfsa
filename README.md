@@ -370,7 +370,7 @@ For such a guarded transition with effect, define a function as the transition t
     sm.doTransition('goal', true)
 ```
 
-Note that the function returns the target state 'kickOff' if the goal was valid, but it returns undefined if the goal was not valid. In the latter case, the transition is denied and we stay in the current state.
+Note that the function returns the target state 'kickOff' if the goal was valid, but it returns `undefined` if the goal was not valid. In the latter case, the transition is denied and we stay in the current state.
 
 #### INTERNAL TRANSITIONS
 
@@ -385,7 +385,7 @@ Note that the function returns the target state 'kickOff' if the goal was valid,
     +-----------------------------------------------+
 ```
 
-For such an internal transition the event handler function must always return undefined.
+For such an internal transition the event handler function must always return [a _falsy_ value](http://www.sitepoint.com/javascript-truthy-falsy/).
 
 ```
     ...
