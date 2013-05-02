@@ -5,13 +5,20 @@ module.exports = function (grunt) {
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        files:{
+            src:'src/<%= pkg.name %>.js',
+            dist:{
+                full: 'bin/<%= pkg.name %>-<%= pkg.version %>.js',
+                min: 'bin/<%= pkg.name %>-<%= pkg.version %>.min.js'
+            }
+        },
         uglify: {
             options: {
                 banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' + '<%= grunt.template.today("yyyy-mm-dd") %> ' + 'Copyright (c) <%= grunt.template.today("yyyy") %> ' + '<%= pkg.author %>; Licensed <%= pkg.licenses[0].type %> */'
             },
             build: {
-                src: 'src/<%= pkg.name %>.js',
-                dest: 'bin/<%= pkg.name %>-<%= pkg.version %>.min.js'
+                src: '<%=files.src%>',
+                dest: '<%=files.dist.min%>'
             }
         },
         watch: {
@@ -26,11 +33,24 @@ module.exports = function (grunt) {
         },
         concat: {
             source: {
-                src: ['src/**/*.js'],
-                dest: 'bin/<%= pkg.name %>-<%= pkg.version %>.js'
+                src: '<%=files.src%>',
+                dest: '<%=files.dist.full%>'
             }
         },
         replace: {
+            bower:{
+                options:{
+                    variables:{
+                        'version': '<%= pkg.version %>',
+                        'name': '<%= pkg.name %>',
+                        'main': '<%=files.dist.min%>'
+                    }
+                },
+                files: [{
+                    src: 'template.bower.json',
+                    dest: 'bower.json'
+                }]
+            },
             dist: {
                 options: {
                     variables: {
@@ -42,7 +62,7 @@ module.exports = function (grunt) {
         },
         jasmine: {
             source: ['src/**/*.js'],
-            dist: [ 'bin/*<%= pkg.version %>.min.js' ],
+            dist: [ 'bin/*<%= pkg.version %>*.js' ],
             options: {
                 specs: ['specs/**/*.js']
             }
@@ -68,7 +88,7 @@ module.exports = function (grunt) {
     // Default task.
     grunt.registerTask('test', ['jshint', 'jasmine:source']);
     grunt.registerTask('consolidate', ['concat', 'uglify', 'replace']);
-    grunt.registerTask('build', ['test', 'consolidate']);
+    grunt.registerTask('build', ['test', 'consolidate', 'replace:bower']);
     grunt.registerTask('docs', ['jsdoc']);
     grunt.registerTask('travis', ['jshint', 'jasmine']);
 };

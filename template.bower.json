@@ -1,0 +1,10 @@
+{
+  "name": "@@name",
+  "version": "@@version",
+  "main": "@@main",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ]
+}

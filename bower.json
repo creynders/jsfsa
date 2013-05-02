@@ -1,0 +1,10 @@
+{
+  "name": "jsfsa",
+  "version": "0.2.5",
+  "main": "bin/jsfsa-0.2.5.min.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ]
+}
