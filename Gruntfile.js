@@ -58,12 +58,12 @@ module.exports = function (grunt) {
                         'version': '<%= pkg.version %>'
                     }
                 },
-                src: ['bin/**/*<%= pkg.version %>*.js']
+                src: ['bin/**/*.js']
             }
         },
         jasmine: {
             source: ['src/**/*.js'],
-            dist: [ 'bin/*<%= pkg.version %>*.js' ],
+            dist: [ 'bin/*.js' ],
             options: {
                 specs: ['specs/**/*.js']
             }
