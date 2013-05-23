@@ -1,7 +1,7 @@
 var jsfsa;
 /**
  * @author Camille Reynders
- * @version @@version
+ * @version 0.3.1
  */
 (function (pkg) {
     "use strict";
@@ -1082,7 +1082,7 @@ var jsfsa;
      * @constant
      * @type String
      */
-    pkg.VERSION= '@@version';
+    pkg.VERSION= '0.3.1';
 
     pkg.Action = Action;
     pkg.StateEvent = StateEvent;
