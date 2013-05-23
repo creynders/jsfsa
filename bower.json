@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "main": "bin/jsfsa.min.js",
   "ignore": [
-    "**/*",
+    "*",
     "./!(docs)",
     "./!(bin/jsfsa.min.js)",
     "./!(bin/jsfsa.js)"

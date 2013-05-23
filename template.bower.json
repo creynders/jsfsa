@@ -3,7 +3,7 @@
   "version": "@@version",
   "main": "@@dist_min",
   "ignore": [
-    "**/*",
+    "*",
     "./!(docs)",
     "./!(@@dist_min)",
     "./!(@@dist_full)"
