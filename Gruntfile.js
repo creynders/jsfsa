@@ -8,8 +8,8 @@ module.exports = function (grunt) {
         files:{
             src:'src/<%= pkg.name %>.js',
             dist:{
-                full: 'bin/<%= pkg.name %>-<%= pkg.version %>.js',
-                min: 'bin/<%= pkg.name %>-<%= pkg.version %>.min.js'
+                full: 'bin/<%= pkg.name %>.js',
+                min: 'bin/<%= pkg.name %>.min.js'
             }
         },
         uglify: {
@@ -43,7 +43,8 @@ module.exports = function (grunt) {
                     variables:{
                         'version': '<%= pkg.version %>',
                         'name': '<%= pkg.name %>',
-                        'main': '<%=files.dist.min%>'
+                        'dist_min': '<%=files.dist.min%>',
+                        'dist_full': '<%=files.dist.full%>'
                     }
                 },
                 files: [{
@@ -84,11 +85,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-replace');
+    grunt.loadNpmTasks('grunt-bump');
 
     // Default task.
     grunt.registerTask('test', ['jshint', 'jasmine:source']);
-    grunt.registerTask('consolidate', ['concat', 'uglify', 'replace']);
-    grunt.registerTask('build', ['test', 'consolidate', 'replace:bower']);
+    grunt.registerTask('build', ['test', 'concat', 'uglify', 'replace']);
     grunt.registerTask('docs', ['jsdoc']);
     grunt.registerTask('travis', ['jshint', 'jasmine']);
 };

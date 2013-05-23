@@ -1,10 +1,11 @@
 {
   "name": "jsfsa",
-  "version": "0.2.6",
-  "main": "bin/jsfsa-0.2.6.min.js",
+  "version": "0.3.0",
+  "main": "bin/jsfsa.min.js",
   "ignore": [
-    "**/.*",
-    "node_modules",
-    "components"
+    "**/*",
+    "./!(docs)",
+    "./!(bin/jsfsa.min.js)",
+    "./!(bin/jsfsa.js)"
   ]
 }

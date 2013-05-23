@@ -1,7 +1,7 @@
 {
   "name": "jsfsa",
   "description": "A lightweight lib for creating finite-state automata (finite-state machines)",
-  "version": "0.2.6",
+  "version": "0.3.0",
   "author": "Camille Reynders (http://www.creynders.be/)",
   "homepage": "http://github.com/creynders/jsfsa",
   "repository": {
@@ -33,6 +33,7 @@
     "grunt-contrib-uglify": "~0.2.0",
     "grunt-contrib-jasmine": "~0.4.1",
     "grunt-jsdoc": "~0.2.4",
-    "grunt-replace": "~0.4.3"
+    "grunt-replace": "~0.4.3",
+    "grunt-bump": "0.0.2"
   }
 }

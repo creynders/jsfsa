@@ -1,10 +1,11 @@
 {
   "name": "@@name",
   "version": "@@version",
-  "main": "@@main",
+  "main": "@@dist_min",
   "ignore": [
-    "**/.*",
-    "node_modules",
-    "components"
+    "**/*",
+    "./!(docs)",
+    "./!(@@dist_min)",
+    "./!(@@dist_full)"
   ]
 }

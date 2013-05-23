@@ -1,7 +1,7 @@
 var jsfsa;
 /**
  * @author Camille Reynders
- * @version 0.2.6
+ * @version @@version
  */
 (function (pkg) {
     "use strict";
@@ -312,7 +312,7 @@ var jsfsa;
      * @see jsfsa.State#hasTransition
      * @see jsfsa.State#getTransition
      * @param {String} transitionName
-     * @param {String} stateName
+     * @param {String|Function} stateName The name of the state to transition to -or- a function which returns that name
      * @return {jsfsa.State} the instance of {@link jsfsa.State} that is acted upon
      */
     State.prototype.addTransition = function (transitionName, stateName) {
@@ -1082,7 +1082,7 @@ var jsfsa;
      * @constant
      * @type String
      */
-    pkg.VERSION= '0.2.6';
+    pkg.VERSION= '@@version';
 
     pkg.Action = Action;
     pkg.StateEvent = StateEvent;
