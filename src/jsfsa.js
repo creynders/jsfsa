@@ -1,9 +1,34 @@
-var jsfsa;
 /**
  * @author Camille Reynders
  * @version @@version
  */
-(function (pkg) {
+
+(function (definition) {
+    /*
+    AMD/CommonJS compatibility largely stolen from https://github.com/kriskowal/q/blob/master/q.js
+     */
+    // Turn off strict mode for this function so we can assign to global.jsfsa
+    /*jshint strict: false, -W117*/
+
+    // This file will function properly as a <script> tag, or a module
+    // using CommonJS and NodeJS or RequireJS module formats.  In
+    // Common/Node/RequireJS, the module exports the jsfsa API and when
+    // executed as a simple <script>, it creates a jsfsa global instead.
+
+    // CommonJS
+    if (typeof exports === "object") {
+        module.exports = definition();
+
+    // RequireJS
+    } else if (typeof define === "function" && define.amd) {
+        define(definition);
+
+    // <script>
+    } else {
+        jsfsa = definition();
+    }
+
+})(function () {
     "use strict";
 
     //--( Dispatcher )--//
@@ -1077,16 +1102,16 @@ var jsfsa;
      */
     Automaton.prototype._dispatchArgs = State.prototype._dispatchArgs;
 
-    /**
-     * framework version number
-     * @constant
-     * @type String
-     */
-    pkg.VERSION= '@@version';
-
-    pkg.Action = Action;
-    pkg.StateEvent = StateEvent;
-    pkg.State = State;
-    pkg.Automaton = Automaton;
-
-})(jsfsa || (jsfsa = {}));
+    return {
+        /**
+         * framework version number
+         * @constant
+         * @type String
+         */
+        VERSION: '@@version',
+        Action : Action,
+        StateEvent : StateEvent,
+        State : State,
+        Automaton : Automaton
+    };
+});

@@ -8,8 +8,8 @@ module.exports = function (grunt) {
         files:{
             src:'src/<%= pkg.name %>.js',
             dist:{
-                full: 'bin/<%= pkg.name %>.js',
-                min: 'bin/<%= pkg.name %>.min.js'
+                full: 'dist/<%= pkg.name %>.js',
+                min: 'dist/<%= pkg.name %>.min.js'
             }
         },
         uglify: {
@@ -58,12 +58,12 @@ module.exports = function (grunt) {
                         'version': '<%= pkg.version %>'
                     }
                 },
-                src: ['bin/**/*.js']
+                src: ['dist/**/*.js']
             }
         },
         jasmine: {
             source: ['src/**/*.js'],
-            dist: [ 'bin/*.js' ],
+            dist: [ 'dist/*.js' ],
             options: {
                 specs: ['specs/**/*.js']
             }
