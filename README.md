@@ -470,3 +470,7 @@ JSFSA is inspired by the fsm's of
 * Docs: the API documentation needs to be completed.
 * Demo: a working demo should be created.
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/creynders/jsfsa/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
