@@ -472,5 +472,5 @@ JSFSA is inspired by the fsm's of
 
 
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/creynders/jsfsa/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/creynders/jsfsa/trend.png)](https://bitdeli.com/free "Bitdeli Badge")[![Analytics](https://ga-beacon.appspot.com/UA-12080113-4/jsfsa/README.md)](https://github.com/igrigorik/ga-beacon)
 
